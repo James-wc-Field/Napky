@@ -1,0 +1,57 @@
+html {
+   height: 100%;
+   width: 100%;
+}
+
+body {
+   margin: 0%;
+   height: 100%;
+}
+
+#main {
+   background-color: antiquewhite;
+   height: max-content;
+   width: max-content;
+}
+
+nav {
+   background-color: blueviolet;
+   height: 80px;
+   width: 100%;
+}
+
+#title {
+   list-style-type: none;
+   margin: 0;
+   padding: 0;
+   height:inherit;
+}
+
+.title_text {
+   font-size: 30pt;
+   color: antiquewhite;
+   height: inherit;
+   line-height: 200%;
+   padding: 0px;
+   margin: 0px;
+}
+
+#icon {
+   height: inherit;
+   margin-right: 10px;
+   margin-left: 10px;
+}
+
+.nav_item {
+   display: inline;
+   float: left;
+   height: inherit;
+}
+
+#account {
+   height: inherit;
+   float: right;
+   font-size: 20pt;
+   color: antiquewhite;
+   line-height: normal;
+}
