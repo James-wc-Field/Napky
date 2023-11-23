@@ -1,9 +1,7 @@
 export default function Page() {
-  return (
-		<>
-      <h1>this is the signup page!!!</h1>
-			<p>signup page</p>
-
+	return (
+		<main>
+			<h1>this is the signup page!!!</h1>
 			<form>
 				<label>email</label>
 				<input type="email" />
@@ -15,6 +13,6 @@ export default function Page() {
 				<input type="password" />
 				<input type="submit" />
 			</form>
-		</>
-  );
+		</main>
+	);
 }
