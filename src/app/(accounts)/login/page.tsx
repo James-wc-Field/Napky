@@ -8,7 +8,7 @@ import {
 
 import Link from 'next/link';
 
-import Copyright from './copyright'
+import Copyright from '@/app/components/Copyright'
 
 export default function Page() {
   return (
