@@ -1,8 +1,8 @@
 'use client'
 import { DndContext } from "@dnd-kit/core";
 import React from "react";
-import Grid from "../../../components/Grid"; // Update the import path
-import TestDraggable from "../../../components/TestDraggable"; // Update the import path
+import Grid from "@components/Grid";
+import TestDraggable from "@components/TestDraggable";
 export default function Page({ params }: { params: { projectID: string } }) {
     return (
         <DndContext>
