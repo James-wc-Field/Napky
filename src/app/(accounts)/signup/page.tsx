@@ -2,8 +2,8 @@
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {
-  Typography, Container, Box, Grid, Checkbox,
-  FormControlLabel, Button, Avatar, CssBaseline, TextField
+  Typography, Container, Box, Grid, 
+  Button, Avatar, CssBaseline, TextField
 } from '@mui/material';
 
 import Link from 'next/link';
