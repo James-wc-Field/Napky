@@ -51,7 +51,7 @@ const DrawingBoard: FC<DrawingBoardProps> = ({ children }) => {
   }, [isDrawing]);
 
   return (
-    <div ref={setNodeRef} style={{ position: 'relative' }}>
+    <div ref={setNodeRef} className='bg-sky-50'>
       <canvas ref={canvasRef} width={800} height={600} style={{ border: '1px solid black' }} />
       <div style={{ position: 'absolute', top: 0, left: 0 }}>
         {children}
