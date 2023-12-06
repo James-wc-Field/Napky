@@ -1,5 +1,5 @@
 import React from "react";
-export const VerticalGrip = (props: { [key: string] : string }) => (
+export const VerticalGripIcon = (props: { [key: string] : string }) => (
   <svg
     aria-hidden="true"
     fill="none"
