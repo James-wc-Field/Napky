@@ -11,6 +11,8 @@
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",
     "@material/web": "^1.0.1",
+    "@nextui-org/react": "^2.2.9",
+    "framer-motion": "^10.16.12",
     "next": "^14.0.3",
     "react": "^18",
     "react-dom": "^18"
