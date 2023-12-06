@@ -12,7 +12,7 @@ export default function TextCard() {
     const [title, setTitle] = React.useState("Title");
 
     return (
-        <Card className="py-4 max-w-sm" onClick={()=>{setSelected(!selected)}}>
+        <Card className="py-4 max-w-sm bg-neutral-light" isPressable onPress={(e)=>{setSelected(!selected); console.log("Hi");}}>
             <CardBody className="overflow-visible py-2 flex space-y-4">
             <Textarea 
                 isReadOnly={selected ? false : true}
@@ -20,6 +20,7 @@ export default function TextCard() {
                 onChange={(e)=>{setTitle(e.target.value)}}
                 classNames={{
                     input: "text-center text-xl",
+                    inputWrapper: "bg-neutral-light shadow-md",
                 }}
                 variant="bordered"
                 minRows={1}
@@ -27,6 +28,9 @@ export default function TextCard() {
             <Input
                 variant="bordered"
                 placeholder="Note"
+                classNames={{
+                    inputWrapper: "bg-neutral-light shadow-md"
+                }}
                 endContent={
                     selected &&
                     (<>
@@ -37,11 +41,11 @@ export default function TextCard() {
                 type="text"
             />
 
-            <Card shadow="sm" className="flex w-full items-center justify-center bg-gray-800"> {/* import Lexi's colors into ts config */}
+            <Card shadow="sm" className="flex w-full items-center justify-center bg-neutral-light border-neutral-dark border-2"> {/* import Lexi's colors into ts config */}
                 <Image
                     as={NextImage}
                     alt="Card background"
-                    className="object-cover rounded-xl mx-auto pt-4"
+                    className="object-cover rounded-xl mt-3"
                     src="/images/pexels-alina-chernii-18879454.jpg"
                     width={270}
                     height={200}
@@ -50,6 +54,9 @@ export default function TextCard() {
                     <Input
                         variant="bordered"
                         placeholder="Note"
+                        classNames={{
+                            inputWrapper: "bg-neutral-light shadow-md"
+                        }}
                         endContent={
                             selected &&
                             (<>
@@ -63,15 +70,5 @@ export default function TextCard() {
             </Card>
             </CardBody>
         </Card>
-  
-        // <div
-        //     className="p-6 min-w-200px w-1/6 rounded-2xl border-[#505251] border-2 flex flex-col space-y-3"
-        //     onClick={()=>{setSelected(!selected)}}
-        // >
-
-        //     <div className="rounded-lg border-[#505251] border-2">
-        //         image
-        //     </div>
-        // </div>
     );
 }
