@@ -57,12 +57,9 @@ export default function Page() {
 									type={isVisible ? "text" : "password"}
 								/>
 								<Checkbox defaultSelected>Remember me</Checkbox>
-
-								<div className="flex gap-2 justify-end">
-									<Button fullWidth color="primary">
-										Login
-									</Button>
-								</div>
+								<Button fullWidth color="primary">
+									Login
+								</Button>
 								<div className="flex flex-col gap-1">
 									<div className="flex group gap-2 justify-center">
 										<p className="text-sm text-center">
@@ -72,7 +69,7 @@ export default function Page() {
 											Sign up
 										</Link>
 									</div>
-									<Link size="sm" href='/forgot-password' className="justify-center cursor-pointer">
+									<Link size="sm" href='/forgot-password' className="justify-center">
 											Forgot password?
 									</Link>
 								</div>
@@ -107,11 +104,9 @@ export default function Page() {
 									type={isVisible ? "text" : "password"}
 									placeholder="Enter your password"
 								/>
-								<div className="flex gap-2 justify-end">
-									<Button fullWidth color="primary">
-										Sign up
-									</Button>
-								</div>
+								<Button fullWidth color="primary">
+									Sign up
+								</Button>
 								<p className="text-center text-small">
 									Already have an account?{" "}
 									<Link size="sm" className="cursor-pointer" onPress={() => tabChange("login")}>
