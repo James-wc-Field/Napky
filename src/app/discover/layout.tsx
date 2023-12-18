@@ -9,9 +9,9 @@ export default function DashboardLayout({
     return (
       <section>
         {/* Include shared UI here e.g. a header or sidebar */}
-        <div className="bg-main_purple h-fit max-w-full">
+        <div className="bg-primary-light h-fit max-w-full">
           <Image 
-          src='/icon.png'
+          src='/images/icon.png'
           height={80}
           width={80}
           className='ml-5 inline-block'
