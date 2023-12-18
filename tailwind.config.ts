@@ -25,6 +25,10 @@ const config: Config = {
         'accent': '#daa5e6',
       }
     },
+    colors: {
+      transparent: 'transparent',
+      main_purple: "#7828c8",
+    }
   },
   darkMode: "class",
   plugins: [nextui()],
