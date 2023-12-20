@@ -4,7 +4,6 @@ import { VerticalGripIcon } from "./icons/VerticalGripIcon";
 import { TrashIcon } from "./icons/TrashIcon";
 
 export const CardNote = (props: { [key: string] : string }) => {
-    console.log(props.selected);
     return (
         <Input
         variant="bordered"
