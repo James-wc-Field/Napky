@@ -9,6 +9,7 @@ import { VerticalGripIcon } from "./icons/VerticalGripIcon";
 import { TrashIcon } from "./icons/TrashIcon";
 import { PlusIcon } from "./icons/PlusIcon";
 import { CardNote } from "./CardNote";
+import { AddItemButton } from "./AddItemButton";
 
 export default function TextCard() {
     const [selected, setSelected] = React.useState(true);
@@ -43,22 +44,7 @@ export default function TextCard() {
                     <CardNote selected={String(selected)}></CardNote>
                 </CardFooter>
             </Card>
-
-            <Button isIconOnly className="bg-primary-dark rounded-full" variant="faded" aria-label="Like">
-                <PlusIcon />
-            </Button>
-            <Card className="bg-primary-dark w-full border-neutral-dark border-2">
-                <ButtonGroup radius="sm" className="">
-                    <Button>Note</Button>
-                    <Button>Image</Button>
-                    <Button>Link</Button>
-                </ButtonGroup>
-
-                <CardBody>
-                    <CardNote selected="false"></CardNote>
-                </CardBody>
-
-            </Card>
+            <AddItemButton />
             </CardBody>
         </Card>
     );
