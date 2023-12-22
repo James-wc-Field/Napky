@@ -5,19 +5,30 @@ import {Card, CardHeader, CardBody, CardFooter} from "@nextui-org/card";
 import {Button, ButtonGroup} from "@nextui-org/button"
 import {Image} from "@nextui-org/image";
 import NextImage from "next/image";
-import { VerticalGripIcon } from "./icons/VerticalGripIcon";
-import { TrashIcon } from "./icons/TrashIcon";
-import { PlusIcon } from "./icons/PlusIcon";
+import { VerticalGripIcon } from "../../../public/icons/VerticalGripIcon";
+import { TrashIcon } from "../../../public/icons/TrashIcon";
+import { PlusIcon } from "../../../public/icons/PlusIcon";
 import { CardNote } from "./CardNote";
 import { AddItemButton } from "./AddItemButton";
+import { CardEditIcon } from "../../../public/icons/CardEditIcon";
 
 export default function TextCard() {
     const [selected, setSelected] = React.useState(true);
     const [adding, setAdding] = React.useState(false);
     const [title, setTitle] = React.useState("Title");
+    const [addedModules, setAddedModules] = React.useState<React.ReactNode[]>([])
+
+    const onPressHandler = (value: string) => {
+        if (value == "note")
+            setAddedModules([...addedModules!, <CardNote />])
+        if (value == "image")
+            setAddedModules([...addedModules!, <CardNote />])
+        if (value == "link")
+            setAddedModules([...addedModules!, <CardNote />])
+    }
 
     return (
-        <Card className="py-4 max-w-sm bg-neutral-light " isPressable onPress={(e)=>{setSelected(!selected);}}>
+        <Card className="py-4 max-w-sm bg-neutral-light " isPressable /* onPress={(e)=>{setSelected(!selected);}} */>
             <CardBody className="overflow-visible py-2 flex space-y-4 items-center">
             <Textarea 
                 isReadOnly={selected ? false : true}
@@ -44,7 +55,14 @@ export default function TextCard() {
                     <CardNote selected={String(selected)}></CardNote>
                 </CardFooter>
             </Card>
-            <AddItemButton />
+            {addedModules}
+            <div>
+                <AddItemButton onAddCardModule={onPressHandler}/>
+                <Button isIconOnly className=" bg-primary-dark rounded-full ml-4" variant="faded" aria-label="Add" size="lg" onPress={(e)=>{setSelected(!selected);}}>
+                        <CardEditIcon />
+                </Button>
+            </div>
+
             </CardBody>
         </Card>
     );

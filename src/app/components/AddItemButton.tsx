@@ -1,4 +1,5 @@
 import { Button } from "@nextui-org/button";
+import "@nextui-org/react"
 import {
     Dropdown,
     DropdownTrigger,
@@ -7,11 +8,15 @@ import {
     DropdownItem
   } from "@nextui-org/dropdown";
 import React from "react"
-import { PlusIcon } from "./icons/PlusIcon";
+import { PlusIcon } from "../../../public/icons/PlusIcon";
+import { CardNoteIcon } from "../../../public/icons/CardNoteIcon";
+import { TrashIcon } from "../../../public/icons/TrashIcon";
+import { CardLinkIcon } from "../../../public/icons/CardLinkIcon";
+import { CardImageIcon } from "../../../public/icons/CardImageIcon";
 
 // This component might not be used but can be when add button is pressed
 
-export const AddItemButton = (props: { [key: string] : string }) => {
+export const AddItemButton = (props: { [key: string] : ((value: string) => void) }) => {
     return (
         <Dropdown>
         <DropdownTrigger>
@@ -20,12 +25,10 @@ export const AddItemButton = (props: { [key: string] : string }) => {
             </Button>
         </DropdownTrigger>
         <DropdownMenu aria-label="Static Actions">
-          <DropdownItem key="edit">Note</DropdownItem>
-          <DropdownItem key="copy">Image</DropdownItem>
-          <DropdownItem key="new">Link</DropdownItem>
-          <DropdownItem key="delete" className="text-danger" color="danger">
-            Close
-          </DropdownItem>
+          <DropdownItem key="note" endContent={<CardNoteIcon />} onPress={() => {props.onAddCardModule("note")}}>Note</DropdownItem>
+          <DropdownItem key="image" endContent={<CardImageIcon />} onPress={() => {props.onAddCardModule("image")}}>Image</DropdownItem>
+          <DropdownItem key="link" endContent={<CardLinkIcon />} onPress={() => {props.onAddCardModule("link")}}>Link</DropdownItem>
+          <DropdownItem key="close" className="text-danger" color="danger">Close</DropdownItem>
         </DropdownMenu>
       </Dropdown>
     );

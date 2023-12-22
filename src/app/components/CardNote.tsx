@@ -1,7 +1,7 @@
 import React from "react"
 import { Input } from "@nextui-org/input"
-import { VerticalGripIcon } from "./icons/VerticalGripIcon";
-import { TrashIcon } from "./icons/TrashIcon";
+import { VerticalGripIcon } from "../../../public/icons/VerticalGripIcon";
+import { TrashIcon } from "../../../public/icons/TrashIcon";
 
 export const CardNote = (props: { [key: string] : string }) => {
     return (
