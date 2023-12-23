@@ -15,7 +15,8 @@ import {
 } from '@dnd-kit/sortable';
 import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
-import {Chip} from "@nextui-org/chip";
+import { CardNote } from './CardNote';
+import { Chip } from '@nextui-org/chip';
 
 function SortableItem(props: any) {
   const {
@@ -32,36 +33,11 @@ function SortableItem(props: any) {
   };
   
   return (
-    <Chip ref={setNodeRef} style={style} {...attributes} {...listeners}>
-        Chip
-    </Chip>
+    <div  ref={setNodeRef} style={style} {...attributes} {...listeners}>
+        <Chip/>
+    </div>
   );
 }
-
-function SortableNextUIItem(props: any) {
-    const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    } = useSortable({id: props.id});
-    
-    const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    };
-    
-    return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-        {/* <div className='bg-slate-400 rounded-full'> */}
-            <Chip>Chip</Chip>
-        {/* </div> */}
-    </div>
-    );
-}
-  
-  
 
 export default function TestSortable() {
   const [items, setItems] = useState([1, 2, 3]);
