@@ -1,7 +1,7 @@
-import TextCard from "./Card";
+import ProjectCard from "./Card";
 
 export default function Page() {
   return (
-    <TextCard />
+    <ProjectCard />
   )
 }
