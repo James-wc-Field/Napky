@@ -29,7 +29,6 @@ export default function Page({ params }: { params: { projectID: string } }) {
 
     return (
         <DndContext onDragEnd={onDragEnd}>
-            <div>My Project: {params.projectID}</div>
             <button onClick={createNewDraggable}>Add Draggable</button>
                 <DrawingBoard>
                     {Object.entries(draggables).map(([id, position]) => (
