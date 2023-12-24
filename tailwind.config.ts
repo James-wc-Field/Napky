@@ -23,6 +23,10 @@ const config: Config = {
         'neutral-light': '#b6bab7',
         'neutral-dark': '#505251',
         'accent': '#daa5e6',
+      },
+      gridTemplateColumns: {
+        sidebar: "300px auto", //for sidebar layout
+        "sidebar-collapsed": "64px auto", //for collapsed sidebar layout
       }
     },
   },
