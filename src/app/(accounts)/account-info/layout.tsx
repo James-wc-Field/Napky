@@ -9,7 +9,6 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  const [collapsed, setSidebarCollapsed] = useState(false);
   return (
     <section>
       <Navbar>
@@ -18,19 +17,19 @@ export default function DashboardLayout({
         </NavbarBrand>
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
           <NavbarItem>
-            <Link color="foreground" href="#">
+            <Link color="foreground" href="./dashboard">
               Dashboard
             </Link>
           </NavbarItem>
           <NavbarItem isActive>
-            <Link href="#" aria-current="page">
+            <Link href="./discover" aria-current="page">
               Discover
             </Link>
           </NavbarItem>
         </NavbarContent>
         <NavbarContent justify="end">
           <NavbarItem>
-            <Button as={Link} color="primary" href="#" variant="flat">
+            <Button as={Link} color="primary" href="./account-info" variant="flat">
               Account
             </Button>
           </NavbarItem>
@@ -41,17 +40,9 @@ export default function DashboardLayout({
         // 👇 use grid layout
         "grid min-h-screen": true,
         // 👇 toggle the width of the sidebar depending on the state
-        "grid-cols-sidebar": !collapsed,
-        "grid-cols-sidebar-collapsed": collapsed,
-        // 👇 transition animation classes
-        "transition-[grid-template-columns] duration-300 ease-in-out": true,
+
       })}
     >
-      <div className="bg-indigo-700 text-white">
-        <button onClick={() => setSidebarCollapsed((prev) => !prev)}>
-          Toggle
-        </button>
-      </div>
       <div className=""> {children}</div>
     </div>
     </section>
