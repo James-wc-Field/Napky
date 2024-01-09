@@ -2,13 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7b19fade-08f7-46b4-96ea-b31c6bddd492" name="Changes" comment="made Readme.md, first commit">
-      <change afterPath="$PROJECT_DIR$/src/app/(accounts)/account-info/change-email/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/(accounts)/account-info/change-password/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/(accounts)/account-info/change-username/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/(accounts)/account-info/layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/(accounts)/account-info/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/[projectID]/layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/dashboard/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(accounts)/account-info/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(accounts)/account-info/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/discover/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/discover/layout.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,15 +25,15 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/app/(accounts)/account-info" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/app/discover" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\James\Documents\GitHub\Napky\src\app\discover" />
+      <recent name="C:\Users\James\Documents\GitHub\Napky\src\app\dashboard" />
+      <recent name="C:\Users\James\Documents\GitHub\Napky\src\app\[projectID]" />
+      <recent name="C:\Users\James\Documents\GitHub\Napky\src\app" />
       <recent name="C:\Users\James\Documents\GitHub\Napky\src\app\(accounts)\account-info" />
-      <recent name="C:\Users\James\Documents\GitHub\Napky\src\app\(accounts)\account-info\change-username" />
-      <recent name="C:\Users\James\Documents\GitHub\Napky\src\app\(accounts)\account-info\change-password" />
-      <recent name="C:\Users\James\Documents\GitHub\Napky\src\app\(accounts)\account-info\change-email" />
-      <recent name="C:\Users\James\Documents\GitHub\Napky\src\app\(accounts)" />
     </key>
   </component>
   <component name="RunManager">
