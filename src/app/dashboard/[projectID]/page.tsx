@@ -26,11 +26,11 @@ export default function Page({ params }: { params: { projectID: string } }) {
 
     const createNewDraggable = () => {
         const newId = `draggable-${Object.keys(draggables).length + 1}`;
-        setDraggables(prev => ({ ...prev, [newId]: { x: 20, y: 20 } }));
+        setDraggables(prev => ({ [newId]: { x: 20, y: 20 },  ...prev}));
     };
 
     return (
-        <DndContext onDragEnd={onDragEnd}>
+       
             <div className="flex">
             <div
                 className={classNames({
@@ -51,6 +51,7 @@ export default function Page({ params }: { params: { projectID: string } }) {
                 </div>
                 <div className=" flex-1">
                 <button onClick={createNewDraggable}>Add Draggable</button>
+                <DndContext onDragEnd={onDragEnd}>
                 <DrawingBoard>
                     {Object.entries(draggables).map(([id, position]) => (
                         <TestDraggable key={id} id={id} position={position} onDragEnd={onDragEnd}>
@@ -58,10 +59,10 @@ export default function Page({ params }: { params: { projectID: string } }) {
                         </TestDraggable>
                     ))}
                 </DrawingBoard>
-
-                </div>
-                </div>
                 </DndContext>
+                </div>
+                </div>
+
 
 
         
