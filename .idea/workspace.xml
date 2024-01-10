@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7b19fade-08f7-46b4-96ea-b31c6bddd492" name="Changes" comment="made Readme.md, first commit">
-      <change afterPath="$PROJECT_DIR$/src/app/[projectID]/layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/dashboard/layout.tsx" afterDir="false" />
+    <list default="true" id="7b19fade-08f7-46b4-96ea-b31c6bddd492" name="Changes" comment="navbar">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/(accounts)/account-info/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(accounts)/account-info/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dashboard/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dashboard/layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/discover/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/discover/layout.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -75,7 +74,14 @@
       <option name="project" value="LOCAL" />
       <updated>1699637610702</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="navbar">
+      <created>1704823482602</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1704823482603</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -92,6 +98,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="made Readme.md, first commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="made Readme.md, first commit" />
+    <MESSAGE value="navbar" />
+    <option name="LAST_COMMIT_MESSAGE" value="navbar" />
   </component>
 </project>
