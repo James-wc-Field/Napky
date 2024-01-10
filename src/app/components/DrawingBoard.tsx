@@ -55,7 +55,7 @@ const DrawingBoard: FC<DrawingBoardProps> = ({ children }) => {
   }, [isDrawing, currentPath]);
 
   return (
-    <div ref={setNodeRef} className='bg-sky-50' style={{ width: '100vw', height: '100vh' }}>
+    <div ref={setNodeRef} className='bg-sky-50 flex-1' style={{ width: '100vw', height: '100vh' }}>
       <svg ref={svgRef} width='100%' height='100%' style={{ border: '1px solid black' }}>
         {paths.map((path, index) => (
           <path key={index} d={path} stroke="black" strokeWidth="2" fill="none" />
