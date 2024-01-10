@@ -17,19 +17,19 @@ export default function DashboardLayout({
         </NavbarBrand>
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
           <NavbarItem>
-            <Link color="foreground" href="./dashboard">
+            <Link color="foreground" href="/./dashboard">
               Dashboard
             </Link>
           </NavbarItem>
           <NavbarItem isActive>
-            <Link href="./discover" aria-current="page">
+            <Link href="/./discover" aria-current="page">
               Discover
             </Link>
           </NavbarItem>
         </NavbarContent>
         <NavbarContent justify="end">
           <NavbarItem>
-            <Button as={Link} color="primary" href="./account-info" variant="flat">
+            <Button as={Link} color="primary" href="/./account-info" variant="flat">
               Account
             </Button>
           </NavbarItem>
