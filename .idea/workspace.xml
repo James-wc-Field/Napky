@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="7b19fade-08f7-46b4-96ea-b31c6bddd492" name="Changes" comment="navbar">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(accounts)/account-info/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(accounts)/account-info/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dashboard/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dashboard/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/discover/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/discover/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dashboard/[projectID]/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dashboard/[projectID]/layout.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
