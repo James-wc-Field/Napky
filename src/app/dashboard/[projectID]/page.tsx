@@ -54,7 +54,7 @@ export default function Page({ params }: { params: { projectID: string } }) {
                 <DndContext onDragEnd={onDragEnd}>
                 <DrawingBoard>
                     {Object.entries(draggables).map(([id, position]) => (
-                        <TestDraggable key={id} id={id} position={position} onDragEnd={onDragEnd}>
+                        <TestDraggable key={id} id={id} position={position}>
                             Drag me!
                         </TestDraggable>
                     ))}
