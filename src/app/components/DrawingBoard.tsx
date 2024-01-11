@@ -6,53 +6,62 @@ interface DrawingBoardProps {
 }
 
 const DrawingBoard: FC<DrawingBoardProps> = ({ children }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
+  const [currentPath, setCurrentPath] = useState('');
+  const [paths, setPaths] = useState<string[]>([]);
   const { setNodeRef } = useDroppable({ id: 'drawing-board' });
 
-  // Basic drawing logic
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const svg = svgRef.current;
+    if (!svg) return;
 
-    const context = canvas.getContext('2d');
-    if (!context) return;
+    const getPoint = (event: MouseEvent) => {
+      const point = svg.createSVGPoint();
+      point.x = event.clientX;
+      point.y = event.clientY;
+      return point.matrixTransform(svg.getScreenCTM()?.inverse());
+    };
 
     const startDrawing = (event: MouseEvent) => {
-      const { offsetX, offsetY } = event;
-      context.beginPath();
-      context.moveTo(offsetX, offsetY);
+      const { x, y } = getPoint(event);
+      setCurrentPath(`M ${x} ${y}`);
       setIsDrawing(true);
     };
 
     const draw = (event: MouseEvent) => {
       if (!isDrawing) return;
-      const { offsetX, offsetY } = event;
-      context.lineTo(offsetX, offsetY);
-      context.stroke();
+      const { x, y } = getPoint(event);
+      setCurrentPath(prev => `${prev} L ${x} ${y}`);
     };
 
     const stopDrawing = () => {
-      context.closePath();
+      setPaths(prev => [...prev, currentPath]);
+      setCurrentPath('');
       setIsDrawing(false);
     };
 
-    canvas.addEventListener('mousedown', startDrawing);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('mouseleave', stopDrawing);
+    svg.addEventListener('mousedown', startDrawing);
+    svg.addEventListener('mousemove', draw);
+    svg.addEventListener('mouseup', stopDrawing);
+    svg.addEventListener('mouseleave', stopDrawing);
 
     return () => {
-      canvas.removeEventListener('mousedown', startDrawing);
-      canvas.removeEventListener('mousemove', draw);
-      canvas.removeEventListener('mouseup', stopDrawing);
-      canvas.removeEventListener('mouseleave', stopDrawing);
+      svg.removeEventListener('mousedown', startDrawing);
+      svg.removeEventListener('mousemove', draw);
+      svg.removeEventListener('mouseup', stopDrawing);
+      svg.removeEventListener('mouseleave', stopDrawing);
     };
-  }, [isDrawing]);
+  }, [isDrawing, currentPath]);
 
   return (
-    <div ref={setNodeRef} className='bg-sky-50'>
-      <canvas ref={canvasRef} width={800} height={600} style={{ border: '1px solid black' }} />
+    <div ref={setNodeRef} className='bg-sky-50' style={{ width: '100vw', height: '100vh' }}>
+      <svg ref={svgRef} width='100%' height='100%' style={{ border: '1px solid black' }}>
+        {paths.map((path, index) => (
+          <path key={index} d={path} stroke="black" strokeWidth="2" fill="none" />
+        ))}
+        {isDrawing && <path d={currentPath} stroke="black" strokeWidth="2" fill="none" />}
+      </svg>
       <div style={{ position: 'absolute', top: 0, left: 0 }}>
         {children}
       </div>
