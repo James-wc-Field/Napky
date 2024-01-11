@@ -2,8 +2,8 @@
 import { DndContext } from "@dnd-kit/core";
 import React from "react";
 import { useState, useId} from "react";
-import Grid from "../../../components/Grid"; // Update the import path
-import TestDraggable from "../../../components/TestDraggable"; // Update the import path
+import Grid from "../../components/Grid"; // Update the import path
+import TestDraggable from "../../components/TestDraggable"; // Update the import path
 import DrawingBoard from "@/app/components/DrawingBoard";
 interface Draggables {
     [key: string]: Position;
@@ -29,7 +29,6 @@ export default function Page({ params }: { params: { projectID: string } }) {
 
     return (
         <DndContext onDragEnd={onDragEnd}>
-            <div>My Project: {params.projectID}</div>
             <button onClick={createNewDraggable}>Add Draggable</button>
                 <DrawingBoard>
                     {Object.entries(draggables).map(([id, position]) => (

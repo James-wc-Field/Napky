@@ -8,8 +8,8 @@ import { Link } from "@nextui-org/link"
 import { Button } from "@nextui-org/button"
 import { Card, CardBody, CardFooter } from "@nextui-org/card"
 
-import { EyeFilledIcon } from "./icons/EyeFilledIcon";
-import { EyeSlashFilledIcon } from "./icons/EyeSlashFilledIcon";
+import { EyeFilledIcon } from "../../../public/icons/EyeFilledIcon";
+import { EyeSlashFilledIcon } from "../../../public/icons/EyeSlashFilledIcon";
 
 import Copyright from "../components/Copyright";
 
