@@ -12,7 +12,7 @@
     "@dnd-kit/core": "^6.1.0",
     "@heroicons/react": "^2.1.1",
     "@nextui-org/react": "^2.2.9",
-    "@tldraw/tldraw": "^1.29.2",
+    "@tldraw/tldraw": "^2.0.0-canary.24bf2cd58181",
     "framer-motion": "^10.16.14",
     "next": "^14.0.3",
     "react": "^18",
