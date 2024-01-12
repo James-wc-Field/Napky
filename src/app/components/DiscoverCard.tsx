@@ -4,6 +4,29 @@ import { Button } from "@nextui-org/button";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/modal";
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
 import Link from 'next/link'
+
+function DiscoverCard(
+    {username, project, modified, created, rating, image, image_text}:
+    {username?: string, project?: string, modified?: string, created?: string, rating?: number, image?:string, image_text?:string }
+) {
+    return (
+        <>
+            <Card shadow="sm" key={project}>
+                <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+                    <h2 className="font-bold text-large">{project}</h2>
+                    <p className="text-tiny font-bold">{username}</p>
+                </CardHeader>
+                <CardBody className="overflow-visible py-2">
+                    <Image 
+                        width= {200}
+                        alt={image_text}
+                        src={image}/>
+                </CardBody>
+            </Card>        
+        </>
+    )
+}
+
 function Page(projectID: string) {
     // database call to get project data
     // loading dummy data for now
@@ -53,4 +76,4 @@ function Page(projectID: string) {
         </>
     );
 }
-export default Page;
+export default DiscoverCard;
