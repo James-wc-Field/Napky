@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss'
 
 const {nextui} = require("@nextui-org/react");
+const colors = require('tailwindcss/colors');
 
 const config: Config = {
   content: [
@@ -17,8 +18,11 @@ const config: Config = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       colors: {
+        'black': '#000000',
+        'white': '#ffffff',
         'primary-light': '#baf7c8',
         'primary-dark': '#7ca397',
+        'card-bg-light': '#faebd7',
         'secondary': '#ffff66',
         'neutral-light': '#b6bab7',
         'neutral-dark': '#505251',
