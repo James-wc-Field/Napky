@@ -41,3 +41,5 @@ NextUI
 - Use individual version, not main, for component imports. It's available at the top of the docs for each component
 - NextUI has special instructions for using with Nextjs on some components, like Image.
 - Good free icons in svg format at https://icons.getbootstrap.com/
+
+NextUI
