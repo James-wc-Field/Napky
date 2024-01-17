@@ -1,56 +1,24 @@
 'use client'
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/modal";
-import {Button} from "@nextui-org/button";
+import {Listbox, ListboxSection, ListboxItem} from "@nextui-org/listbox";
+import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
+import { Button } from "@nextui-org/button";
 
 export default function Page() {
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
-
   return (
-    <>
-      <Button onPress={onOpen}>Open Modal</Button>
-      <Modal 
-        backdrop="opaque" 
-        isOpen={isOpen} 
-        onOpenChange={onOpenChange}
-        classNames={{
-          backdrop: "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20"
-        }}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
-              <ModalBody>
-                <p> 
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                </p>
-                <p>
-                  Magna exercitation reprehenderit magna aute tempor cupidatat consequat elit
-                  dolor adipisicing. Mollit dolor eiusmod sunt ex incididunt cillum quis. 
-                  Velit duis sit officia eiusmod Lorem aliqua enim laboris do dolor eiusmod. 
-                  Et mollit incididunt nisi consectetur esse laborum eiusmod pariatur 
-                  proident Lorem eiusmod et. Culpa deserunt nostrud ad veniam.
-                </p>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  Action
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </>
+    <div>
+      <Card className="w-1/6">
+        <Listbox>
+          <ListboxSection>
+            <ListboxItem key="new">
+              <Button>
+                <p className="text-center p-4">New Project</p>
+              </Button>
+            </ListboxItem>
+            <ListboxItem key="favs">Favorites</ListboxItem>
+            <ListboxItem key="trash">Trash</ListboxItem>
+          </ListboxSection>
+        </Listbox>
+      </Card>
+    </div>
   );
 }
