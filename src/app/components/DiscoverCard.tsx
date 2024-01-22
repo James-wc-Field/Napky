@@ -7,7 +7,8 @@ function DiscoverCard(
 ) {
   const image_size = 240
   return (
-    <div className='block box-border box-content w-64 h-100 bg-card-bg-light border-4 rounded-lg border-accent p-2'>
+    <li key={`${username}_${project}`}>
+    <div className='list-item block box-border box-content w-64 h-100 bg-card-bg-light border-4 rounded-lg border-accent p-2' >
       <h2 className='text-3xl text-black font-bold'>{project}</h2>
       <p className='text-lg text-black'>{username}</p>
       <img 
@@ -21,7 +22,7 @@ function DiscoverCard(
       <div className="text-black">Rating: {rating} </div>
       <p className="text-black">last modified: {modified}</p>
     </div>
-
+    </li>
   )
 }
 
