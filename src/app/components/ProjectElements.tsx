@@ -3,8 +3,9 @@ import { TextBlockProjectElement } from "./blocks/TextBlock";
 import { ImageBlockProjectElement } from "./blocks/ImageBlock";
 import { LinkBlockProjectElement } from "./blocks/LinkBlock";
 import { ListBlockProjectElement } from "./blocks/ListBlock";
+import { TodoBlockProjectElement } from "./blocks/TodoBlock";
 
-export type ElementsType = "TextBlock" | "ImageBlock" | "LinkBlock" | "ListBlock";
+export type ElementsType = "TextBlock" | "ImageBlock" | "LinkBlock" | "ListBlock" | "TodoBlock";
 
 export type ProjectElement = {
   type: ElementsType;
@@ -46,4 +47,5 @@ export const ProjectElements: ProjectElementsType = {
   ImageBlock: ImageBlockProjectElement,
   LinkBlock: LinkBlockProjectElement,
   ListBlock: ListBlockProjectElement,
+  TodoBlock: TodoBlockProjectElement,
 };

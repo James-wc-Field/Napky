@@ -12,6 +12,7 @@ function Toolbar() {
       <ToolbarBtnElement projectElement={ProjectElements.LinkBlock} />
       <ToolbarBtnElement projectElement={ProjectElements.ImageBlock} />
       <ToolbarBtnElement projectElement={ProjectElements.ListBlock} />
+      <ToolbarBtnElement projectElement={ProjectElements.TodoBlock} />
     </aside>
   );
 }
