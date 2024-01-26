@@ -1,0 +1,46 @@
+Proposed DB Schema
+by Cody Apedaile
+
+Public DataBase
+
+User {
+  username:     String      Primary Key (unique)
+  projects:     Project[]       Foreign Keys, default([])
+  favorites:    Project[]       Foreign Keys, default([])
+  interests:    String[]    default([]) include tags and categories?
+}
+
+Project {
+  id:           Int         Primary Key, Auto Increment
+  name:         String
+  username:     String      Foreign Key, Primary Key pair?
+  data:         String      data format in string form
+  created:      Date        default(date.now())
+  modified:     Date        default(date.now())
+  ratings:      Ratings[]   Foreign Keys
+  comments:     Comments[]  Foreign Keys
+  visits:       Int         default(0)
+  description:  String      default("")
+*  photo:        ???         need to research how to store a photo
+  category:     String      
+  tags:         String[]    default([])
+  shareURL:     String      suggested in video, need more research?
+  
+  co-creators:  String[]    Foreign Keys, maybe a good idea for later implementation?
+}
+
+Rating{
+  rating:       Int         Limit 1-5
+  username:     String      Primary Key, Foreign Key
+  projectId:    Int         Primary Key, Foreign Key
+}
+
+Comment{
+  id:           Int         Primary Key, auto increment start at 1, 0 is main channel
+  projectId:    Int         Primary Key, Foreign Key
+  username:     String      Primary Key, Foreign Key
+  content:      String
+  likes:        Int         default(0)
+  reply:        Int         Foreign Key, default(0)
+}
+
