@@ -2,8 +2,9 @@ import React from "react";
 import { TextBlockProjectElement } from "./blocks/TextBlock";
 import { ImageBlockProjectElement } from "./blocks/ImageBlock";
 import { LinkBlockProjectElement } from "./blocks/LinkBlock";
+import { ListBlockProjectElement } from "./blocks/ListBlock";
 
-export type ElementsType = "TextBlock" | "ImageBlock" | "LinkBlock";
+export type ElementsType = "TextBlock" | "ImageBlock" | "LinkBlock" | "ListBlock";
 
 export type ProjectElement = {
   type: ElementsType;
@@ -44,4 +45,5 @@ export const ProjectElements: ProjectElementsType = {
   TextBlock: TextBlockProjectElement,
   ImageBlock: ImageBlockProjectElement,
   LinkBlock: LinkBlockProjectElement,
+  ListBlock: ListBlockProjectElement,
 };

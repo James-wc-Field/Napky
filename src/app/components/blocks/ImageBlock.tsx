@@ -56,7 +56,7 @@ function CanvasComponent({
       <CardBody className="justify-center flex grow">
         <Skeleton className="w-full h-full rounded-md" />
       </CardBody>
-      <CardFooter className="flex justify-between text-gray-500">
+      <CardFooter className="flex justify-between">
         <p>{label}</p>
         <p>{file}</p>
       </CardFooter>
