@@ -13,8 +13,7 @@ export type ProjectElement = {
     icon: React.ElementType;
     label: string;
   };
-
-  projectComponent: React.FC<{
+  canvasComponent: React.FC<{
     elementInstance: ProjectElementInstance;
   }>;
   toolbarPropertiesComponent: React.FC;
@@ -23,6 +22,14 @@ export type ProjectElement = {
 export type ProjectElementInstance = {
   id: string;
   type: ElementsType;
+  position: {
+    x: number;
+    y: number;
+  };
+  size: {
+    width: number;
+    height: number;
+  };
   extraAttributes?: Record<string, any>;
 };
 
