@@ -1,4 +1,6 @@
-const simulatedDatabase = [
+import { Project } from "./SchemaSimulation";
+
+const simulatedDatabase:Project[] = [
   {
     id: 1,
     userId: 'user123',
