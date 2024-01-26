@@ -20,9 +20,7 @@ const extraAttributes = {
 
 export const TodoBlockProjectElement: ProjectElement = {
   type,
-  construct: (
-    id: string,
-  ) => ({
+  construct: (id: string) => ({
     id,
     type,
     position: { x: 0, y: 0 },
@@ -59,9 +57,15 @@ function CanvasComponent({
     <Card style={style}>
       <CardBody className="justify-center">
         <CheckboxGroup>
-          <Checkbox>
-            <Input size="sm" type="text" placeholder={placeHolder} />
-          </Checkbox>
+          <div className="flex flex-row grow gap-2">
+            <Checkbox className="flex"></Checkbox>
+            <Input
+              className="flex"
+              size="sm"
+              type="text"
+              placeholder={placeHolder}
+            />
+          </div>
         </CheckboxGroup>
       </CardBody>
     </Card>
