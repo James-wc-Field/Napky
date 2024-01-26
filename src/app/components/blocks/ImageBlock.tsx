@@ -6,7 +6,7 @@ import {
   ProjectElement,
   ProjectElementInstance,
 } from "../ProjectElements";
-import { Card, CardBody, Input } from "@nextui-org/react";
+import { Card, CardBody, CardFooter, Input, Skeleton } from "@nextui-org/react";
 
 const type: ElementsType = "ImageBlock";
 
@@ -22,7 +22,7 @@ export const ImageBlockProjectElement: ProjectElement = {
     id,
     type,
     position: { x: 0, y: 0 },
-    size: { width: 100, height: 100 },
+    size: { width: 300, height: 200 },
     extraAttributes,
   }),
 
@@ -53,10 +53,13 @@ function CanvasComponent({
 
   return (
     <Card style={style}>
-      <CardBody className="justify-center">
+      <CardBody className="justify-center flex grow">
+        <Skeleton className="w-full h-full rounded-md" />
+      </CardBody>
+      <CardFooter className="flex justify-between text-gray-500">
         <p>{label}</p>
         <p>{file}</p>
-      </CardBody>
+      </CardFooter>
     </Card>
   );
 }
