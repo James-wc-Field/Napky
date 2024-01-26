@@ -5,7 +5,7 @@ import { ProjectElementInstance } from "../ProjectElements";
 
 type CanvasContextType = {
   elements: ProjectElementInstance[];
-  addElement: (element: ProjectElementInstance, x?: number, y?: number) => void;
+  addElement: (element: ProjectElementInstance, x: number, y: number) => void;
 };
 
 export const CanvasContext = createContext<CanvasContextType | null>(null);
@@ -17,12 +17,12 @@ export default function CanvasContextProvider({
 }) {
   const [elements, setElements] = useState<ProjectElementInstance[]>([]);
 
-  const addElement = (element: ProjectElementInstance, x?: number, y?: number) => {
+  const addElement = (element: ProjectElementInstance, x: number, y: number) => {
     setElements((prev) => {
       let newElements = [...prev];
       newElements = [...newElements, element];
-      element.position.x = x || 0;
-      element.position.y = y || 0;
+      element.position.x = x;
+      element.position.y = y;
       return newElements;
     })
   };

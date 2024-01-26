@@ -21,13 +21,11 @@ export const TextBlockProjectElement: ProjectElement = {
   type,
   construct: (
     id: string,
-    position?: { x: number; y: number },
-    size?: { width: number; height: number }
   ) => ({
     id,
     type,
-    position: position ?? { x: 0, y: 0 },
-    size: size ?? { width: 300, height: 75 },
+    position: { x: 0, y: 0 },
+    size: { width: 300, height: 75 },
     extraAttributes,
   }),
 

@@ -9,8 +9,6 @@ export type ProjectElement = {
 
   construct: (
     id: string,
-    position?: { x: number; y: number },
-    size?: { width: number; height: number }
   ) => ProjectElementInstance;
 
   toolbarElement: {
