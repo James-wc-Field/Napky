@@ -6,21 +6,24 @@ import {
   ProjectElement,
   ProjectElementInstance,
 } from "../ProjectElements";
+import { Card, CardBody, Input } from "@nextui-org/react";
 
 const type: ElementsType = "ImageBlock";
 
+const extraAttributes = {
+  label: "Image Block",
+  helperText: "Helper Text",
+  file: "path",
+};
+
 export const ImageBlockProjectElement: ProjectElement = {
   type,
-  construct: (
-    id: string,
-    position?: { x: number; y: number },
-    size?: { width: number; height: number }
-  ) => ({
+  construct: (id: string) => ({
     id,
     type,
-    position: position ?? { x: 0, y: 0 },
-    size: size ?? { width: 100, height: 100 },
-    extraAttributes: {},
+    position: { x: 0, y: 0 },
+    size: { width: 100, height: 100 },
+    extraAttributes,
   }),
 
   toolbarElement: {
@@ -28,6 +31,32 @@ export const ImageBlockProjectElement: ProjectElement = {
     label: "Image",
   },
 
-  canvasComponent: () => <div>Canvas Component</div>,
+  canvasComponent: CanvasComponent,
   toolbarPropertiesComponent: () => <div>Toolbar properties</div>,
 };
+
+type CustomInstance = ProjectElementInstance & {
+  extraAttributes: typeof extraAttributes;
+};
+
+function CanvasComponent({
+  elementInstance,
+}: {
+  elementInstance: ProjectElementInstance;
+}) {
+  const element = elementInstance as CustomInstance;
+  const { label, helperText, file } = element.extraAttributes;
+  const style = {
+    width: element.size.width,
+    height: element.size.height,
+  };
+
+  return (
+    <Card style={style}>
+      <CardBody className="justify-center">
+        <p>{label}</p>
+        <p>{file}</p>
+      </CardBody>
+    </Card>
+  );
+}
