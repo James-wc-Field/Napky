@@ -11,9 +11,15 @@ const type: ElementsType = "ImageBlock";
 
 export const ImageBlockProjectElement: ProjectElement = {
   type,
-  construct: (id: string) => ({
+  construct: (
+    id: string,
+    position?: { x: number; y: number },
+    size?: { width: number; height: number }
+  ) => ({
     id,
     type,
+    position: position ?? { x: 0, y: 0 },
+    size: size ?? { width: 100, height: 100 },
     extraAttributes: {},
   }),
 
@@ -22,19 +28,6 @@ export const ImageBlockProjectElement: ProjectElement = {
     label: "Image",
   },
 
-  projectComponent: ProjectComponent,
+  canvasComponent: () => <div>Canvas Component</div>,
   toolbarPropertiesComponent: () => <div>Toolbar properties</div>,
 };
-
-function ProjectComponent({
-  elementInstance,
-}: {
-  elementInstance: ProjectElementInstance;
-}) {
-  const element = elementInstance as ProjectElementInstance;
-  return (
-    <div className="flex flex-col gap-2 w-[400px]">
-      {elementInstance.extraAttributes?.label}
-    </div>
-  );
-}

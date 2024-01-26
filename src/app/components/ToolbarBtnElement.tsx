@@ -2,20 +2,20 @@
 
 import React, { useId } from "react";
 import { ProjectElement } from "./ProjectElements";
-import { Button, Card, cn } from "@nextui-org/react";
+import { Card, cn } from "@nextui-org/react";
 import { useDraggable } from "@dnd-kit/core";
 
-export default function SidebarBtnElement({
+export default function ToolbarBtnElement({
   projectElement,
 }: {
   projectElement: ProjectElement;
 }) {
   const { label, icon: Icon } = projectElement.toolbarElement;
   const draggable = useDraggable({
-    id: `designer-btn-${projectElement.type}`,
+    id: `builder-btn-${projectElement.type}`,
     data: {
       type: projectElement.type,
-      isDesignerBtnElement: true,
+      isToolbarBtnElement: true,
     },
   });
   const id = useId();
@@ -37,7 +37,7 @@ export default function SidebarBtnElement({
   );
 }
 
-export function SidebarBtnElementDragOverlay({
+export function ToolbarBtnElementDragOverlay({
   projectElement,
 }: {
   projectElement: ProjectElement;

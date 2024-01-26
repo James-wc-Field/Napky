@@ -1,15 +1,12 @@
-import React, { useId, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
   DragStartEvent,
   UniqueIdentifier,
   useDraggable,
   useDroppable,
 } from "@dnd-kit/core";
-import {restrictToParentElement} from "@dnd-kit/modifiers";
 import { Card } from "@nextui-org/react";
+import { ProjectElementInstance, ProjectElements } from "./ProjectElements";
 
 interface DraggableItemProps {
   id: UniqueIdentifier;
@@ -18,7 +15,8 @@ interface DraggableItemProps {
 }
 
 function Draggable({ id, x, y }: DraggableItemProps) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id });
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({ id });
 
   const style: React.CSSProperties = {
     left: `${x}px`,
@@ -52,6 +50,7 @@ function Droppable({
   });
   const style = {
     border: isOver ? "1px solid red" : "1px solid transparent",
+    background: isOver ? "rgba(255, 0, 0, 0.1)" : "transparent",
   };
 
   return (
@@ -61,12 +60,14 @@ function Droppable({
   );
 }
 
-export default function Canvas() {
-  const [items, setItems] = useState<DraggableItemProps[]>([
-    { id: "1", x: 50, y: 50 },
-    { id: "2", x: 50, y: 300 },
-  ]);
-  const [activeDraggable, setActiveDraggable] = useState<DraggableItemProps | null>(null);
+export default function Canvas({
+  elements,
+}: {
+  elements: ProjectElementInstance[];
+}) {
+  const [items, setItems] = useState<DraggableItemProps[]>([]);
+  const [activeDraggable, setActiveDraggable] =
+    useState<DraggableItemProps | null>(null);
 
   const handleDragStart = (event: DragStartEvent) => {
     const draggable = items.find((item) => item.id === event.active.id);
@@ -74,43 +75,33 @@ export default function Canvas() {
     setActiveDraggable(draggable);
   };
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over, delta } = event;
-    const dragged = items.find((item) => item.id === active.id);
-    if (!dragged) return;
-
-    dragged.x += delta.x;
-    dragged.y += delta.y;
-
-    const updatedItems = items.map((item) => {
-      if (item.id === dragged.id) return dragged;
-      return item;
-    });
-
-    setItems(updatedItems);
-    setActiveDraggable(null);
-  };
-
   return (
-    <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} modifiers={[restrictToParentElement]}>
-      <div className="relative flex grow gap-4 p-4 overflow-hidden">
-        <Droppable id="canvas"></Droppable>
-        <Droppable id="canvas2"></Droppable>
-        {items.map((item) => (
-          <Draggable key={item.id} {...item} />
-        ))}
-      <DragOverlay>
-        {activeDraggable ? (
-          <Card
-            id={String(activeDraggable)}
-            className="absolute w-[100px] h-[100px] justify-center items-center bg-primary"
-          >
-            Item {activeDraggable.id}: x={activeDraggable.x.toFixed(2)}: y=
-            {activeDraggable.y.toFixed(2)}
-          </Card>
-        ) : null}
-      </DragOverlay>
-      </div>
-    </DndContext>
+    <div className="relative flex grow gap-4 p-4 overflow-hidden">
+      <Droppable id="canvas">
+        {elements.length > 0 && (
+          <div className="flex flex-col w-full gap-2 p-4">
+            {elements.map((element) => (
+              <CanvasElementWrapper key={element.id} element={element} />
+            ))}
+          </div>
+        )}
+      </Droppable>
+      {items.map((item) => (
+        <Draggable key={item.id} {...item} />
+      ))}
+    </div>
+  );
+}
+
+function CanvasElementWrapper({
+  element,
+}: {
+  element: ProjectElementInstance;
+}) {
+  const CanvasElement = ProjectElements[element.type].canvasComponent;
+  return (
+    <div className="flex w-full h-[120px] items-center rounded-md bg-accent/40 px-4 py-2 pointer-events-none">
+      <CanvasElement elementInstance={element} />
+    </div>
   );
 }
