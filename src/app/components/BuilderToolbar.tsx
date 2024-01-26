@@ -9,6 +9,7 @@ function Toolbar() {
     border-r-1 border-slate-500 bg-background h-full p-4"
     >
       <ToolbarBtnElement projectElement={ProjectElements.TextBlock} />
+      <ToolbarBtnElement projectElement={ProjectElements.LinkBlock} />
       <ToolbarBtnElement projectElement={ProjectElements.ImageBlock} />
     </aside>
   );
