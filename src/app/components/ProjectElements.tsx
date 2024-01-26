@@ -7,7 +7,11 @@ export type ElementsType = "TextBlock" | "ImageBlock";
 export type ProjectElement = {
   type: ElementsType;
 
-  construct: (id: string) => ProjectElementInstance;
+  construct: (
+    id: string,
+    position?: { x: number; y: number },
+    size?: { width: number; height: number }
+  ) => ProjectElementInstance;
 
   toolbarElement: {
     icon: React.ElementType;

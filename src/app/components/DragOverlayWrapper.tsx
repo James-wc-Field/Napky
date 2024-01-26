@@ -8,9 +8,10 @@ import {
 } from "@dnd-kit/core";
 import React, { useState } from "react";
 import { ElementsType, ProjectElements } from "./ProjectElements";
-import { ToolbarBtnElementDragOverlay } from "./ToolbarBtnElement";
+import useProject from "./hooks/useProject";
 
-function DragOverlayWrapper() {
+export default function DragOverlayWrapper() {
+  const { elements } = useProject();
   const [draggedItem, setDraggedItem] = useState<Active | null>(null);
 
   useDndMonitor({
@@ -28,18 +29,29 @@ function DragOverlayWrapper() {
   if (!draggedItem) return null;
 
   let node = <div>No drag overlay</div>;
-  const isToolbarBtnElement = draggedItem.data?.current?.isToolbarBtnElement;
 
+  const isToolbarBtnElement = draggedItem.data?.current?.isToolbarBtnElement;
   if (isToolbarBtnElement) {
-    const type = draggedItem.data?.current?.type as ElementsType;
-    node = (
-      <ToolbarBtnElementDragOverlay projectElement={ProjectElements[type]} />
+    const type = draggedItem.data?.current?.type;
+    const CanvasElementComponent =
+      ProjectElements[type as ElementsType].canvasComponent;
+    const tempElement = ProjectElements[type as ElementsType].construct(
+      "new-element-drag-overlay"
     );
-  } else {
-    node = <div>Dragged element</div>;
+    node = <CanvasElementComponent elementInstance={tempElement} />;
+  }
+
+  const isCanvasElement = draggedItem.data?.current?.isCanvasElement;
+  if (isCanvasElement) {
+    const elementId = draggedItem.data?.current?.elementId;
+    const draggedElement = elements.find((element) => element.id == elementId);
+
+    if (!draggedElement) return <div>Dragged element not found</div>;
+
+    const CanvasElementComponent =
+      ProjectElements[draggedElement.type].canvasComponent;
+    node = <CanvasElementComponent elementInstance={draggedElement} />;
   }
 
   return <DragOverlay>{node}</DragOverlay>;
 }
-
-export default DragOverlayWrapper;

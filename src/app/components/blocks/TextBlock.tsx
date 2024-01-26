@@ -6,14 +6,8 @@ import {
   ProjectElement,
   ProjectElementInstance,
 } from "../ProjectElements";
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Input,
-  Textarea,
-} from "@nextui-org/react";
+import { Card, CardBody } from "@nextui-org/card";
+import { Input } from "@nextui-org/input";
 
 const type: ElementsType = "TextBlock";
 
@@ -33,7 +27,7 @@ export const TextBlockProjectElement: ProjectElement = {
     id,
     type,
     position: position ?? { x: 0, y: 0 },
-    size: size ?? { width: 100, height: 100 },
+    size: size ?? { width: 300, height: 75 },
     extraAttributes,
   }),
 
@@ -57,12 +51,15 @@ function CanvasComponent({
 }) {
   const element = elementInstance as CustomInstance;
   const { label, placeHolder, helperText } = element.extraAttributes;
+  const style = {
+    width: element.size.width,
+    height: element.size.height,
+  };
 
   return (
-    <Card>
-      {label}
-      <CardBody>
-        <Input type="text" placeholder={placeHolder} />
+    <Card style={style}>
+      <CardBody className="justify-center">
+        <Input size="sm" type="text" placeholder={placeHolder} />
       </CardBody>
     </Card>
   );

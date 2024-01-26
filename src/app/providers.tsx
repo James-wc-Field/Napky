@@ -2,14 +2,14 @@
 
 import { NextUIProvider } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import BuilderContextProvider from "./components/context/BuilderContext";
+import CanvasContextProvider from "./components/context/CanvasContext";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   return (
-    <BuilderContextProvider>
+    <CanvasContextProvider>
       <NextUIProvider navigate={router.push}>{children}</NextUIProvider>
-    </BuilderContextProvider>
+    </CanvasContextProvider>
   );
 }
