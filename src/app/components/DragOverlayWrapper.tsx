@@ -15,7 +15,8 @@ function DragOverlayWrapper() {
     },
     onDragEnd: () => {
       setDraggedItem(null);
-    }
+    },
+    
   });
 
   if (!draggedItem) return null;

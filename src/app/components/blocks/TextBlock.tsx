@@ -13,14 +13,15 @@ export const TextBlockProjectElement: ProjectElement = {
     extraAttributes: {
       label: "Text Block",
       helperText: "Helper Text",
-      placeHolder: "Value here...",
+      placeHolder: "Start typing here...",
     },
   }),
-  designerBtnElement: {
+
+  toolbarElement: {
     icon: Bars3Icon,
     label: "Text Block",
   },
-  designerComponent: () => <div>Designer Component</div>,
+
   projectComponent: () => <div>Project Component</div>,
-  propertiesComponent: () => <div>Properties Component</div>,
+  toolbarPropertiesComponent: () => <div>Properties Component</div>,
 };
