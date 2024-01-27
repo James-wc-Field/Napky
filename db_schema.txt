@@ -1,6 +1,11 @@
 Proposed DB Schema
 by Cody Apedaile
 
+
+Notes:
+  Instagram Database Video:
+    https://www.youtube.com/watch?v=i_1CbyzzlDk
+
 Public DataBase
 
 User {
@@ -21,7 +26,7 @@ Project {
   comments:     Comments[]  Foreign Keys
   visits:       Int         default(0)
   description:  String      default("")
-*  photo:        ???         need to research how to store a photo
+*  photo:        ???          Links to Photos (cloud (expensive?), offline (another server?)) or Binary Large OBject data (BLOB)
   category:     String      
   tags:         String[]    default([])
   shareURL:     String      suggested in video, need more research?
