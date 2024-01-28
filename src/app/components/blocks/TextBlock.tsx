@@ -8,6 +8,7 @@ import {
 } from "../ProjectElements";
 import { Card, CardBody } from "@nextui-org/card";
 import { Input } from "@nextui-org/input";
+import { useState } from "react";
 
 const type: ElementsType = "TextBlock";
 
@@ -19,9 +20,7 @@ const extraAttributes = {
 
 export const TextBlockProjectElement: ProjectElement = {
   type,
-  construct: (
-    id: string,
-  ) => ({
+  construct: (id: string) => ({
     id,
     type,
     position: { x: 0, y: 0 },
@@ -54,10 +53,19 @@ function CanvasComponent({
     height: element.size.height,
   };
 
+  function handleTextChange(value: string) {
+    element.extraAttributes.placeHolder = value
+  }
+
   return (
     <Card style={style}>
       <CardBody className="justify-center">
-        <Input size="sm" type="text" placeholder={placeHolder} />
+        <Input
+          size="sm"
+          type="text"
+          placeholder={placeHolder}
+          onChange={(key) => handleTextChange(key.target.value)}
+        />
       </CardBody>
     </Card>
   );
