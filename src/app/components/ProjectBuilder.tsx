@@ -10,7 +10,7 @@ import DragOverlayWrapper from "./DragOverlayWrapper";
 function ProjectBuilder({ project }: { project: Project }) {
   const id = useId();
   const sensors = useSensors(
-    useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(MouseSensor, { activationConstraint: { distance: 2, delay: 75 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 100, tolerance: 5 } }),
   );
 
