@@ -6,14 +6,14 @@ import {
   ProjectElement,
   ProjectElementInstance,
 } from "../ProjectElements";
-import { Card, CardBody, CardFooter, Input, Skeleton } from "@nextui-org/react";
+import { Card, CardBody, CardFooter, Skeleton } from "@nextui-org/react";
 
 const type: ElementsType = "ImageBlock";
 
 const extraAttributes = {
   label: "Image Block",
   helperText: "Helper Text",
-  file: "path",
+  file: "File",
 };
 
 export const ImageBlockProjectElement: ProjectElement = {
