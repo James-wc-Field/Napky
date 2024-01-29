@@ -7,8 +7,23 @@ export default function Canvas({
 }: {
   elements: ProjectElementInstance[];
 }) {
+  function dragOverHandler(e: React.DragEvent<HTMLDivElement>) {
+    // console.log("dragOverHandler");
+    e.preventDefault();
+  }
+
+  function dropHandler(e: React.DragEvent<HTMLDivElement>) {
+    console.log("dropHandler");
+    e.preventDefault();
+  }
+
   return (
-    <div className="relative flex grow">
+    <div
+      id="file-drop-area"
+      onDragOver={(e) => dragOverHandler(e)}
+      onDrop={(e) => dropHandler(e)}
+      className="flex grow"
+    >
       <MainCanvasDroppable>
         {elements.length > 0 &&
           elements.map((element) => (
@@ -33,7 +48,7 @@ function MainCanvasDroppable({ children }: { children?: React.ReactNode }) {
   };
 
   return (
-    <div ref={setNodeRef} className="w-full" style={style}>
+    <div ref={setNodeRef} className="relative flex grow" style={style}>
       {children}
     </div>
   );
