@@ -71,7 +71,7 @@ function ProjectBuilder({ project }: { project: Project }) {
   }
 
   // Handler for external file drop
-  function dropHandler(e: React.DragEvent<HTMLDivElement>) {
+  function externalDropHandler(e: React.DragEvent<HTMLDivElement>) {
     if (!e.dataTransfer.items) return;
 
     for (const file of Array.from(e.dataTransfer.files)) {
@@ -119,7 +119,7 @@ function ProjectBuilder({ project }: { project: Project }) {
             <Toolbar />
             <div
               id="file-drop-area"
-              onDrop={(e) => dropHandler(e)}
+              onDrop={(e) => externalDropHandler(e)}
               onDragOver={(e) => e.preventDefault()}
               className="flex grow"
             >
