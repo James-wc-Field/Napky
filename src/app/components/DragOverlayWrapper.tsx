@@ -44,13 +44,14 @@ export default function DragOverlayWrapper() {
   const isCanvasElement = draggedItem.data?.current?.isCanvasElement;
   if (isCanvasElement) {
     const elementId = draggedItem.data?.current?.elementId;
-    const draggedElement = elements.find((element) => element.id == elementId);
+    const element = elements.find((element) => element.id === elementId);
+    if (element?.type === "ImageBlock") return null; // Don't show overlay for images, causes flicker
 
-    if (!draggedElement) return <div>Dragged element not found</div>;
+    if (!element) return <div>Dragged element not found</div>;
 
     const CanvasElementComponent =
-      ProjectElements[draggedElement.type].canvasComponent;
-    node = <CanvasElementComponent elementInstance={draggedElement} />;
+      ProjectElements[element.type].canvasComponent;
+    node = <CanvasElementComponent elementInstance={element} />;
   }
 
   return <DragOverlay>{node}</DragOverlay>;

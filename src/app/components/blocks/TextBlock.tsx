@@ -8,12 +8,12 @@ import {
 } from "../ProjectElements";
 import { Card, CardBody } from "@nextui-org/card";
 import { Input } from "@nextui-org/input";
+import useProject from "../hooks/useProject";
 
 const type: ElementsType = "TextBlock";
 
 const extraAttributes = {
-  label: "Text Block",
-  helperText: "Helper Text",
+  text: "",
   placeHolder: "Start typing here...",
 };
 
@@ -45,12 +45,23 @@ function CanvasComponent({
 }: {
   elementInstance: ProjectElementInstance;
 }) {
+  const { updateElement } = useProject();
   const element = elementInstance as CustomInstance;
-  const { label, placeHolder, helperText } = element.extraAttributes;
+  const { text, placeHolder } = element.extraAttributes;
   const style = {
     width: element.size.width,
     height: element.size.height,
   };
+
+  function handleOnTextChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const { value } = event.target;
+    updateElement(element.id, {
+      ...element,
+      extraAttributes: {
+        text: value,
+      },
+    });
+  }
 
   return (
     <Card style={style}>
@@ -59,6 +70,8 @@ function CanvasComponent({
           size="sm"
           type="text"
           placeholder={placeHolder}
+          onChange={handleOnTextChange}
+          value={text}
         />
       </CardBody>
     </Card>
