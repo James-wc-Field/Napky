@@ -25,13 +25,8 @@ function MainCanvasDroppable({ children }: { children?: React.ReactNode }) {
     },
   });
 
-  const style = {
-    border: isOver ? "1px solid red" : "1px solid transparent",
-    background: isOver ? "rgba(255, 0, 0, 0.1)" : "transparent",
-  };
-
   return (
-    <div ref={setNodeRef} className="relative flex grow" style={style}>
+    <div ref={setNodeRef} className="relative flex grow">
       {children}
     </div>
   );
@@ -42,28 +37,33 @@ function CanvasElementWrapper({
 }: {
   element: ProjectElementInstance;
 }) {
-  const { attributes, listeners, isDragging, setNodeRef } = useDraggable({
-    id: element.id + "-drag-handler",
-    data: {
-      type: element.type,
-      elementId: element.id,
-      isCanvasElement: true,
-    },
-  });
+  const { attributes, listeners, isDragging, setNodeRef, transform } =
+    useDraggable({
+      id: element.id + "-drag-handler",
+      data: {
+        type: element.type,
+        elementId: element.id,
+        isCanvasElement: true,
+      },
+    });
+
+  // Only transform images since we will not use an overlay
+  // - using an overlay causes the image to flicker
+  const isImage = element.type === "ImageBlock";
+  const style: React.CSSProperties = {
+    position: "absolute",
+    left: element.position.x,
+    top: element.position.y,
+    transform:
+      transform && isImage
+        ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+        : "",
+    visibility: isDragging && !isImage ? "hidden" : undefined,
+  };
 
   const CanvasElement = ProjectElements[element.type].canvasComponent;
   return (
-    <div
-      ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-      style={{
-        position: "absolute",
-        left: element.position.x,
-        top: element.position.y,
-        visibility: isDragging ? "hidden" : undefined,
-      }}
-    >
+    <div style={style} ref={setNodeRef} {...listeners} {...attributes}>
       <CanvasElement elementInstance={element} />
     </div>
   );

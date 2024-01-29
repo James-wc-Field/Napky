@@ -6,14 +6,12 @@ import {
   ProjectElement,
   ProjectElementInstance,
 } from "../ProjectElements";
-import { Card, CardBody, CardFooter, Skeleton } from "@nextui-org/react";
+import { Image } from "@nextui-org/image";
 
 const type: ElementsType = "ImageBlock";
 
 const extraAttributes = {
-  label: "Image Block",
-  helperText: "Helper Text",
-  file: "File",
+  src: "/images/placeholder.webp",
 };
 
 export const ImageBlockProjectElement: ProjectElement = {
@@ -45,21 +43,15 @@ function CanvasComponent({
   elementInstance: ProjectElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
-  const { label, helperText, file } = element.extraAttributes;
-  const style = {
-    width: element.size.width,
-    height: element.size.height,
-  };
+  const { src } = element.extraAttributes;
 
   return (
-    <Card style={style}>
-      <CardBody className="justify-center flex grow">
-        <Skeleton className="w-full h-full rounded-md" />
-      </CardBody>
-      <CardFooter className="flex justify-between">
-        <p>{label}</p>
-        <p>{file}</p>
-      </CardFooter>
-    </Card>
+    <Image
+      width={element.size.width}
+      src={src}
+      alt="Image"
+      disableAnimation
+      removeWrapper
+    />
   );
 }

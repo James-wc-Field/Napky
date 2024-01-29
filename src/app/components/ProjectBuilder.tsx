@@ -28,7 +28,7 @@ function ProjectBuilder({ project }: { project: Project }) {
     })
   );
 
-  const { elements, addElement } = useProject();
+  const { elements, addElement, updateElement } = useProject();
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over, delta } = event;
@@ -58,28 +58,46 @@ function ProjectBuilder({ project }: { project: Project }) {
 
       if (!dragged) return;
 
-      dragged.position.x += delta.x;
-      dragged.position.y += delta.y;
+      updateElement(dragged.id, {
+        ...dragged,
+        position: {
+          x: dragged.position.x + delta.x,
+          y: dragged.position.y + delta.y,
+        },
+      });
 
       console.log("DRAGGED:", dragged);
     }
   }
 
-  // Handlers for external file drop
-  function dragOverHandler(e: React.DragEvent<HTMLDivElement>) {
-    e.preventDefault();
-  }
-
+  // Handler for external file drop
   function dropHandler(e: React.DragEvent<HTMLDivElement>) {
-    console.log(e.dataTransfer.items[0].getAsFile());
-    console.log(e.dataTransfer.files);
-    const f: File | null = e.dataTransfer.items[0].getAsFile();
-    const type = "ImageBlock";
-    const newElement = ProjectElements[type as ElementsType].construct(
-      idGenerator()
-    );
-    addElement(newElement, 0, 0);
+    if (!e.dataTransfer.items) return;
 
+    for (const file of Array.from(e.dataTransfer.files)) {
+      console.log("FILE:", file);
+
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        const src = event.target?.result as string;
+        const type = "ImageBlock";
+        const newElement = ProjectElements[type as ElementsType].construct(
+          idGenerator()
+        );
+
+        addElement(newElement);
+        updateElement(newElement.id, {
+          ...newElement,
+          extraAttributes: {
+            ...newElement.extraAttributes,
+            src: src,
+          },
+        });
+      };
+
+      reader.readAsDataURL(file);
+    }
     e.preventDefault();
   }
 
@@ -101,8 +119,8 @@ function ProjectBuilder({ project }: { project: Project }) {
             <Toolbar />
             <div
               id="file-drop-area"
-              onDragOver={(e) => dragOverHandler(e)}
               onDrop={(e) => dropHandler(e)}
+              onDragOver={(e) => e.preventDefault()}
               className="flex grow"
             >
               <Canvas elements={elements} />
