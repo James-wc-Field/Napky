@@ -69,9 +69,17 @@ function ProjectBuilder({ project }: { project: Project }) {
   function dragOverHandler(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
   }
+
   function dropHandler(e: React.DragEvent<HTMLDivElement>) {
     console.log(e.dataTransfer.items[0].getAsFile());
     console.log(e.dataTransfer.files);
+    const f: File | null = e.dataTransfer.items[0].getAsFile();
+    const type = "ImageBlock";
+    const newElement = ProjectElements[type as ElementsType].construct(
+      idGenerator()
+    );
+    addElement(newElement, 0, 0);
+
     e.preventDefault();
   }
 
