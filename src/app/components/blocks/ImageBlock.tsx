@@ -11,7 +11,7 @@ import { Image } from "@nextui-org/image";
 const type: ElementsType = "ImageBlock";
 
 const extraAttributes = {
-  src: "/images/placeholder.webp",
+  src: "/images/placeholder.jpg",
 };
 
 export const ImageBlockProjectElement: ProjectElement = {
@@ -48,6 +48,7 @@ function CanvasComponent({
   return (
     <Image
       width={element.size.width}
+      className={`min-w-[${element.size.width}px]`}
       src={src}
       alt="Image"
       disableAnimation
