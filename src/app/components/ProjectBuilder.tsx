@@ -115,7 +115,7 @@ function ProjectBuilder({ project }: { project: Project }) {
           className="flex w-full flex-grow items-center justify-center
         overflow-y-auto h-[200px] bg-[url(/paper.svg)] dark:bg-[url(/dark-paper.svg)]"
         >
-          <div className="flex w-full h-full">
+          <div className="flex flex-row w-full h-full">
             <Toolbar />
             <div
               id="file-drop-area"

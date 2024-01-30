@@ -30,7 +30,7 @@ export const LinkBlockProjectElement: ProjectElement = {
 
   toolbarElement: {
     icon: LinkIcon,
-    label: "Link Block",
+    label: "Link",
   },
 
   canvasComponent: CanvasComponent,

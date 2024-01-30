@@ -9,7 +9,7 @@ import React, { ReactNode } from "react";
 function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="flex flex-col min-h-screen max-h-screen min-w-full">
-      <Navbar isBordered>
+      {/* <Navbar isBordered>
         <NavbarBrand>
           <NavbarItem>LOGO</NavbarItem>
         </NavbarBrand>
@@ -18,7 +18,7 @@ function Layout({ children }: { children: ReactNode }) {
           <NavbarItem>Hello</NavbarItem>
         </NavbarContent>
         <NavbarItem>Hello</NavbarItem>
-      </Navbar>
+      </Navbar> */}
       <main className="flex grow">{children}</main>
     </div>
   );

@@ -27,7 +27,7 @@ function MainCanvasDroppable({ children }: { children?: React.ReactNode }) {
 
   return (
     <div ref={setNodeRef} className="relative flex grow">
-      {children}
+      <div className="absolute inset-0 overflow-auto">{children}</div>
     </div>
   );
 }

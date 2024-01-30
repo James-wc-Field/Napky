@@ -23,13 +23,13 @@ export default function ToolbarBtnElement({
     <Card
       ref={setNodeRef}
       className={cn(
-        "flex flex-col gap-2 h-[120px] w-[120px] cursor-grab justify-center items-center",
+        "flex flex-col gap-1 h-[50px] w-[50px] cursor-grab justify-center items-center",
         isDragging && "ring-2 ring-primary"
       )}
       {...listeners}
       {...attributes}
     >
-      <Icon className="h-8 w-8 cursor-grab" />
+      <Icon className="h-5 w-5"/>
       <p className="text-xs">{label}</p>
     </Card>
   );

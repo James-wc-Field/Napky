@@ -31,7 +31,7 @@ export const ListBlockProjectElement: ProjectElement = {
 
   toolbarElement: {
     icon: Bars4Icon,
-    label: "List Block",
+    label: "List",
   },
 
   canvasComponent: CanvasComponent,
