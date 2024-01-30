@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #353535;
+}
+
+/* Handle */
+/* make rounded */
+::-webkit-scrollbar-thumb {
+  background: #4d4d4d;
+  border-radius: 3px
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Corner of two scrollbars black */
+::-webkit-scrollbar-corner {
+  background: #353535;
+}

@@ -29,7 +29,7 @@ export const TextBlockProjectElement: ProjectElement = {
 
   toolbarElement: {
     icon: Bars3Icon,
-    label: "Text Block",
+    label: "Text",
   },
 
   canvasComponent: CanvasComponent,
