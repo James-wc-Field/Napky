@@ -29,28 +29,39 @@ function ProjectBuilder({ project }: { project: Project }) {
   );
 
   const { elements, addElement, updateElement } = useProject();
+  const scrollableRef = React.useRef<HTMLDivElement>(null);
 
   function handleDragEnd(event: DragEndEvent) {
-    const { active, over, delta } = event;
+    const { active, over, delta, collisions } = event;
     if (!active || !over) return;
 
+    // Create new element
     const isToolbarBtnElement = active.data?.current?.isToolbarBtnElement;
     if (isToolbarBtnElement) {
       const type = active.data?.current?.type;
       const newElement = ProjectElements[type as ElementsType].construct(
         idGenerator()
       );
+      console.log(collisions);
+
       const canvasTop = over.rect.top;
       const canvasLeft = over.rect.left;
       const initialTop = active.rect.current.initial?.top || canvasTop;
       const initialLeft = active.rect.current.initial?.left || canvasLeft;
       const diffX = canvasLeft - initialLeft;
       const diffY = canvasTop - initialTop;
+      const scrolledleft = scrollableRef.current?.scrollLeft || 0;
+      const scrolledTop = scrollableRef.current?.scrollTop || 0;
 
-      addElement(newElement, delta.x - diffX, delta.y - diffY);
+      addElement(
+        newElement,
+        delta.x - diffX - scrolledleft,
+        delta.y - diffY - scrolledTop
+      );
       console.log("NEW ELEMENT:", newElement);
     }
 
+    // Drag existing element
     const isCanvasElement = active.data?.current?.isCanvasElement;
     if (isCanvasElement) {
       const elementId = active.data?.current?.elementId;
@@ -67,6 +78,7 @@ function ProjectBuilder({ project }: { project: Project }) {
       });
 
       console.log("DRAGGED:", dragged);
+      console.log(dragged.position.x, dragged.position.y);
     }
   }
 
@@ -103,28 +115,29 @@ function ProjectBuilder({ project }: { project: Project }) {
 
   return (
     <DndContext id={id} sensors={sensors} onDragEnd={handleDragEnd}>
-      <main className="flex flex-col w-full">
-        <div className="flex justify-between border-b-1 border-slate-500 p-4 gap-3 items-center">
+      <main className="flex flex-col w-full h-full">
+        {/* Top bar */}
+        <div className="flex justify-between border-b-1 border-slate-500 p-2 gap-2 items-center">
           <h2 className="truncate font-medium">
             <span className="mr-2">Project:</span>
             {project.name}
           </h2>
           <SaveProjectBtn />
         </div>
-        <div
-          className="flex w-full flex-grow items-center justify-center
-        overflow-y-auto h-[200px] bg-[url(/paper.svg)] dark:bg-[url(/dark-paper.svg)]"
-        >
-          <div className="flex flex-row w-full h-full">
-            <Toolbar />
+
+        {/* Toolbar/Canvas area */}
+        <div className="flex flex-row grow">
+          <Toolbar /> {/* Toolbar is set to flex-none */}
+          <div className="flex-1 relative">
             <div
               id="file-drop-area"
               onDrop={(e) => externalDropHandler(e)}
               onDragOver={(e) => e.preventDefault()}
-              className="flex grow"
+              className="absolute inset-0"
             >
-              <Canvas elements={elements} />
+              <Canvas elements={elements} scrollableRef={scrollableRef} />
             </div>
+            <div />
           </div>
         </div>
       </main>
