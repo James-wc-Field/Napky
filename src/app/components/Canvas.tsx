@@ -4,11 +4,13 @@ import { ProjectElementInstance, ProjectElements } from "./ProjectElements";
 
 export default function Canvas({
   elements,
+  scrollableRef,
 }: {
   elements: ProjectElementInstance[];
+  scrollableRef: React.RefObject<HTMLDivElement>;
 }) {
   return (
-    <MainCanvasDroppable>
+    <MainCanvasDroppable scrollableRef={scrollableRef}>
       {elements.length > 0 &&
         elements.map((element) => (
           <CanvasElementWrapper key={element.id} element={element} />
@@ -17,17 +19,38 @@ export default function Canvas({
   );
 }
 
-function MainCanvasDroppable({ children }: { children?: React.ReactNode }) {
+function MainCanvasDroppable({
+  children,
+  scrollableRef,
+}: {
+  children?: React.ReactNode;
+  scrollableRef: React.RefObject<HTMLDivElement>;
+}) {
   const { isOver, setNodeRef } = useDroppable({
     id: "canvas-drop-area",
     data: {
       isCanvasDropArea: true,
     },
   });
+  const showScroll = () => {
+    console.log(`scrollTop = ${scrollableRef.current?.scrollTop}`);
+    console.log(`scrollLeft = ${scrollableRef.current?.scrollLeft}`);
+  };
 
   return (
-    <div ref={setNodeRef} className="relative flex grow">
-      <div className="absolute inset-0 overflow-auto">{children}</div>
+    <div
+      ref={scrollableRef}
+      onClick={showScroll}
+      id="scrollable-canvas"
+      className="absolute inset-0 overflow-auto w-full h-full"
+    >
+      <div
+        ref={setNodeRef}
+        className="relative w-[1000px] h-[1000px]
+          bg-[url(/paper.svg)] dark:bg-[url(/dark-paper.svg)]"
+      >
+        {children}
+      </div>
     </div>
   );
 }
