@@ -35,6 +35,9 @@ function ProjectBuilder({ project }: { project: Project }) {
     const { active, over, delta, collisions } = event;
     if (!active || !over) return;
 
+    const scrolledleft = scrollableRef.current?.scrollLeft || 0;
+    const scrolledTop = scrollableRef.current?.scrollTop || 0;
+
     // Create new element
     const isToolbarBtnElement = active.data?.current?.isToolbarBtnElement;
     if (isToolbarBtnElement) {
@@ -42,7 +45,6 @@ function ProjectBuilder({ project }: { project: Project }) {
       const newElement = ProjectElements[type as ElementsType].construct(
         idGenerator()
       );
-      console.log(collisions);
 
       const canvasTop = over.rect.top;
       const canvasLeft = over.rect.left;
@@ -50,8 +52,6 @@ function ProjectBuilder({ project }: { project: Project }) {
       const initialLeft = active.rect.current.initial?.left || canvasLeft;
       const diffX = canvasLeft - initialLeft;
       const diffY = canvasTop - initialTop;
-      const scrolledleft = scrollableRef.current?.scrollLeft || 0;
-      const scrolledTop = scrollableRef.current?.scrollTop || 0;
 
       addElement(
         newElement,
@@ -128,16 +128,13 @@ function ProjectBuilder({ project }: { project: Project }) {
         {/* Toolbar/Canvas area */}
         <div className="flex flex-row grow">
           <Toolbar /> {/* Toolbar is set to flex-none */}
-          <div className="flex-1 relative">
-            <div
-              id="file-drop-area"
-              onDrop={(e) => externalDropHandler(e)}
-              onDragOver={(e) => e.preventDefault()}
-              className="absolute inset-0"
-            >
-              <Canvas elements={elements} scrollableRef={scrollableRef} />
-            </div>
-            <div />
+          <div
+            id="file-drop-area"
+            onDrop={(e) => externalDropHandler(e)}
+            onDragOver={(e) => e.preventDefault()}
+            className="relative flex-1"
+          >
+            <Canvas elements={elements} scrollableRef={scrollableRef} />
           </div>
         </div>
       </main>

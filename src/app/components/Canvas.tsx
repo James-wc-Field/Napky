@@ -1,6 +1,9 @@
 import React from "react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { ProjectElementInstance, ProjectElements } from "./ProjectElements";
+import { Card } from "@nextui-org/react";
+import { PlusIcon } from "@heroicons/react/24/solid";
+import { MinusIcon } from "@heroicons/react/24/solid";
 
 export default function Canvas({
   elements,
@@ -32,26 +35,57 @@ function MainCanvasDroppable({
       isCanvasDropArea: true,
     },
   });
+
   const showScroll = () => {
     console.log(`scrollTop = ${scrollableRef.current?.scrollTop}`);
     console.log(`scrollLeft = ${scrollableRef.current?.scrollLeft}`);
   };
 
+  const [zoomLevel, setZoomLevel] = React.useState(1);
+
+  const handleZoomIn = () => {
+    setZoomLevel((prev) => {
+      return prev + 0.1;
+    });
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel((prev) => {
+      return prev - 0.1;
+    });
+  };
+
   return (
-    <div
-      ref={scrollableRef}
-      onClick={showScroll}
-      id="scrollable-canvas"
-      className="absolute inset-0 overflow-auto w-full h-full"
-    >
+    <>
       <div
-        ref={setNodeRef}
-        className="relative w-[1000px] h-[1000px]
-          bg-[url(/paper.svg)] dark:bg-[url(/dark-paper.svg)]"
+        ref={scrollableRef}
+        onClick={showScroll}
+        id="canvas-scrollable-area"
+        className="absolute inset-0 overflow-auto"
       >
-        {children}
+        <div
+          id="canvas-drop-area"
+          ref={setNodeRef}
+          className="w-fit h-fit bg-white/20"
+          style={{
+            transform: `scale(${zoomLevel})`,
+            transformOrigin: "center",
+          }}
+        >
+          <div className="w-[2500px] h-[2500px] dark:bg-[url(/dark-paper.svg)]">
+            {children}
+          </div>
+        </div>
       </div>
-    </div>
+      <Card className="absolute top-4 right-6 flex flex-col gap-2 p-3">
+        <button onClick={handleZoomIn}>
+          <PlusIcon className="w-6" />
+        </button>
+        <button onClick={handleZoomOut}>
+          <MinusIcon className="w-6" />
+        </button>
+      </Card>
+    </>
   );
 }
 
