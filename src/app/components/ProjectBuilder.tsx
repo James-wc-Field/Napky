@@ -18,6 +18,7 @@ import Canvas from "./Canvas";
 import useProject from "./hooks/useProject";
 import { ElementsType, ProjectElements } from "./ProjectElements";
 import { idGenerator } from "../lib/idGenerator";
+import { TransformWrapper } from "react-zoom-pan-pinch";
 
 function ProjectBuilder({ project }: { project: Project }) {
   const id = useId();
@@ -134,7 +135,23 @@ function ProjectBuilder({ project }: { project: Project }) {
             onDragOver={(e) => e.preventDefault()}
             className="relative flex-1"
           >
-            <Canvas elements={elements} scrollableRef={scrollableRef} />
+            <TransformWrapper
+              centerOnInit
+              minScale={0.1}
+              wheel={{
+                wheelDisabled: true,
+                smoothStep: 0.003,
+              }}
+              panning={{
+                allowLeftClickPan: false,
+                allowMiddleClickPan: true,
+                wheelPanning: true,
+              }}
+              smooth={false}
+              onWheel={() => console.log("WHEEL")}
+            >
+              <Canvas elements={elements} scrollableRef={scrollableRef} />
+            </TransformWrapper>
           </div>
         </div>
       </main>

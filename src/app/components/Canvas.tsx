@@ -4,16 +4,16 @@ import { ProjectElementInstance, ProjectElements } from "./ProjectElements";
 import { Card } from "@nextui-org/react";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { MinusIcon } from "@heroicons/react/24/solid";
+import { TransformComponent, useTransformEffect } from "react-zoom-pan-pinch";
 
 export default function Canvas({
   elements,
-  scrollableRef,
 }: {
   elements: ProjectElementInstance[];
   scrollableRef: React.RefObject<HTMLDivElement>;
 }) {
   return (
-    <MainCanvasDroppable scrollableRef={scrollableRef}>
+    <MainCanvasDroppable>
       {elements.length > 0 &&
         elements.map((element) => (
           <CanvasElementWrapper key={element.id} element={element} />
@@ -22,13 +22,7 @@ export default function Canvas({
   );
 }
 
-function MainCanvasDroppable({
-  children,
-  scrollableRef,
-}: {
-  children?: React.ReactNode;
-  scrollableRef: React.RefObject<HTMLDivElement>;
-}) {
+function MainCanvasDroppable({ children }: { children?: React.ReactNode }) {
   const { isOver, setNodeRef } = useDroppable({
     id: "canvas-drop-area",
     data: {
@@ -36,56 +30,20 @@ function MainCanvasDroppable({
     },
   });
 
-  const showScroll = () => {
-    console.log(`scrollTop = ${scrollableRef.current?.scrollTop}`);
-    console.log(`scrollLeft = ${scrollableRef.current?.scrollLeft}`);
-  };
-
-  const [zoomLevel, setZoomLevel] = React.useState(1);
-
-  const handleZoomIn = () => {
-    setZoomLevel((prev) => {
-      return prev + 0.1;
-    });
-  };
-
-  const handleZoomOut = () => {
-    setZoomLevel((prev) => {
-      return prev - 0.1;
-    });
-  };
-
   return (
-    <>
-      <div
-        ref={scrollableRef}
-        onClick={showScroll}
-        id="canvas-scrollable-area"
-        className="absolute inset-0 overflow-auto"
-      >
-        <div
-          id="canvas-drop-area"
-          ref={setNodeRef}
-          className="w-fit h-fit bg-white/20"
-          style={{
-            transform: `scale(${zoomLevel})`,
-            transformOrigin: "center",
-          }}
-        >
-          <div className="w-[2500px] h-[2500px] dark:bg-[url(/dark-paper.svg)]">
-            {children}
-          </div>
+    <TransformComponent
+      wrapperStyle={{
+        maxWidth: "100%",
+        maxHeight: "100%",
+        position: "absolute",
+      }}
+    >
+      <div id="canvas-drop-area" ref={setNodeRef} className="bg-white/20">
+        <div className="w-[10000px] h-[10000px] dark:bg-[url(/dark-paper.svg)]">
+          {children}
         </div>
       </div>
-      <Card className="absolute top-4 right-6 flex flex-col gap-2 p-3">
-        <button onClick={handleZoomIn}>
-          <PlusIcon className="w-6" />
-        </button>
-        <button onClick={handleZoomOut}>
-          <MinusIcon className="w-6" />
-        </button>
-      </Card>
-    </>
+    </TransformComponent>
   );
 }
 
