@@ -135,23 +135,7 @@ function ProjectBuilder({ project }: { project: Project }) {
             onDragOver={(e) => e.preventDefault()}
             className="relative flex-1"
           >
-            <TransformWrapper
-              centerOnInit
-              minScale={0.1}
-              wheel={{
-                wheelDisabled: true,
-                smoothStep: 0.003,
-              }}
-              panning={{
-                allowLeftClickPan: false,
-                allowMiddleClickPan: true,
-                wheelPanning: true,
-              }}
-              smooth={false}
-              onWheel={() => console.log("WHEEL")}
-            >
-              <Canvas elements={elements} scrollableRef={scrollableRef} />
-            </TransformWrapper>
+            <Canvas elements={elements} scrollableRef={scrollableRef} />
           </div>
         </div>
       </main>
