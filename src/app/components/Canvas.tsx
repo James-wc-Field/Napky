@@ -5,7 +5,6 @@ import { Button, Card } from "@nextui-org/react";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { MinusIcon } from "@heroicons/react/24/solid";
 import useProject from "./hooks/useProject";
-import DragOverlayWrapper from "./DragOverlayWrapper";
 
 export default function Canvas({
   elements,
