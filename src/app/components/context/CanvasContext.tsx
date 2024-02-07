@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useState } from "react";
+import { Dispatch, ReactNode, SetStateAction, createContext, useState } from "react";
 import { ProjectElementInstance } from "../ProjectElements";
 
 type CanvasContextType = {
@@ -8,18 +8,26 @@ type CanvasContextType = {
   addElement: (element: ProjectElementInstance, x?: number, y?: number) => void;
   removeElement: (id: string) => void;
   updateElement: (id: string, element: ProjectElementInstance) => void;
+
+  scrollLeft: number;
+  updateScrollLeft: Dispatch<SetStateAction<number>>;
+
+  scrollTop: number;
+  updateScrollTop: Dispatch<SetStateAction<number>>;
+
+  zoomLevel: number;
+  updateZoomLevel: Dispatch<SetStateAction<number>>;
 };
 
 export const CanvasContext = createContext<CanvasContextType | null>(null);
 
-export default function CanvasContextProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function CanvasContextProvider({ children, }: { children: ReactNode; }) {
   const [elements, setElements] = useState<ProjectElementInstance[]>([]);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [scrollTop, setScrollTop] = useState(0);
+  const [zoomLevel, setZoomLevel] = useState(1);
 
-  const addElement = (element: ProjectElementInstance, x?: number, y?:number) => {
+  const addElement = (element: ProjectElementInstance, x?: number, y?: number) => {
     setElements((prev) => {
       let newElements = [...prev];
       if (x && y) {
@@ -51,6 +59,12 @@ export default function CanvasContextProvider({
         addElement,
         removeElement,
         updateElement,
+        scrollLeft,
+        updateScrollLeft: setScrollLeft,
+        scrollTop,
+        updateScrollTop: setScrollTop,
+        zoomLevel,
+        updateZoomLevel: setZoomLevel,
       }}
     >
       {children}

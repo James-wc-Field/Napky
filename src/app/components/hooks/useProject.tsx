@@ -6,7 +6,7 @@ import { CanvasContext } from "../context/CanvasContext";
 function useProject() {
   const context = useContext(CanvasContext);
   if (!context)
-    throw new Error("useProject must be used within a ProjectContext");
+    throw new Error("useCanvas must be used within a CanvasContextProvider");
   return context;
 }
 
