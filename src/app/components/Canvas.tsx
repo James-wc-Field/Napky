@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import { ReactNode } from "react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { ProjectElementInstance, ProjectElements } from "./ProjectElements";
 import { Button, Card } from "@nextui-org/react";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { MinusIcon } from "@heroicons/react/24/solid";
+import useProject from "./hooks/useProject";
+import DragOverlayWrapper from "./DragOverlayWrapper";
 
 export default function Canvas({
   elements,
 }: {
   elements: ProjectElementInstance[];
-  scrollableRef: React.RefObject<HTMLDivElement>;
 }) {
   return (
     <MainCanvasDroppable>
@@ -21,19 +22,21 @@ export default function Canvas({
   );
 }
 
-function MainCanvasDroppable({ children }: { children?: React.ReactNode }) {
+function MainCanvasDroppable({ children }: { children?: ReactNode }) {
   const { isOver, setNodeRef } = useDroppable({
     id: "canvas-drop-area",
     data: {
       isCanvasDropArea: true,
     },
   });
-  const [zoomLevel, setZoomLevel] = useState(1);
+
+  const { updateZoomLevel, zoomLevel, updateScrollLeft, updateScrollTop } =
+    useProject();
 
   const minScale = 0.2;
   const maxScale = 3;
   function handleButtonPress(type: "plus" | "minus") {
-    setZoomLevel((prev) => {
+    updateZoomLevel((prev) => {
       if (prev <= minScale && type === "minus") return prev;
       if (prev >= maxScale && type === "plus") return prev;
       if (type === "plus") return prev * 1.2;
@@ -43,24 +46,37 @@ function MainCanvasDroppable({ children }: { children?: React.ReactNode }) {
 
   return (
     <>
-      <div className="absolute inset-0 overflow-auto flex items-center">
+      <div
+        className="absolute inset-0 overflow-auto flex items-center"
+        onScroll={(e) => {
+          updateScrollLeft(e.currentTarget.scrollLeft);
+          updateScrollTop(e.currentTarget.scrollTop);
+        }}
+      >
         <div
           className="m-auto"
           style={{
-            width: `calc(3000px * ${zoomLevel})`,
+            width: `calc(4000px * ${zoomLevel})`,
             height: `calc(3000px * ${zoomLevel})`,
           }}
         >
           <div
-            className="w-[3000px] h-[3000px] dark:bg-[url(/dark-paper.svg)]"
+            // change background image to nothing if scale is less than 1
+            className="w-[4000px] h-[3000px] dark:bg-[url(/dark-paper.svg)]"
             style={{
               transform: `scale(${zoomLevel})`,
               transformOrigin: "top left",
+              background: zoomLevel < 0.3 ? "none" : undefined,
             }}
           >
-            <div id="canvas-drop-area" ref={setNodeRef} className="bg-white/20 w-full h-full">
+            <div
+              id="canvas-drop-area"
+              ref={setNodeRef}
+              className="bg-white/20 w-full h-full"
+            >
               {children}
             </div>
+            {/* <DragOverlayWrapper /> */}
           </div>
         </div>
       </div>
