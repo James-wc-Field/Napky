@@ -73,8 +73,12 @@ function BuildArea() {
       console.log("FILE:", file);
 
       const reader = new FileReader();
-      const top = e.currentTarget.getBoundingClientRect().top;
-      const left = e.currentTarget.getBoundingClientRect().left;
+      const top =
+        document.getElementById("canvas-drop-area")?.getBoundingClientRect()
+          .top || 0;
+      const left =
+        document.getElementById("canvas-drop-area")?.getBoundingClientRect()
+          .left || 0;
       const xPos = (e.clientX - left + scrollLeft) / zoomLevel;
       const yPos = (e.clientY - top + scrollTop) / zoomLevel;
 
