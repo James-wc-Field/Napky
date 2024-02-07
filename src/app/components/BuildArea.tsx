@@ -69,18 +69,24 @@ function BuildArea() {
   function externalDropHandler(e: DragEvent<HTMLDivElement>) {
     if (!e.dataTransfer.items) return;
 
+    const canvasRect = document
+      .getElementById("canvas-drop-area")
+      ?.getBoundingClientRect() as DOMRect;
+    const top = canvasRect.top || 0;
+    const left = canvasRect.left || 0;
     for (const file of Array.from(e.dataTransfer.files)) {
       console.log("FILE:", file);
 
       const reader = new FileReader();
-      const top =
-        document.getElementById("canvas-drop-area")?.getBoundingClientRect()
-          .top || 0;
-      const left =
-        document.getElementById("canvas-drop-area")?.getBoundingClientRect()
-          .left || 0;
-      const xPos = (e.clientX - left + scrollLeft) / zoomLevel;
-      const yPos = (e.clientY - top + scrollTop) / zoomLevel;
+      const xPos = e.clientX - left;
+      const yPos = e.clientY - top;
+      if (
+        yPos < 0 ||
+        xPos < 0 ||
+        yPos > canvasRect.height ||
+        xPos > canvasRect.width
+      )
+        continue;
 
       reader.onload = (event) => {
         const src = event.target?.result as string;
@@ -89,7 +95,7 @@ function BuildArea() {
           idGenerator()
         );
 
-        addElement(newElement, xPos, yPos);
+        addElement(newElement, xPos / zoomLevel, yPos / zoomLevel);
         updateElement(newElement.id, {
           ...newElement,
           extraAttributes: {
