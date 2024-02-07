@@ -76,7 +76,6 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
             >
               {children}
             </div>
-            {/* <DragOverlayWrapper /> */}
           </div>
         </div>
       </div>
