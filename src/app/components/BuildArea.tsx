@@ -5,7 +5,6 @@ import { useDndMonitor } from "@dnd-kit/core";
 import { ElementsType, ProjectElements } from "./ProjectElements";
 import { idGenerator } from "../lib/idGenerator";
 import useProject from "./hooks/useProject";
-import DragOverlayWrapper from "./DragOverlayWrapper";
 
 function BuildArea() {
   const {
@@ -21,8 +20,6 @@ function BuildArea() {
     onDragEnd: (event) => {
       const { active, over, delta } = event;
       if (!active || !over) return;
-
-      console.log(scrollLeft, scrollTop, zoomLevel);
 
       // Create new element
       const isToolbarBtnElement = active.data?.current?.isToolbarBtnElement;
@@ -76,6 +73,10 @@ function BuildArea() {
       console.log("FILE:", file);
 
       const reader = new FileReader();
+      const top = e.currentTarget.getBoundingClientRect().top;
+      const left = e.currentTarget.getBoundingClientRect().left;
+      const xPos = (e.clientX - left + scrollLeft) / zoomLevel;
+      const yPos = (e.clientY - top + scrollTop) / zoomLevel;
 
       reader.onload = (event) => {
         const src = event.target?.result as string;
@@ -84,7 +85,7 @@ function BuildArea() {
           idGenerator()
         );
 
-        addElement(newElement);
+        addElement(newElement, xPos, yPos);
         updateElement(newElement.id, {
           ...newElement,
           extraAttributes: {
