@@ -1,4 +1,5 @@
-'use client'
+'use client';
+
 import {Listbox, ListboxItem} from "@nextui-org/listbox";
 import { Card } from "@nextui-org/card";
 import { Button } from "@nextui-org/button";
@@ -77,7 +78,7 @@ export default function Page() {
               <Button className="text-lg text-center p-6 m-4">New</Button>
             </DropdownTrigger>
             <DropdownMenu>
-              <DropdownItem key="project" href="/dashboard/12345">Project</DropdownItem>
+              <DropdownItem key="project" href="/builder/12345">Project</DropdownItem>
               <DropdownItem key="folder">Folder</DropdownItem>
               <DropdownItem key="file">File Upload</DropdownItem>
             </DropdownMenu>
