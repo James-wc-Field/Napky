@@ -44,15 +44,13 @@ function CanvasComponent({
 }) {
   const element = elementInstance as CustomInstance;
   const { src } = element.extraAttributes;
+  const style = {
+    minWidth: element.size.width,
+    width: element.size.width,
+    height: element.size.height,
+  };
 
   return (
-    <Image
-      width={element.size.width}
-      className={`min-w-[${element.size.width}px]`}
-      src={src}
-      alt="Image"
-      disableAnimation
-      removeWrapper
-    />
+    <Image style={style} src={src} alt="Image" removeWrapper disableAnimation />
   );
 }
