@@ -10,7 +10,7 @@ import {
   pointerWithin,
 } from "@dnd-kit/core";
 
-import { Project } from "../builder/SchemaSimulation";
+import { Project } from "../project/SchemaSimulation";
 import SaveProjectBtn from "./SaveProjectBtn";
 import BuildArea from "./BuildArea";
 import DragOverlayWrapper from "./DragOverlayWrapper";
