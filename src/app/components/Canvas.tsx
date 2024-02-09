@@ -29,8 +29,13 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     },
   });
 
-  const { updateZoomLevel, zoomLevel, updateScrollLeft, updateScrollTop } =
-    useProject();
+  const {
+    updateZoomLevel,
+    zoomLevel,
+    updateScrollLeft,
+    updateScrollTop,
+    canvasSize,
+  } = useProject();
 
   const minScale = 0.2;
   const maxScale = 3;
@@ -46,7 +51,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
   return (
     <>
       <div
-        className="absolute inset-0 overflow-auto flex items-center"
+        className="absolute inset-0 flex overflow-auto items-center bg-neutral-700"
         onScroll={(e) => {
           updateScrollLeft(e.currentTarget.scrollLeft);
           updateScrollTop(e.currentTarget.scrollTop);
@@ -55,26 +60,24 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
         <div
           className="m-auto"
           style={{
-            width: `calc(4000px * ${zoomLevel})`,
-            height: `calc(3000px * ${zoomLevel})`,
+            width: canvasSize.width * zoomLevel,
+            height: canvasSize.height * zoomLevel,
           }}
         >
           <div
-            // change background image to nothing if scale is less than 1
-            className="w-[4000px] h-[3000px] dark:bg-[url(/dark-paper.svg)]"
+            id="canvas-drop-area"
+            ref={setNodeRef}
+            className="w-full h-full bg-white/10"
             style={{
+              width: canvasSize.width,
+              height: canvasSize.height,
               transform: `scale(${zoomLevel})`,
               transformOrigin: "top left",
-              background: zoomLevel < 0.3 ? "none" : undefined,
+              border: isOver ? "4px dashed" : undefined,
+              borderColor: isOver ? "gray" : undefined,
             }}
           >
-            <div
-              id="canvas-drop-area"
-              ref={setNodeRef}
-              className="bg-white/20 w-full h-full"
-            >
-              {children}
-            </div>
+            {children}
           </div>
         </div>
       </div>
@@ -95,15 +98,14 @@ function CanvasElementWrapper({
 }: {
   element: ProjectElementInstance;
 }) {
-  const { attributes, listeners, isDragging, setNodeRef, transform } =
-    useDraggable({
-      id: element.id + "-drag-handler",
-      data: {
-        type: element.type,
-        elementId: element.id,
-        isCanvasElement: true,
-      },
-    });
+  const { attributes, listeners, isDragging, setNodeRef } = useDraggable({
+    id: element.id + "-drag-handler",
+    data: {
+      type: element.type,
+      elementId: element.id,
+      isCanvasElement: true,
+    },
+  });
 
   const style: React.CSSProperties = {
     position: "absolute",
