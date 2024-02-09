@@ -17,6 +17,9 @@ type CanvasContextType = {
 
   zoomLevel: number;
   updateZoomLevel: Dispatch<SetStateAction<number>>;
+
+  canvasSize: { width: number; height: number };
+  updateCanvasSize: Dispatch<SetStateAction<{ width: number; height: number }>>;
 };
 
 export const CanvasContext = createContext<CanvasContextType | null>(null);
@@ -26,6 +29,7 @@ export default function CanvasContextProvider({ children, }: { children: ReactNo
   const [scrollLeft, setScrollLeft] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
   const [zoomLevel, setZoomLevel] = useState(1);
+  const [canvasSize, setCanvasSize] = useState({ width: 4000, height: 2000});
 
   const addElement = (element: ProjectElementInstance, x?: number, y?: number) => {
     setElements((prev) => {
@@ -65,6 +69,8 @@ export default function CanvasContextProvider({ children, }: { children: ReactNo
         updateScrollTop: setScrollTop,
         zoomLevel,
         updateZoomLevel: setZoomLevel,
+        canvasSize,
+        updateCanvasSize: setCanvasSize,
       }}
     >
       {children}
