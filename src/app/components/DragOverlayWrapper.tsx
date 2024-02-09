@@ -56,25 +56,24 @@ export default function DragOverlayWrapper() {
   }
 
   const compensateScale: Modifier = ({ transform, over }) => {
-    if (!over)
+    if (over?.id === "canvas-drop-area" || !over)
       return {
         ...transform,
         scaleX: zoomLevel,
         scaleY: zoomLevel,
       };
-    if (over.id === "canvas-drop-area")
-      return {
-        ...transform,
-        scaleX: zoomLevel,
-        scaleY: zoomLevel,
-      };
-    return transform;
+    return {
+      ...transform,
+      scaleX: 1,
+      scaleY: 1,
+    };
   };
 
   return (
     <DragOverlay
       style={{ transformOrigin: "0 0" }}
       adjustScale
+      transition="transform 0.15s ease-out"
       modifiers={[compensateScale]}
     >
       {node}
