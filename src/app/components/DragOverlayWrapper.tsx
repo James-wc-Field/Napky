@@ -4,6 +4,7 @@ import {
   DragEndEvent,
   DragOverlay,
   DragStartEvent,
+  Modifier,
   useDndMonitor,
 } from "@dnd-kit/core";
 import React, { useState } from "react";
@@ -11,7 +12,7 @@ import { ElementsType, ProjectElements } from "./ProjectElements";
 import useProject from "./hooks/useProject";
 
 export default function DragOverlayWrapper() {
-  const { elements } = useProject();
+  const { elements, zoomLevel } = useProject();
   const [draggedItem, setDraggedItem] = useState<Active | null>(null);
 
   useDndMonitor({
@@ -54,5 +55,29 @@ export default function DragOverlayWrapper() {
     node = <CanvasElementComponent elementInstance={element} />;
   }
 
-  return <DragOverlay>{node}</DragOverlay>;
+  const compensateScale: Modifier = ({ transform, over }) => {
+    if (!over)
+      return {
+        ...transform,
+        scaleX: zoomLevel,
+        scaleY: zoomLevel,
+      };
+    if (over.id === "canvas-drop-area")
+      return {
+        ...transform,
+        scaleX: zoomLevel,
+        scaleY: zoomLevel,
+      };
+    return transform;
+  };
+
+  return (
+    <DragOverlay
+      style={{ transformOrigin: "0 0" }}
+      adjustScale
+      modifiers={[compensateScale]}
+    >
+      {node}
+    </DragOverlay>
+  );
 }
