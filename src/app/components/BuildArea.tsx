@@ -47,6 +47,7 @@ function BuildArea() {
       // Drag existing element
       const isCanvasElement = active.data?.current?.isCanvasElement;
       if (isCanvasElement) {
+        if (over.id === "toolbar-area") return;
         const elementId = active.data?.current?.elementId;
         const dragged = elements.find((element) => element.id == elementId);
 
