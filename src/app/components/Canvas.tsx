@@ -105,20 +105,11 @@ function CanvasElementWrapper({
       },
     });
 
-  const { zoomLevel } = useProject();
-
-  // Only transform images since we will not use an overlay
-  // - using an overlay causes the image to flicker
-  const isImage = element.type === "ImageBlock";
   const style: React.CSSProperties = {
     position: "absolute",
     left: element.position.x,
     top: element.position.y,
-    transform:
-      transform && isImage
-        ? `translate3d(${transform.x / zoomLevel}px, ${transform.y / zoomLevel}px, 0)`
-        : "",
-    visibility: isDragging && !isImage ? "hidden" : undefined,
+    visibility: isDragging ? "hidden" : undefined,
   };
 
   const CanvasElement = ProjectElements[element.type].canvasComponent;

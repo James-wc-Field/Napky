@@ -46,7 +46,6 @@ export default function DragOverlayWrapper() {
   if (isCanvasElement) {
     const elementId = draggedItem.data?.current?.elementId;
     const element = elements.find((element) => element.id === elementId);
-    if (element?.type === "ImageBlock") return null; // Don't show overlay for images, causes flicker
 
     if (!element) return <div>Dragged element not found</div>;
 
@@ -71,9 +70,9 @@ export default function DragOverlayWrapper() {
 
   return (
     <DragOverlay
-      style={{ transformOrigin: "0 0" }}
       adjustScale
-      transition="transform 0.15s ease-out"
+      style={{ transformOrigin: "0 0" }}
+      transition="transform 0.1s ease-out"
       modifiers={[compensateScale]}
     >
       {node}
