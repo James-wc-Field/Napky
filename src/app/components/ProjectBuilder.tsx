@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useId } from "react";
+import React, { useEffect, useId } from "react";
 import {
   DndContext,
   MouseSensor,
@@ -24,6 +24,7 @@ function ProjectBuilder({ project }: { project: Project }) {
     })
   );
 
+  usePreventZoom();
   return (
     <DndContext id={id} sensors={sensors} collisionDetection={pointerWithin}>
       <main className="flex flex-col w-full h-full">
@@ -42,3 +43,23 @@ function ProjectBuilder({ project }: { project: Project }) {
 }
 
 export default ProjectBuilder;
+
+/**
+ * Prevents default zoom behavior (zooming the entire page,
+ *  including nav- and toolbar) when using the mouse wheel
+ */
+function usePreventZoom() {
+  useEffect(() => {
+    function preventZoom(e: WheelEvent) {
+      if (e.ctrlKey) {
+        e.preventDefault();
+      }
+    }
+
+    window.addEventListener("wheel", preventZoom, { passive: false });
+
+    return () => {
+      window.removeEventListener("wheel", preventZoom);
+    };
+  }, []);
+}

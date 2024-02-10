@@ -32,63 +32,114 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
   const {
     updateZoomLevel,
     zoomLevel,
+    scrollTop,
+    scrollLeft,
     updateScrollLeft,
     updateScrollTop,
-    canvasSize,
   } = useProject();
 
-  const minScale = 0.2;
-  const maxScale = 3;
+  const minScale = 0.01;
+  const maxScale = 5;
   function handleButtonPress(type: "plus" | "minus") {
     updateZoomLevel((prev) => {
-      if (prev <= minScale && type === "minus") return prev;
-      if (prev >= maxScale && type === "plus") return prev;
+      if (prev / 1.2 <= minScale && type === "minus") return prev;
+      if (prev * 1.2 >= maxScale && type === "plus") return prev;
       if (type === "plus") return prev * 1.2;
       return prev / 1.2;
     });
   }
 
+  function handleScroll(e: React.WheelEvent<HTMLDivElement>) {
+    console.log(zoomLevel);
+    const { deltaX, deltaY } = e;
+    console.log(deltaX, deltaY);
+    if (e.ctrlKey) {
+      updateZoomLevel((prev) => {
+        if (prev / 1.05 <= minScale && deltaY > 0) return prev;
+        if (prev * 1.05 >= maxScale && deltaY < 0) return prev;
+        if (deltaY > 0) return prev / 1.05;
+        return prev * 1.05;
+      });
+      return;
+    }
+    updateScrollLeft((prev) => prev - deltaX);
+    updateScrollTop((prev) => prev - deltaY);
+  }
+
   return (
     <>
       <div
-        className="absolute inset-0 flex overflow-auto items-center bg-neutral-700"
-        onScroll={(e) => {
-          updateScrollLeft(e.currentTarget.scrollLeft);
-          updateScrollTop(e.currentTarget.scrollTop);
+        id="canvas-renderer"
+        className="absolute w-full h-full top-0 left-0"
+        style={{
+          zIndex: 4,
         }}
+        onWheel={handleScroll}
       >
         <div
-          className="m-auto"
-          style={{
-            width: canvasSize.width * zoomLevel,
-            height: canvasSize.height * zoomLevel,
-          }}
+          id="canvas-pane-droppable"
+          className="absolute w-full h-full top-0 left-0 bg-white/20"
+          style={{ zIndex: 1 }}
+          ref={setNodeRef}
         >
           <div
-            id="canvas-drop-area"
-            ref={setNodeRef}
-            className="w-full h-full bg-white/10"
+            id="canvas-viewport"
+            className="absolute top-0 left-0 w-full h-full"
             style={{
-              width: canvasSize.width,
-              height: canvasSize.height,
-              transform: `scale(${zoomLevel})`,
+              transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
               transformOrigin: "top left",
-              border: isOver ? "4px dashed" : undefined,
-              borderColor: isOver ? "gray" : undefined,
+              zIndex: 2,
             }}
           >
             {children}
           </div>
         </div>
       </div>
-      <Card className="absolute top-4 right-4 gap-2 p-2">
-        <Button onPress={() => handleButtonPress("plus")}>
+
+      {/* Canvas Controls */}
+      <Card className="absolute top-4 right-4 gap-2 p-2" style={{ zIndex: 5 }}>
+        <Button
+          isIconOnly
+          variant="flat"
+          onPress={() => handleButtonPress("plus")}
+        >
           <PlusIcon className="w-6" />
         </Button>
-        <Button onPress={() => handleButtonPress("minus")}>
+        <Button
+          isIconOnly
+          variant="flat"
+          onPress={() => handleButtonPress("minus")}
+        >
           <MinusIcon className="w-6" />
         </Button>
       </Card>
+
+      {/* Background */}
+      <svg className="absolute w-full h-full top-0 left-0">
+        <pattern
+          id="background"
+          x={scrollLeft % (24 * zoomLevel)}
+          y={scrollTop % (24 * zoomLevel)}
+          width={24 * zoomLevel}
+          height={24 * zoomLevel}
+          patternUnits="userSpaceOnUse"
+          patternTransform={`translate(${zoomLevel}, ${zoomLevel})`}
+        >
+          <circle
+            cx={zoomLevel}
+            cy={zoomLevel}
+            r={zoomLevel}
+            fill="#91919a"
+          ></circle>
+        </pattern>
+        <rect
+          x="0"
+          y="0"
+          width="100%"
+          height="100%"
+          fill="url(#background)"
+        ></rect>
+      </svg>
     </>
   );
 }
