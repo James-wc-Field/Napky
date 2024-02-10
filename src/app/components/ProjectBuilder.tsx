@@ -14,6 +14,7 @@ import { Project } from "../project/SchemaSimulation";
 import SaveProjectBtn from "./SaveProjectBtn";
 import BuildArea from "./BuildArea";
 import DragOverlayWrapper from "./DragOverlayWrapper";
+import usePreventZoom from "./hooks/usePreventZoom";
 
 function ProjectBuilder({ project }: { project: Project }) {
   const id = useId();
@@ -43,23 +44,3 @@ function ProjectBuilder({ project }: { project: Project }) {
 }
 
 export default ProjectBuilder;
-
-/**
- * Prevents default zoom behavior (zooming the entire page,
- *  including nav- and toolbar) when using the mouse wheel
- */
-function usePreventZoom() {
-  useEffect(() => {
-    function preventZoom(e: WheelEvent) {
-      if (e.ctrlKey) {
-        e.preventDefault();
-      }
-    }
-
-    window.addEventListener("wheel", preventZoom, { passive: false });
-
-    return () => {
-      window.removeEventListener("wheel", preventZoom);
-    };
-  }, []);
-}
