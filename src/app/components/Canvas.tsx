@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useRef } from "react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { ProjectElementInstance, ProjectElements } from "./ProjectElements";
 import { Button, Card } from "@nextui-org/react";
@@ -36,6 +36,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     scrollLeft,
     updateScrollLeft,
     updateScrollTop,
+    elements,
   } = useProject();
 
   const minScale = 0.05;
@@ -64,6 +65,9 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     updateScrollTop((prev) => prev - deltaY);
   }
 
+  // keep canvas-viewport size for minimap
+  const ref = useRef<HTMLDivElement>(null);
+
   return (
     <>
       <div
@@ -88,6 +92,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
               transformOrigin: "top left",
               zIndex: 2,
             }}
+            ref={ref}
           >
             {children}
           </div>
@@ -112,11 +117,45 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
         </Button>
       </Card>
 
+      {/* Minimap to see a small version of the viewport and its elements */}
+      <div
+        className="absolute right-0 bottom-0 bg-neutral-400/50 m-4 rounded-md border-1 border-neutral-500/50"
+        style={{ zIndex: 5 }}
+      >
+        <svg
+          className="w-48 h-32  bg-white/20"
+          viewBox={`
+            0 0
+            ${ref.current?.clientWidth} ${ref.current?.clientHeight}
+          `}
+        >
+          {elements.map((element) => {
+            return (
+              <rect
+                x={element.position.x + scrollLeft}
+                y={element.position.y + scrollTop}
+                width={element.size.width * zoomLevel}
+                height={element.size.height * zoomLevel}
+                fill="gray"
+              />
+            );
+          })}
+          <path
+            d={`M0 0 H${ref.current?.clientWidth} V${ref.current?.clientHeight} H0 Z`}
+            fill="rgba(240,240,240,0.3)"
+            fill-rule="evenodd"
+            stroke="white"
+            strokeWidth="1"
+          />
+        </svg>
+      </div>
+
       {/* Background */}
-      <svg className="absolute w-full h-full top-0 left-0"
-      style={{
-        visibility: zoomLevel < 0.5 ? "hidden" : "visible",
-      }}
+      <svg
+        className="absolute w-full h-full top-0 left-0"
+        style={{
+          visibility: zoomLevel < 0.5 ? "hidden" : "visible",
+        }}
       >
         <pattern
           id="background"
