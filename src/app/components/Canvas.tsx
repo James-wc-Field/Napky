@@ -50,9 +50,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
   }
 
   function handleScroll(e: React.WheelEvent<HTMLDivElement>) {
-    console.log(zoomLevel);
     const { deltaX, deltaY } = e;
-    console.log(deltaX, deltaY);
     if (e.ctrlKey) {
       updateZoomLevel((prev) => {
         if (prev / 1.05 <= minScale && deltaY > 0) return prev;
