@@ -38,7 +38,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     updateScrollTop,
   } = useProject();
 
-  const minScale = 0.01;
+  const minScale = 0.05;
   const maxScale = 5;
   function handleButtonPress(type: "plus" | "minus") {
     updateZoomLevel((prev) => {
@@ -113,7 +113,11 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
       </Card>
 
       {/* Background */}
-      <svg className="absolute w-full h-full top-0 left-0">
+      <svg className="absolute w-full h-full top-0 left-0"
+      style={{
+        visibility: zoomLevel < 0.5 ? "hidden" : "visible",
+      }}
+      >
         <pattern
           id="background"
           x={scrollLeft % (24 * zoomLevel)}
