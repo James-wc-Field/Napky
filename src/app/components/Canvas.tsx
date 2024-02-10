@@ -132,8 +132,8 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
           {elements.map((element) => {
             return (
               <rect
-                x={element.position.x + scrollLeft}
-                y={element.position.y + scrollTop}
+                x={element.position.x * zoomLevel + scrollLeft}
+                y={element.position.y * zoomLevel + scrollTop}
                 width={element.size.width * zoomLevel}
                 height={element.size.height * zoomLevel}
                 fill="gray"
