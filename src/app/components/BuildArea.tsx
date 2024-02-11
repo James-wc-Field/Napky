@@ -115,10 +115,10 @@ function BuildArea() {
     <div className="flex flex-row grow">
       <Toolbar />
       <div
-        id="file-drop-area"
+        id="canvas-wrapper"
         onDrop={(e) => externalDropHandler(e)}
         onDragOver={(e) => e.preventDefault()}
-        className="relative flex-1"
+        className="relative overflow-hidden z-0 w-full h-full"
       >
         <Canvas elements={elements} />
       </div>
