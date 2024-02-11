@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useId } from "react";
+import React, { useEffect, useId } from "react";
 import {
   DndContext,
   MouseSensor,
@@ -14,6 +14,7 @@ import { Project } from "../project/SchemaSimulation";
 import SaveProjectBtn from "./SaveProjectBtn";
 import BuildArea from "./BuildArea";
 import DragOverlayWrapper from "./DragOverlayWrapper";
+import usePreventZoom from "./hooks/usePreventZoom";
 
 function ProjectBuilder({ project }: { project: Project }) {
   const id = useId();
@@ -24,6 +25,7 @@ function ProjectBuilder({ project }: { project: Project }) {
     })
   );
 
+  usePreventZoom();
   return (
     <DndContext id={id} sensors={sensors} collisionDetection={pointerWithin}>
       <main className="flex flex-col w-full h-full">
