@@ -13,15 +13,12 @@ const type: ElementsType = "ListBlock";
 
 const extraAttributes = {
   label: "List Block",
-  helperText: "Helper Text",
   placeHolder: "Add other blocks here...",
 };
 
 export const ListBlockProjectElement: ProjectElement = {
   type,
-  construct: (
-    id: string,
-  ) => ({
+  construct: (id: string) => ({
     id,
     type,
     position: { x: 0, y: 0 },
@@ -48,22 +45,18 @@ function CanvasComponent({
   elementInstance: ProjectElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
-  const { label, placeHolder, helperText } = element.extraAttributes;
+  const { label, placeHolder } = element.extraAttributes;
   const style = {
     width: element.size.width,
     height: element.size.height,
   };
 
   return (
-    <Card style={style}>
-      <CardHeader>{label}</CardHeader>
-      <CardBody className="justify-center">
-        <Card className="w-full h-full">
-          <CardBody className="flex justify-center items-center">
-            <p>{placeHolder}</p>
-          </CardBody>
-        </Card>
-      </CardBody>
+    <Card style={style} className="gap-2 p-2">
+      <p>{label}</p>
+      <Card className="w-full h-full items-center justify-center border-2 border-dashed border-neutral-700">
+        <p>{placeHolder}</p>
+      </Card>
     </Card>
   );
 }
