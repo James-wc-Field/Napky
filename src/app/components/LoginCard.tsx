@@ -1,6 +1,9 @@
 'use client'
 
 import React from "react";
+import { Session } from 'next-auth';
+import { signIn, signOut } from 'next-auth/react';
+
 import { Tabs, Tab } from "@nextui-org/tabs"
 import { Input } from "@nextui-org/input"
 import { Checkbox } from "@nextui-org/checkbox"
@@ -13,10 +16,45 @@ import { EyeSlashFilledIcon } from "../../../public/icons/EyeSlashFilledIcon";
 
 import Copyright from "../components/Copyright";
 
-export default function Page() {
+interface Props {
+	session: Session | null;
+}
+
+export default function Page({ session } : Props) {
 	const [selected, setSelected] = React.useState("login");
-  const [isVisible, setIsVisible] = React.useState(false);
-  const toggleVisibility = () => setIsVisible(!isVisible);
+	const [isVisible, setIsVisible] = React.useState(false);
+	const [email, setEmail] = React.useState('');
+
+	const handleEmailSignIn = (e: React.FormEvent<HTMLFormElement>) => {
+		// handle email sign in
+		e.preventDefault();
+		React.useEffect(() => {
+			(async () => {
+				await signIn('email', { email, callbackUrl: '/protected' });
+			})();
+		})
+	};
+	
+	const handleGoogleSignIn = () => {
+		// handle Google sign in
+		React.useEffect(() => {
+			(async () => {
+				await signIn('google', { callbackUrl: '/protected' });
+			})();
+		})
+	};
+	
+	const handleSignOut = () => {
+		// handle sign out
+		React.useEffect(() => {
+			(async () => {
+				await signOut({ callbackUrl: '/' });
+			})();
+		})
+
+	};
+
+	const toggleVisibility = () => setIsVisible(!isVisible);
 	function tabChange(key: React.Key) {
 		setIsVisible(false); // Reset password visibility when changing tabs
 		setSelected(key as string);
@@ -24,6 +62,25 @@ export default function Page() {
 
 	return (
 		<>
+		<div className="border-4 rounded-lg border-sky-500 mb-4">
+			<h1>Test Auth UI</h1>
+			{!session && (
+				<>
+					<form onSubmit={handleEmailSignIn}>
+						<input
+							name="email"
+							type="email"
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+						/>
+						<button>Continue</button>
+					</form>
+					<button onClick={handleGoogleSignIn}>Continue with Google</button>
+				</>
+			)}
+
+			{session && <button onClick={handleSignOut}>Sign out</button>}
+		</div>
 			<Card className="max-w-full w-[340px] h-[400px]">
 				<CardBody className="overflow-hidden">
 					<Tabs
