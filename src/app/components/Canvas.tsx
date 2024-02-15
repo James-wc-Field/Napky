@@ -101,7 +101,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
         </div>
       </div>
       <CanvasControls />
-      {/* <MiniMap /> */}
+      <MiniMap />
       <CanvasBackground />
     </>
   );

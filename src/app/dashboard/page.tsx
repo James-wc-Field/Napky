@@ -78,7 +78,7 @@ export default function Page() {
               <Button className="text-lg text-center p-6 m-4">New</Button>
             </DropdownTrigger>
             <DropdownMenu>
-              <DropdownItem key="project" href="/builder/12345">Project</DropdownItem>
+              <DropdownItem key="project" href="/project/12345">Project</DropdownItem>
               <DropdownItem key="folder">Folder</DropdownItem>
               <DropdownItem key="file">File Upload</DropdownItem>
             </DropdownMenu>
