@@ -71,7 +71,7 @@ function BuildArea() {
     if (!e.dataTransfer.items) return;
 
     const canvasRect = document
-      .getElementById("canvas-drop-area")
+      .getElementById("canvas-pane-droppable")
       ?.getBoundingClientRect() as DOMRect;
     const top = canvasRect.top || 0;
     const left = canvasRect.left || 0;
@@ -109,6 +109,7 @@ function BuildArea() {
       reader.readAsDataURL(file);
     }
     e.preventDefault();
+    e.stopPropagation();
   }
 
   return (
