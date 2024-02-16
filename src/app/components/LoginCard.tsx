@@ -20,38 +20,25 @@ interface Props {
 	session: Session | null;
 }
 
-export default function Page({ session } : Props) {
+export default async function Page({ session } : Props) {
 	const [selected, setSelected] = React.useState("login");
 	const [isVisible, setIsVisible] = React.useState(false);
 	const [email, setEmail] = React.useState('');
 
-	const handleEmailSignIn = (e: React.FormEvent<HTMLFormElement>) => {
+	const handleEmailSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
 		// handle email sign in
 		e.preventDefault();
-		React.useEffect(() => {
-			(async () => {
-				await signIn('email', { email, callbackUrl: '/protected' });
-			})();
-		})
+		await signIn('email', { email, callbackUrl: '/login' });
 	};
 	
-	const handleGoogleSignIn = () => {
+	const handleGoogleSignIn = async () => {
 		// handle Google sign in
-		React.useEffect(() => {
-			(async () => {
-				await signIn('google', { callbackUrl: '/protected' });
-			})();
-		})
+		await signIn('google', { callbackUrl: '/login' });
 	};
 	
-	const handleSignOut = () => {
+	const handleSignOut = async () => {
 		// handle sign out
-		React.useEffect(() => {
-			(async () => {
-				await signOut({ callbackUrl: '/' });
-			})();
-		})
-
+		await signOut({ callbackUrl: '/login' });
 	};
 
 	const toggleVisibility = () => setIsVisible(!isVisible);
@@ -63,7 +50,8 @@ export default function Page({ session } : Props) {
 	return (
 		<>
 		<div className="border-4 rounded-lg border-sky-500 mb-4">
-			<h1>Test Auth UI</h1>
+			<h1 className="text-center">Test Auth UI</h1>
+			<button className="block text-center border-4 border-green-500 mx-auto" onClick={handleGoogleSignIn}>Continue with Google</button>
 			{!session && (
 				<>
 					<form onSubmit={handleEmailSignIn}>
@@ -75,7 +63,6 @@ export default function Page({ session } : Props) {
 						/>
 						<button>Continue</button>
 					</form>
-					<button onClick={handleGoogleSignIn}>Continue with Google</button>
 				</>
 			)}
 
