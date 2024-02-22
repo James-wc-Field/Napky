@@ -5,14 +5,17 @@ import { LinkBlockProjectElement } from "./blocks/LinkBlock";
 import { ListBlockProjectElement } from "./blocks/ListBlock";
 import { TodoBlockProjectElement } from "./blocks/TodoBlock";
 
-export type ElementsType = "TextBlock" | "ImageBlock" | "LinkBlock" | "ListBlock" | "TodoBlock";
+export type ElementsType =
+  | "TextBlock"
+  | "ImageBlock"
+  | "LinkBlock"
+  | "ListBlock"
+  | "TodoBlock";
 
 export type ProjectElement = {
   type: ElementsType;
 
-  construct: (
-    id: string,
-  ) => ProjectElementInstance;
+  construct: (id: string) => ProjectElementInstance;
 
   toolbarElement: {
     icon: React.ElementType;
