@@ -63,7 +63,7 @@ export default function Page() {
 								<div className="flex flex-col gap-1">
 									<div className="flex group gap-2 justify-center">
 										<p className="text-sm text-center">
-											Don't have an account?
+											Don&apos;t have an account?
 										</p>
 										<Link className="cursor-pointer" size="sm" onPress={() => tabChange("sign-up")}>
 											Sign up
