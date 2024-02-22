@@ -34,7 +34,7 @@ function MiniMap() {
     onDragEnd: (event) => {
       setOverlayRect(null);
     },
-  });
+  }); // This causes an maximum update depth error, fix at some point if we decide to use the minimap
 
   return (
     <div
