@@ -73,7 +73,7 @@ export default function DragOverlayWrapper() {
     <DragOverlay
       adjustScale
       style={{ transformOrigin: "0 0" }}
-      transition="transform 0.2s cubic-bezier(.22,1.31,.28,1.19)"
+      // transition="transform 0.2s cubic-bezier(.22,1.31,.28,1.19)" // Slow when devtools are open, remove for dev for now
       modifiers={[overScale]}
     >
       {node}

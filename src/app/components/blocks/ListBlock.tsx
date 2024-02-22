@@ -6,14 +6,15 @@ import {
   ProjectElement,
   ProjectElementInstance,
 } from "../ProjectElements";
-import { Card, CardBody } from "@nextui-org/card";
-import { CardHeader } from "@nextui-org/react";
+import { Card } from "@nextui-org/card";
+import { useDroppable } from "@dnd-kit/core";
 
 const type: ElementsType = "ListBlock";
 
 const extraAttributes = {
   label: "List Block",
   placeHolder: "Add other blocks here...",
+  items: [],
 };
 
 export const ListBlockProjectElement: ProjectElement = {
@@ -45,7 +46,7 @@ function CanvasComponent({
   elementInstance: ProjectElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
-  const { label, placeHolder } = element.extraAttributes;
+  const { label, placeHolder, items } = element.extraAttributes;
   const style = {
     width: element.size.width,
     height: element.size.height,
@@ -54,9 +55,38 @@ function CanvasComponent({
   return (
     <Card style={style} className="gap-2 p-2">
       <p>{label}</p>
-      <Card className="w-full h-full items-center justify-center border-2 border-dashed border-neutral-700">
-        <p>{placeHolder}</p>
+      <Card className="w-full h-full p-1">
+        <ListDroppable element={element}>
+          <p className="text-neutral-400">{placeHolder}</p>
+          {items.map((item, index) => (
+            <div key={index} className="bg-neutral-100 p-2">
+              {item}
+            </div>
+          ))}
+        </ListDroppable>
       </Card>
     </Card>
+  );
+}
+
+function ListDroppable({
+  children,
+  element,
+}: {
+  children: React.ReactNode;
+  element: ProjectElementInstance;
+}) {
+  const { isOver, setNodeRef } = useDroppable({
+    id: element.id + "-list-droppable",
+  });
+  return (
+    <div
+      ref={setNodeRef}
+      className={`${
+        isOver ? "bg-neutral-600/50" : ""
+      } w-full h-full rounded-xl border-2 border-dashed border-neutral-700 items-center justify-center flex flex-col gap-2`}
+    >
+      {children}
+    </div>
   );
 }
