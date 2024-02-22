@@ -68,7 +68,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [canvasViewRef]);
+  }, []);
 
   return (
     <>
