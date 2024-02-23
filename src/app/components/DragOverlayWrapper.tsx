@@ -55,7 +55,7 @@ export default function DragOverlayWrapper() {
   }
 
   const overScale: Modifier = ({ transform, over }) => {
-    if (over?.id === "canvas-drop-area" || !over) {
+    if (!over?.data?.current?.isToolbar || !over) {
       return {
         ...transform,
         scaleX: zoomLevel,

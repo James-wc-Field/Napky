@@ -42,7 +42,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
   function handleScroll(e: React.WheelEvent<HTMLDivElement>) {
     const { deltaX, deltaY } = e;
     if (e.ctrlKey) {
-      updateZoomLevel(deltaY > 0, 1.05);
+      updateZoomLevel(deltaY < 0, 1.05);
       return;
     } else if (e.shiftKey) {
       updateScrollLeft(deltaY);
@@ -75,9 +75,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
       <div
         id="canvas-renderer"
         className="absolute w-full h-full top-0 left-0"
-        style={{
-          zIndex: 4,
-        }}
+        style={{ zIndex: 4 }}
         onWheel={handleScroll}
         ref={canvasViewRef}
       >

@@ -23,8 +23,13 @@ export type ProjectElement = {
   };
   canvasComponent: React.FC<{
     elementInstance: ProjectElementInstance;
-  }>;
-  toolbarPropertiesComponent: React.FC;
+  }>; // How the element will be rendered in the canvas
+
+  toolbarPropertiesComponent: React.FC; // How the properties of the element will be rendered in the toolbar
+
+  listComponent: React.FC<{
+    elementInstance: ProjectElementInstance;
+  }>; // How the element will be rendered when put into a list
 };
 
 export type ProjectElementInstance = {

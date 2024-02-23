@@ -5,16 +5,17 @@ import {
   ElementsType,
   ProjectElement,
   ProjectElementInstance,
+  ProjectElements,
 } from "../ProjectElements";
 import { Card } from "@nextui-org/card";
-import { useDroppable } from "@dnd-kit/core";
+import { useDroppable, useDraggable } from "@dnd-kit/core";
 
 const type: ElementsType = "ListBlock";
 
 const extraAttributes = {
   label: "List Block",
   placeHolder: "Add other blocks here...",
-  items: [],
+  items: [] as ProjectElementInstance[],
 };
 
 export const ListBlockProjectElement: ProjectElement = {
@@ -32,8 +33,10 @@ export const ListBlockProjectElement: ProjectElement = {
     label: "List",
   },
 
+
   canvasComponent: CanvasComponent,
   toolbarPropertiesComponent: () => <div>Properties Component</div>,
+  listComponent: () => null,
 };
 
 type CustomInstance = ProjectElementInstance & {
@@ -55,16 +58,15 @@ function CanvasComponent({
   return (
     <Card style={style} className="gap-2 p-2">
       <p>{label}</p>
-      <Card className="w-full h-full p-1">
-        <ListDroppable element={element}>
-          <p className="text-neutral-400">{placeHolder}</p>
-          {items.map((item, index) => (
-            <div key={index} className="bg-neutral-100 p-2">
-              {item}
-            </div>
-          ))}
-        </ListDroppable>
-      </Card>
+      <ListDroppable element={element}>
+        {items.length === 0 ? (
+          <p className="text-neutral-500">{placeHolder}</p>
+        ) : (
+          items.map((item, index) => (
+            <ListElementWrapper key={index} element={item} />
+          ))
+        )}
+      </ListDroppable>
     </Card>
   );
 }
@@ -78,6 +80,10 @@ function ListDroppable({
 }) {
   const { isOver, setNodeRef } = useDroppable({
     id: element.id + "-list-droppable",
+    data: {
+      isListDroppable: true,
+      element: element,
+    },
   });
   return (
     <div
@@ -87,6 +93,32 @@ function ListDroppable({
       } w-full h-full rounded-xl border-2 border-dashed border-neutral-700 items-center justify-center flex flex-col gap-2`}
     >
       {children}
+    </div>
+  );
+}
+
+function ListElementWrapper({ element }: { element: ProjectElementInstance }) {
+  const { attributes, listeners, isDragging, setNodeRef } = useDraggable({
+    id: element.id + "-drag-handler",
+    data: {
+      type: element.type,
+      elementId: element.id,
+      isListElement: true,
+    },
+  });
+
+  const ListElement = ProjectElements[element.type].listComponent;
+  if (!ListElement) return null;
+  return (
+    <div
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      className={`${
+        isDragging ? "opacity-50" : ""
+      } bg-neutral-400 rounded-xl p-2 w-full`}
+    >
+      <ListElement elementInstance={element} />
     </div>
   );
 }
