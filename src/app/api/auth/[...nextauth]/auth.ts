@@ -2,9 +2,26 @@ import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 import GitHub from "next-auth/providers/github"
 import EmailProvider from 'next-auth/providers/nodemailer';
+import { DynamoDB, DynamoDBClientConfig } from '@aws-sdk/client-dynamodb'
+import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb"
+import { DynamoDBAdapter } from "@auth/dynamodb-adapter"
 
-// import Auth from "@auth/core"
-// import { default as GoogleAuth } from "@auth/core/providers/google"
+//TODO These can be undocumented when adding email
+// const config: DynamoDBClientConfig = {
+//   credentials: {
+//     accessKeyId: process.env.NEXT_AUTH_AWS_ACCESS_KEY as string,
+//     secretAccessKey: process.env.NEXT_AUTH_AWS_SECRET_KEY as string,
+//   },
+//   region: process.env.NEXT_AUTH_AWS_REGION,
+// };
+
+// const client = DynamoDBDocument.from(new DynamoDB(config), {
+//   marshallOptions: {
+//     convertEmptyValues: true,
+//     removeUndefinedValues: true,
+//     convertClassInstanceToMap: true,
+//   },
+// })
 
 export const {
   handlers,
@@ -25,26 +42,11 @@ export const {
       //     from: process.env.SMTP_FROM,
       //   }),
       ],
-      // adapter: MongoDBAdapter(mongoClientPromise, {
-      //   databaseName: process.env.ENVIRONMENT,
-      // }),
+      // adapter: DynamoDBAdapter( // TODO this can be uncommented when email added
+      //   client
+      // ),
       pages: {
         signIn: '/auth',
         signOut: '/auth',
       },
     });
-
-// const request = new Request(origin)
-// const response = await Auth(request, {
-//   providers: [Google({ clientId: GOOGLE_CLIENT_ID, clientSecret: GOOGLE_CLIENT_SECRET })],
-// })
-
-// export default NextAuth({
-//   providers: [
-//     Google({
-//       clientId: process.env.GITHUB_ID,
-//       clientSecret: process.env.GITHUB_SECRET,
-//     }),
-//   ],
-// })
-    
