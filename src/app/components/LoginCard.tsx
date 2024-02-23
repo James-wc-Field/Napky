@@ -15,6 +15,7 @@ import { EyeFilledIcon } from "../../../public/icons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../../../public/icons/EyeSlashFilledIcon";
 
 import Copyright from "../components/Copyright";
+import { GoogleIcon } from "../../../public/icons/GoogleIcon";
 
 interface Props {
 	session: Session | null;
@@ -51,24 +52,9 @@ export default async function Page({ session } : Props) {
 		<>
 		<div className="border-4 rounded-lg border-sky-500 mb-4">
 			<h1 className="text-center">Test Auth UI</h1>
-			<button className="block text-center border-4 border-green-500 mx-auto" onClick={handleGoogleSignIn}>Continue with Google</button>
-			{!session && (
-				<>
-					<form onSubmit={handleEmailSignIn}>
-						<input
-							name="email"
-							type="email"
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-						/>
-						<button>Continue</button>
-					</form>
-				</>
-			)}
-
 			{session && <button onClick={handleSignOut}>Sign out</button>}
 		</div>
-			<Card className="max-w-full w-[340px] h-[400px]">
+			<Card className="max-w-full w-[340px]">
 				<CardBody className="overflow-hidden">
 					<Tabs
 						fullWidth
@@ -103,6 +89,9 @@ export default async function Page({ session } : Props) {
 								<Checkbox defaultSelected>Remember me</Checkbox>
 								<Button fullWidth color="primary">
 									Login
+								</Button>
+								<Button startContent={<GoogleIcon />} fullWidth color="primary" onPress={handleGoogleSignIn}>
+									Login with Google
 								</Button>
 								<div className="flex flex-col gap-1">
 									<div className="flex group gap-2 justify-center">
