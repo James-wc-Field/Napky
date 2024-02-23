@@ -34,6 +34,7 @@ export const TextBlockProjectElement: ProjectElement = {
 
   canvasComponent: CanvasComponent,
   toolbarPropertiesComponent: () => <div>Properties Component</div>,
+  listComponent: ListComponent,
 };
 
 type CustomInstance = ProjectElementInstance & {
@@ -50,7 +51,6 @@ function CanvasComponent({
   const { text, placeHolder } = element.extraAttributes;
   const style = {
     width: element.size.width,
-    height: element.size.height,
   };
 
   function handleOnTextChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -64,16 +64,29 @@ function CanvasComponent({
   }
 
   return (
-    <Card style={style}>
-      <CardBody className="justify-center">
-        <Input
-          size="sm"
-          type="text"
-          placeholder={placeHolder}
-          onChange={handleOnTextChange}
-          value={text}
-        />
-      </CardBody>
+    <Card style={style} className="p-2 h-fit">
+      <Input
+        size="sm"
+        type="text"
+        placeholder={placeHolder}
+        onChange={handleOnTextChange}
+        value={text}
+      />
     </Card>
+  );
+}
+
+function ListComponent({
+  elementInstance,
+}: {
+  elementInstance: ProjectElementInstance;
+}) {
+  const element = elementInstance as CustomInstance;
+  const { text, placeHolder } = element.extraAttributes;
+
+  return (
+    <div className="p-2 h-fit" style={{ width: element.size.width }}>
+      <p>{text}</p>
+    </div>
   );
 }

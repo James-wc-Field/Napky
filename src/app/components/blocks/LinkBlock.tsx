@@ -18,9 +18,7 @@ const extraAttributes = {
 
 export const LinkBlockProjectElement: ProjectElement = {
   type,
-  construct: (
-    id: string,
-  ) => ({
+  construct: (id: string) => ({
     id,
     type,
     position: { x: 0, y: 0 },
@@ -54,13 +52,16 @@ function CanvasComponent({
   };
 
   return (
-    <Card style={style}>
-      <CardBody className="">
-        <div className="flex max-h-full gap-2 items-center">
-          <LinkIcon className="text-gray-500 h-6 w-6" />
-          <Input size="sm" type="text" className="flex" placeholder={placeHolder} />
-        </div>
-      </CardBody>
+    <Card style={style} className="p-2 h-fit">
+      <div className="flex max-h-full gap-2 items-center">
+        <LinkIcon className="text-gray-500 h-6 w-6" />
+        <Input
+          size="sm"
+          type="text"
+          className="flex"
+          placeholder={placeHolder}
+        />
+      </div>
     </Card>
   );
 }

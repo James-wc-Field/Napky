@@ -50,24 +50,21 @@ function CanvasComponent({
   const { label, placeHolder, helperText } = element.extraAttributes;
   const style = {
     width: element.size.width,
-    height: element.size.height,
   };
 
   return (
-    <Card style={style}>
-      <CardBody className="justify-center">
-        <CheckboxGroup>
-          <div className="flex flex-row grow gap-2">
-            <Checkbox className="flex"></Checkbox>
-            <Input
-              className="flex"
-              size="sm"
-              type="text"
-              placeholder={placeHolder}
-            />
-          </div>
-        </CheckboxGroup>
-      </CardBody>
+    <Card style={style} className="p-2 h-fit">
+      <CheckboxGroup>
+        <div className="flex flex-row grow gap-1">
+          <Checkbox className="flex"></Checkbox>
+          <Input
+            className="flex"
+            size="sm"
+            type="text"
+            placeholder={placeHolder}
+          />
+        </div>
+      </CheckboxGroup>
     </Card>
   );
 }
