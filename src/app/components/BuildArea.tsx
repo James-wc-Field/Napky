@@ -23,7 +23,11 @@ function BuildArea() {
 
       // Drag existing element
       const isCanvasElement = active.data?.current?.isCanvasElement;
-      if (isCanvasElement && over.data?.current?.isCanvasDropArea) {
+      const isListElement = active.data?.current?.isListElement;
+      if (
+        (isCanvasElement || isListElement) &&
+        over.data?.current?.isCanvasDropArea
+      ) {
         const elementId = active.data?.current?.elementId;
         const dragged = elements.find((element) => element.id == elementId);
 
@@ -34,6 +38,10 @@ function BuildArea() {
           position: {
             x: dragged.position.x + delta.x / zoomLevel,
             y: dragged.position.y + delta.y / zoomLevel,
+          },
+          extraAttributes: {
+            ...dragged.extraAttributes,
+            inList: false,
           },
         });
 
@@ -57,6 +65,14 @@ function BuildArea() {
           extraAttributes: {
             ...list.extraAttributes,
             items: newItems,
+          },
+        });
+
+        updateElement(dragged.id, {
+          ...dragged,
+          extraAttributes: {
+            ...dragged.extraAttributes,
+            inList: true,
           },
         });
 

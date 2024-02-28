@@ -14,9 +14,10 @@ export default function Canvas({
   return (
     <MainCanvasDroppable>
       {elements.length > 0 &&
-        elements.map((element) => (
-          <CanvasElementWrapper key={element.id} element={element} />
-        ))}
+        elements.map((element) => {
+          if (element.extraAttributes?.inList) return null;
+          return <CanvasElementWrapper key={element.id} element={element} />
+        })}
     </MainCanvasDroppable>
   );
 }
