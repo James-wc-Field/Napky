@@ -11,7 +11,6 @@ function BuildArea() {
     elements,
     addElement,
     updateElement,
-    removeElement,
     scrollLeft,
     scrollTop,
     zoomLevel,
@@ -22,25 +21,45 @@ function BuildArea() {
       const { active, over, delta } = event;
       if (!active || !over) return;
 
-      // If we are over a list block, we need to add the dragged element to the list and remove it from the canvas
+      // Drag existing element
+      const isCanvasElement = active.data?.current?.isCanvasElement;
+      if (isCanvasElement && over.data?.current?.isCanvasDropArea) {
+        const elementId = active.data?.current?.elementId;
+        const dragged = elements.find((element) => element.id == elementId);
+
+        if (!dragged) return;
+
+        updateElement(dragged.id, {
+          ...dragged,
+          position: {
+            x: dragged.position.x + delta.x / zoomLevel,
+            y: dragged.position.y + delta.y / zoomLevel,
+          },
+        });
+
+        console.log("DRAGGED:", dragged);
+      }
+
       if (over.data?.current?.isListDroppable) {
         const elementId = active.data?.current?.elementId;
         const dragged = elements.find((element) => element.id == elementId);
         if (!dragged || dragged.type === "ListBlock") return;
 
-        const list = over.data?.current?.element;
-        if (!list) return;
+        // Add element to list
+        const listId = over.data?.current?.element.id;
+        const list = elements.find((element) => element.id == listId);
+        if (!list || list.type !== "ListBlock") return;
 
+        const items = list.extraAttributes?.items;
+        const newItems = [...items, dragged];
         updateElement(list.id, {
           ...list,
           extraAttributes: {
-            items: [...list.extraAttributes.items, dragged],
+            ...list.extraAttributes,
+            items: newItems,
           },
         });
-        console.log("ADDED TO LIST:", list);
 
-        removeElement(dragged.id);
-        console.log("REMOVED FROM CANVAS:", dragged);
         return;
       }
 
@@ -65,26 +84,6 @@ function BuildArea() {
           (delta.y - diffY - scrollTop) / zoomLevel
         );
         console.log("NEW ELEMENT:", newElement);
-      }
-
-      // Drag existing element
-      const isCanvasElement = active.data?.current?.isCanvasElement;
-      if (isCanvasElement) {
-        if (!over.data?.current?.isCanvasDropArea) return;
-        const elementId = active.data?.current?.elementId;
-        const dragged = elements.find((element) => element.id == elementId);
-
-        if (!dragged) return;
-
-        updateElement(dragged.id, {
-          ...dragged,
-          position: {
-            x: dragged.position.x + delta.x / zoomLevel,
-            y: dragged.position.y + delta.y / zoomLevel,
-          },
-        });
-
-        console.log("DRAGGED:", dragged);
       }
     },
   });

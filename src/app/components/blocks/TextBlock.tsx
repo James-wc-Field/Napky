@@ -6,7 +6,7 @@ import {
   ProjectElement,
   ProjectElementInstance,
 } from "../ProjectElements";
-import { Card, CardBody } from "@nextui-org/card";
+import { Card } from "@nextui-org/card";
 import { Input } from "@nextui-org/input";
 import useProject from "../hooks/useProject";
 
@@ -34,7 +34,6 @@ export const TextBlockProjectElement: ProjectElement = {
 
   canvasComponent: CanvasComponent,
   toolbarPropertiesComponent: () => <div>Properties Component</div>,
-  listComponent: ListComponent,
 };
 
 type CustomInstance = ProjectElementInstance & {
@@ -53,12 +52,12 @@ function CanvasComponent({
     width: element.size.width,
   };
 
-  function handleOnTextChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const { value } = event.target;
+  function handleOnTextChange(e: React.ChangeEvent<HTMLInputElement>) {
     updateElement(element.id, {
       ...element,
       extraAttributes: {
-        text: value,
+        ...element.extraAttributes,
+        text: e.target.value,
       },
     });
   }
@@ -73,20 +72,5 @@ function CanvasComponent({
         value={text}
       />
     </Card>
-  );
-}
-
-function ListComponent({
-  elementInstance,
-}: {
-  elementInstance: ProjectElementInstance;
-}) {
-  const element = elementInstance as CustomInstance;
-  const { text, placeHolder } = element.extraAttributes;
-
-  return (
-    <div className="p-2 h-fit" style={{ width: element.size.width }}>
-      <p>{text}</p>
-    </div>
   );
 }

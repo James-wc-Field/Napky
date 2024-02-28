@@ -8,7 +8,7 @@ import {
   ProjectElements,
 } from "../ProjectElements";
 import { Card } from "@nextui-org/card";
-import { useDroppable, useDraggable } from "@dnd-kit/core";
+import { useDroppable, useDraggable, useDndContext } from "@dnd-kit/core";
 
 const type: ElementsType = "ListBlock";
 
@@ -33,10 +33,8 @@ export const ListBlockProjectElement: ProjectElement = {
     label: "List",
   },
 
-
   canvasComponent: CanvasComponent,
   toolbarPropertiesComponent: () => <div>Properties Component</div>,
-  listComponent: () => null,
 };
 
 type CustomInstance = ProjectElementInstance & {
@@ -62,8 +60,8 @@ function CanvasComponent({
         {items.length === 0 ? (
           <p className="text-neutral-500">{placeHolder}</p>
         ) : (
-          items.map((item, index) => (
-            <ListElementWrapper key={index} element={item} />
+          items.map((listElement, index) => (
+            <ListElementWrapper key={index} element={listElement} />
           ))
         )}
       </ListDroppable>
@@ -78,13 +76,16 @@ function ListDroppable({
   children: React.ReactNode;
   element: ProjectElementInstance;
 }) {
+  const { active } = useDndContext();
   const { isOver, setNodeRef } = useDroppable({
     id: element.id + "-list-droppable",
+    disabled: element.id === active?.data?.current?.elementId, // Prevent dropping onto itself
     data: {
       isListDroppable: true,
       element: element,
     },
   });
+
   return (
     <div
       ref={setNodeRef}
@@ -107,16 +108,13 @@ function ListElementWrapper({ element }: { element: ProjectElementInstance }) {
     },
   });
 
-  const ListElement = ProjectElements[element.type].listComponent;
-  if (!ListElement) return null;
+  const ListElement = ProjectElements[element.type].canvasComponent;
   return (
     <div
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      className={`${
-        isDragging ? "opacity-50" : ""
-      } bg-neutral-400 rounded-xl p-2 w-full`}
+      className={`${isDragging ? "opacity-50" : ""}`}
     >
       <ListElement elementInstance={element} />
     </div>
