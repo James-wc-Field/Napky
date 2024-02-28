@@ -137,14 +137,7 @@ export default function CanvasContextProvider({
     setElements((prev) => {
       let newElements = [...prev];
       const index = newElements.findIndex((el) => el.id === id);
-      newElements[index] = {
-        ...newElements[index],
-        ...element,
-        extraAttributes: {
-          ...newElements[index].extraAttributes,
-          ...element.extraAttributes,
-        },
-      }
+      newElements[index] = element;
       return newElements;
     });
   };
