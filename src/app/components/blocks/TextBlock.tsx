@@ -45,13 +45,22 @@ function CanvasComponent({
 }: {
   elementInstance: ProjectElementInstance;
 }) {
-  const { updateElement } = useProject();
-  const element = elementInstance as CustomInstance;
-  const { text, placeHolder } = element.extraAttributes;
+  const { updateElement, elements } = useProject();
+  const element = elements.find(
+    (el) => el.id === elementInstance.id
+  ) as CustomInstance;
   const style = {
-    width: element.size.width,
+    width: element?.size.width || 300,
   };
 
+  if (!element)
+    return (
+      <Card style={style} className="p-2 h-fit">
+        <Input size="sm" type="text" placeholder="Start typing here..." />
+      </Card>
+    );
+
+  const { text, placeHolder } = element.extraAttributes;
   function handleOnTextChange(e: React.ChangeEvent<HTMLInputElement>) {
     updateElement(element.id, {
       ...element,
