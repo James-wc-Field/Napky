@@ -43,7 +43,8 @@ export default function DragOverlayWrapper() {
   }
 
   const isCanvasElement = draggedItem.data?.current?.isCanvasElement;
-  if (isCanvasElement) {
+  const isListElement = draggedItem.data?.current?.isListElement;
+  if (isCanvasElement || isListElement) {
     const elementId = draggedItem.data?.current?.elementId;
     const element = elements.find((element) => element.id === elementId);
 
