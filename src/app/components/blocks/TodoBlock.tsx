@@ -9,7 +9,7 @@ import {
 import { Card } from "@nextui-org/card";
 import { Checkbox, CheckboxGroup, Textarea } from "@nextui-org/react";
 import useProject from "../hooks/useProject";
-import { FormEvent, useEffect } from "react";
+import { FormEvent } from "react";
 
 const type: ElementsType = "TodoBlock";
 
@@ -56,8 +56,13 @@ function CanvasComponent({
     maxWidth: element.size.width,
   };
 
-  function handleOnKeyPress(e: React.KeyboardEvent<HTMLInputElement>, index: number) {
-    if (e.key === "Enter" && !e.shiftKey) {
+  function handleOnKeyPress(
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) {
+    if (e.key === "Enter" && !e.shiftKey && !e.altKey && !e.ctrlKey) {
+      console.log("Enter pressed");
+      e.preventDefault();
       const newItems = [...items];
       newItems.splice(index + 1, 0, "");
       const newChecked = [...checked];
@@ -70,16 +75,54 @@ function CanvasComponent({
           checked: newChecked,
         },
       });
-      e.preventDefault();
-
-      // Focus on the next item
       setTimeout(() => {
-        const nextInput = document.getElementById(
-          `${element.id}-todo-item-${index + 1}`
-        ) as HTMLInputElement;
-        nextInput?.focus();
+        focusNextInput(index);
+      });
+    } else if (e.key === "Enter" && e.shiftKey && e.ctrlKey) {
+      // Focus on the previous todo item
+      e.preventDefault();
+      focusPrevInput(index);
+    } else if (e.key === "Enter" && e.ctrlKey) {
+      // Focus on the next todo item
+      e.preventDefault();
+      focusNextInput(index);
+    } else if (
+      e.key === "Backspace" &&
+      items[index] === "" &&
+      items.length > 1
+    ) {
+      e.preventDefault();
+      const newItems = [...items];
+      newItems.splice(index, 1);
+      const newChecked = [...checked];
+      newChecked.splice(index, 1);
+      updateElement(element.id, {
+        ...element,
+        extraAttributes: {
+          ...element.extraAttributes,
+          items: newItems,
+          checked: newChecked,
+        },
+      });
+
+      setTimeout(() => {
+        focusPrevInput(index);
       });
     }
+  }
+
+  function focusNextInput(index: number) {
+    const nextInput = document.getElementById(
+      `${element.id}-todo-item-${index + 1}`
+    ) as HTMLInputElement;
+    nextInput?.focus();
+  }
+
+  function focusPrevInput(index: number) {
+    const prevInput = document.getElementById(
+      `${element.id}-todo-item-${index - 1}`
+    ) as HTMLInputElement;
+    prevInput?.focus();
   }
 
   function handleOnTodoItemChange(e: FormEvent<HTMLElement> | string[]) {
