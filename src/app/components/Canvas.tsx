@@ -1,10 +1,11 @@
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useEffect, useMemo, useRef } from "react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { ProjectElementInstance, ProjectElements } from "./ProjectElements";
 import useProject from "./hooks/useProject";
 import MiniMap from "./MiniMap";
 import CanvasControls from "./CanvasControls";
 import CanvasBackground from "./CanvasBackground";
+import CanvasToolbar from "./CanvasToolbar";
 
 export default function Canvas({
   elements,
@@ -13,18 +14,17 @@ export default function Canvas({
 }) {
   return (
     <MainCanvasDroppable>
-      {elements.length > 0 &&
-        elements.map((element) => {
-          if (element.extraAttributes?.inList) return null;
-          return <CanvasElementWrapper key={element.id} element={element} />
-        })}
+      {elements.map((element) => {
+        if (element.parentId !== "root") return null;
+        return <CanvasElementWrapper key={element.id} element={element} />;
+      })}
     </MainCanvasDroppable>
   );
 }
 
 function MainCanvasDroppable({ children }: { children?: ReactNode }) {
   const { isOver, setNodeRef } = useDroppable({
-    id: "canvas-drop-area",
+    id: "canvas-droppable",
     data: {
       isCanvasDropArea: true,
     },
@@ -99,6 +99,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
           </div>
         </div>
       </div>
+      <CanvasToolbar />
       <CanvasControls />
       {/* <MiniMap /> */}
       <CanvasBackground />
@@ -127,7 +128,9 @@ function CanvasElementWrapper({
     visibility: isDragging ? "hidden" : undefined,
   };
 
-  const CanvasElement = ProjectElements[element.type].canvasComponent;
+  const CanvasElement = useMemo(() => {
+    return ProjectElements[element.type].canvasComponent;
+  }, [element]);
   return (
     <div style={style} ref={setNodeRef} {...listeners} {...attributes}>
       <CanvasElement elementInstance={element} />

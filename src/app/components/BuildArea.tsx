@@ -1,5 +1,4 @@
 import { DragEvent } from "react";
-import Toolbar from "./BuilderToolbar";
 import Canvas from "./Canvas";
 import { useDndMonitor } from "@dnd-kit/core";
 import { ElementsType, ProjectElements } from "./ProjectElements";
@@ -21,13 +20,39 @@ function BuildArea() {
       const { active, over, delta } = event;
       if (!active || !over) return;
 
-      // Drag existing element
+      const isToolbarBtnElement = active.data?.current?.isToolbarBtnElement;
       const isCanvasElement = active.data?.current?.isCanvasElement;
       const isListElement = active.data?.current?.isListElement;
-      if (
-        (isCanvasElement || isListElement) &&
-        over.data?.current?.isCanvasDropArea
-      ) {
+
+      const isCanvasDropArea = over.data?.current?.isCanvasDropArea;
+      const isListDroppable = over.data?.current?.isListDroppable;
+
+      // Drag new element from toolbar onto canvas
+      if (isToolbarBtnElement) {
+        const type = active.data?.current?.type;
+        console.log(over.data);
+        const newElement = ProjectElements[type as ElementsType].construct(
+          idGenerator(),
+          (over.data.current?.elementId as string) || "root"
+        );
+
+        const overTop = over.rect.top;
+        const overLeft = over.rect.left;
+        const initialTop = active.rect.current.initial?.top || overTop;
+        const initialLeft = active.rect.current.initial?.left || overLeft;
+        const diffX = overLeft - initialLeft;
+        const diffY = overTop - initialTop;
+
+        addElement(
+          newElement,
+          (delta.x - diffX - scrollLeft) / zoomLevel,
+          (delta.y - diffY - scrollTop) / zoomLevel
+        );
+        console.log("NEW ELEMENT:", newElement);
+      }
+
+      // Drag existing CanvasElement to new position
+      if (isCanvasElement && isCanvasDropArea) {
         const elementId = active.data?.current?.elementId;
         const dragged = elements.find((element) => element.id == elementId);
 
@@ -41,52 +66,14 @@ function BuildArea() {
           },
           extraAttributes: {
             ...dragged.extraAttributes,
-            inList: false,
           },
         });
 
         console.log("DRAGGED:", dragged);
       }
 
-      if (over.data?.current?.isListDroppable) {
-        const elementId = active.data?.current?.elementId;
-        const dragged = elements.find((element) => element.id == elementId);
-        if (!dragged || dragged.type === "ListBlock") return;
-
-        // Add element to list
-        const listId = over.data?.current?.element.id;
-        const list = elements.find((element) => element.id == listId);
-        if (!list || list.type !== "ListBlock") return;
-
-        const items = list.extraAttributes?.items;
-        const newItems = [...items, dragged];
-        updateElement(list.id, {
-          ...list,
-          extraAttributes: {
-            ...list.extraAttributes,
-            items: newItems,
-          },
-        });
-
-        updateElement(dragged.id, {
-          ...dragged,
-          extraAttributes: {
-            ...dragged.extraAttributes,
-            inList: true,
-          },
-        });
-
-        return;
-      }
-
-      // Create new element
-      const isToolbarBtnElement = active.data?.current?.isToolbarBtnElement;
-      if (isToolbarBtnElement) {
-        const type = active.data?.current?.type;
-        const newElement = ProjectElements[type as ElementsType].construct(
-          idGenerator()
-        );
-
+      // Drag list element onto canvas
+      if (isListElement && isCanvasDropArea) {
         const canvasTop = over.rect.top;
         const canvasLeft = over.rect.left;
         const initialTop = active.rect.current.initial?.top || canvasTop;
@@ -94,22 +81,85 @@ function BuildArea() {
         const diffX = canvasLeft - initialLeft;
         const diffY = canvasTop - initialTop;
 
-        addElement(
-          newElement,
-          (delta.x - diffX - scrollLeft) / zoomLevel,
-          (delta.y - diffY - scrollTop) / zoomLevel
-        );
-        console.log("NEW ELEMENT:", newElement);
+        const elementId = active.data?.current?.elementId;
+        const dragged = elements.find((element) => element.id == elementId);
+        if (!dragged) return;
+
+        updateElement(dragged.id, {
+          ...dragged,
+          position: {
+            x: (delta.x - diffX - scrollLeft) / zoomLevel,
+            y: (delta.y - diffY - scrollTop) / zoomLevel,
+          },
+          parentId: "root",
+          extraAttributes: {
+            ...dragged.extraAttributes,
+          },
+        });
+
+        const listId = dragged.parentId;
+        const list = elements.find((element) => element.id == listId);
+        if (!list) return;
+
+        const childElements = list.extraAttributes?.children;
+        const newChildElements = childElements.filter((id: string) => id !== elementId);
+
+        // Remove element from list
+        updateElement(listId, {
+          ...list,
+          extraAttributes: {
+            ...list.extraAttributes,
+            children: newChildElements,
+          },
+        })
+      }
+
+      // Drag canvas element onto list
+      if (isListDroppable && isCanvasElement) {
+        const elementId = active.data?.current?.elementId;
+        const dragged = elements.find((element) => element.id == elementId);
+        if (!dragged || dragged.type === "ListBlock") return;
+
+        const listId = over.data?.current?.elementId;
+        const list = elements.find((element) => element.id == listId);
+        if (!list || list.type !== "ListBlock") return;
+
+        const childElements = list.extraAttributes?.children;
+
+        const newChildElements = [...childElements, elementId];
+
+        updateElement(listId, {
+          ...list,
+          extraAttributes: {
+            ...list.extraAttributes,
+            children: newChildElements,
+          },
+        });
+
+        updateElement(dragged.id, {
+          ...dragged,
+          position: {
+            x: 0,
+            y: 0,
+          },
+          parentId: listId,
+          extraAttributes: {
+            ...dragged.extraAttributes,
+          },
+        });
+
+        return;
       }
     },
   });
 
   // Handler for external file drop
   function externalDropHandler(e: DragEvent<HTMLDivElement>) {
+    e.preventDefault();
     if (!e.dataTransfer.items) return;
 
     const canvasRect = document
-      .getElementById("canvas-drop-area")
+      .getElementById("canvas-pane-droppable")
       ?.getBoundingClientRect() as DOMRect;
     const top = canvasRect.top || 0;
     const left = canvasRect.left || 0;
@@ -131,7 +181,8 @@ function BuildArea() {
         const src = event.target?.result as string;
         const type = "ImageBlock";
         const newElement = ProjectElements[type as ElementsType].construct(
-          idGenerator()
+          idGenerator(),
+          "canvas"
         );
 
         addElement(newElement, xPos / zoomLevel, yPos / zoomLevel);
@@ -146,12 +197,10 @@ function BuildArea() {
 
       reader.readAsDataURL(file);
     }
-    e.preventDefault();
   }
 
   return (
     <div className="flex flex-row grow">
-      <Toolbar />
       <div
         id="canvas-wrapper"
         onDrop={(e) => externalDropHandler(e)}
