@@ -3,11 +3,11 @@
 import React, { useId } from "react";
 import {
   DndContext,
-  MouseSensor,
   TouchSensor,
   useSensor,
   useSensors,
   pointerWithin,
+  PointerSensor,
 } from "@dnd-kit/core";
 
 import { Project } from "../project/SchemaSimulation";
@@ -16,10 +16,10 @@ import BuildArea from "./BuildArea";
 import DragOverlayWrapper from "./DragOverlayWrapper";
 import usePreventZoom from "./hooks/usePreventZoom";
 
-function ProjectBuilder({ project }: { project: Project }) {
+export default function ProjectBuilder({ project }: { project: Project }) {
   const id = useId();
   const sensors = useSensors(
-    useSensor(MouseSensor, { activationConstraint: { distance: 1 } }),
+    useSensor(PointerSensor, { activationConstraint: { distance: 2 } }),
     useSensor(TouchSensor, {
       activationConstraint: { delay: 100, tolerance: 5 },
     })
@@ -42,5 +42,3 @@ function ProjectBuilder({ project }: { project: Project }) {
     </DndContext>
   );
 }
-
-export default ProjectBuilder;
