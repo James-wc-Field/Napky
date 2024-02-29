@@ -56,7 +56,7 @@ function CanvasComponent({
   };
 
   return (
-    <Card style={style} className="gap-2 p-2">
+    <Card style={style} className="gap-2 p-2 items-center">
       <p>{label}</p>
       <ListDroppable element={element}>
         {children.length === 0 ? (
@@ -93,7 +93,7 @@ function ListDroppable({
       ref={setNodeRef}
       className={`${
         isOver ? "bg-neutral-600/50" : ""
-      } flex-1 rounded-xl border-2 border-dashed border-neutral-700
+      } flex-1 w-full rounded-xl border-2 border-dashed border-neutral-700
       flex flex-col items-center justify-center gap-2`}
     >
       {children}
