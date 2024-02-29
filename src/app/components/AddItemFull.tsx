@@ -16,9 +16,9 @@ export const AddItemFull = (props: { [key: string] : string }) => {
 
             <Card className="bg-primary-dark w-full border-neutral-dark border-2 max-h-32 rounded-none rounded-b-lg">
             <CardBody>
-                {/* <CardNote selected={"false" as any}></CardNote>
+                {/* <CardNote selected="false"></CardNote>
                 <CardNote selected="false"></CardNote>
-                <CardNote selected="false"></CardNote> */}
+                <CardNote selected="false"></CardNote> */} {/* This is causing build errors */}
             </CardBody>
             </Card>
         </div>
