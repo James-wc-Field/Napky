@@ -48,21 +48,13 @@ function CanvasComponent({
   const element = elementInstance as CustomInstance;
   const { label, placeHolder, helperText } = element.extraAttributes;
   const style = {
-    width: element.size.width,
-    height: element.size.height,
+    maxWidth: element.size.width,
   };
 
   return (
-    <Card style={style} className="p-2 h-fit">
-      <div className="flex max-h-full gap-2 items-center">
-        <LinkIcon className="text-gray-500 h-6 w-6" />
-        <Input
-          size="sm"
-          type="text"
-          className="flex"
-          placeholder={placeHolder}
-        />
-      </div>
+    <Card style={style} className="p-2 h-fit flex flex-row gap-1 items-center">
+      <LinkIcon className="text-gray-500 h-6 w-6" />
+      <Input size="sm" type="text" className="flex" placeholder={placeHolder} />
     </Card>
   );
 }

@@ -7,8 +7,8 @@ import {
   ProjectElementInstance,
 } from "../ProjectElements";
 import { Card } from "@nextui-org/card";
-import { Input } from "@nextui-org/input";
 import useProject from "../hooks/useProject";
+import { Textarea } from "@nextui-org/react";
 
 const type: ElementsType = "TextBlock";
 
@@ -50,10 +50,6 @@ function CanvasComponent({
   const element = elementInstance as CustomInstance;
   const { text, placeHolder } = element.extraAttributes;
 
-  const style = {
-    width: element?.size.width,
-  };
-
   function handleOnTextChange(e: React.ChangeEvent<HTMLInputElement>) {
     updateElement(element.id, {
       ...element,
@@ -63,12 +59,14 @@ function CanvasComponent({
       },
     });
   }
+  const style = {
+    maxWidth: element.size.width,
+  };
 
   return (
     <Card style={style} className="p-2 h-fit">
-      <Input
+      <Textarea
         size="sm"
-        type="text"
         placeholder={placeHolder}
         onChange={handleOnTextChange}
         value={text}

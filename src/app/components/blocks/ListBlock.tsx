@@ -51,7 +51,7 @@ function CanvasComponent({
   const element = elementInstance as CustomInstance;
   const { label, placeHolder, children: children } = element.extraAttributes;
   const style = {
-    width: element.size.width,
+    maxWidth: element.size.width,
     minHeight: element.size.height,
   };
 
@@ -59,12 +59,12 @@ function CanvasComponent({
     <Card style={style} className="gap-2 p-2 items-center">
       <p>{label}</p>
       <ListDroppable element={element}>
-        {children.length === 0 ? (
-          <p className="text-neutral-500">{placeHolder}</p>
-        ) : (
-          children.map((listElement, index) => (
-            <ListElementWrapper key={index} elementId={listElement} />
+        {children.length > 0 ? (
+          children.map((childId) => (
+            <ListElementWrapper key={childId} elementId={childId} />
           ))
+        ) : (
+          <p className="text-neutral-400">{placeHolder}</p>
         )}
       </ListDroppable>
     </Card>
@@ -78,23 +78,22 @@ function ListDroppable({
   children: React.ReactNode;
   element: ProjectElementInstance;
 }) {
-  const { active } = useDndContext();
   const { isOver, setNodeRef } = useDroppable({
     id: element.id + "-list-droppable",
-    disabled: element.id === active?.data?.current?.elementId, // Prevent dropping onto itself
     data: {
       isListDroppable: true,
       elementId: element.id,
+      accepts: Object.keys(ProjectElements).filter(
+        (type) => type !== element.type
+      ),
     },
   });
 
   return (
     <div
       ref={setNodeRef}
-      className={`${
-        isOver ? "bg-neutral-600/50" : ""
-      } flex-1 w-full rounded-xl border-2 border-dashed border-neutral-700
-      flex flex-col items-center justify-center gap-2`}
+      className={`${isOver ? "bg-neutral-600/50" : ""} flex-1 w-full rounded-xl 
+      flex flex-col items-center justify-center gap-1 outline-2 outline-neutral-700 outline-dashed`}
     >
       {children}
     </div>
@@ -121,7 +120,7 @@ function ListElementWrapper({ elementId }: { elementId: string }) {
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      className={`${isDragging ? "opacity-50" : ""}`}
+      className={`${isDragging ? "opacity-50" : ""} w-full`}
     >
       <ListElement elementInstance={element} />
     </div>

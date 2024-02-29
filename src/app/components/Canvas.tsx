@@ -126,6 +126,7 @@ function CanvasElementWrapper({
     left: element.position.x,
     top: element.position.y,
     visibility: isDragging ? "hidden" : undefined,
+    width: element.size.width,
   };
 
   const CanvasElement = useMemo(() => {
