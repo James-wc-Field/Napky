@@ -56,22 +56,27 @@ function CanvasComponent({
     maxWidth: element.size.width,
   };
 
-  function handleOnAddItem() {
-    updateElement(element.id, {
-      ...element,
-      extraAttributes: {
-        ...element.extraAttributes,
-        items: [...items, ""],
-        checked: [...checked, false],
-      },
-    });
+  function handleOnKeyPress(e: React.KeyboardEvent<HTMLInputElement>, index: number) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      const newItems = [...items];
+      newItems.splice(index + 1, 0, "");
+      const newChecked = [...checked];
+      newChecked.splice(index + 1, 0, false);
+      updateElement(element.id, {
+        ...element,
+        extraAttributes: {
+          ...element.extraAttributes,
+          items: newItems,
+          checked: newChecked,
+        },
+      });
+      e.preventDefault();
+    }
   }
 
   function handleOnTodoItemChange(e: FormEvent<HTMLElement> | string[]) {
     if (Array.isArray(e)) {
       handleOnCheckboxChange(e);
-    } else {
-      handleOnTextChange(e);
     }
   }
 
@@ -86,40 +91,36 @@ function CanvasComponent({
     });
   }
 
-  function handleOnTextChange(e: FormEvent<HTMLElement>) {
-    const { value } = e.target as HTMLInputElement;
-    console.log(e);
-    const index = parseInt(
-      (e.target as HTMLInputElement).getAttribute("data-index")!
-    );
-    console.log(index, value);
+  function handleOnTextChange(e: string, index: number) {
+    const newItems = [...items];
+    newItems[index] = e;
+    updateElement(element.id, {
+      ...element,
+      extraAttributes: {
+        ...element.extraAttributes,
+        items: newItems,
+      },
+    });
   }
 
   return (
-    <Card
-      style={style}
-      className="p-2 h-fit"
-      onKeyDown={(e) => {
-        if (e.key === "Enter" && e.shiftKey === false) {
-          handleOnAddItem();
-          e.preventDefault();
-        }
-      }}
-    >
+    <Card style={style} className="p-2 h-fit">
       <CheckboxGroup
         label={element.extraAttributes.label}
         onChange={handleOnTodoItemChange}
-        value={checked.map((_, index) => {
-          if (checked[index]) {
-            return index + "";
-          }
-          return "";
-        })}
+        value={checked.map((_, index) => (checked[index] ? index + "" : ""))}
       >
         {items.map((item, index) => (
           <div key={index} className="flex items-center">
             <Checkbox value={index + ""} />
-            <Textarea minRows={1} value={item} placeholder={placeHolder} />
+            <Textarea
+              key={index}
+              minRows={1}
+              value={item}
+              placeholder={placeHolder}
+              onValueChange={(e) => handleOnTextChange(e, index)}
+              onKeyDown={(e) => handleOnKeyPress(e, index)}
+            />
           </div>
         ))}
       </CheckboxGroup>
