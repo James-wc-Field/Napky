@@ -255,19 +255,21 @@ export default function BuildArea() {
       reader.onload = (event) => {
         const src = event.target?.result as string;
         const type = "ImageBlock";
-        const newElement = ProjectElements[type as ElementsType].construct(
+        let newElement = ProjectElements[type as ElementsType].construct(
           idGenerator(),
-          "canvas"
+          "root"
         );
+        console.log("NEW ELEMENT:", newElement);
 
-        addElement(newElement, xPos / zoomLevel, yPos / zoomLevel);
-        updateElement(newElement.id, {
+        newElement = {
           ...newElement,
           extraAttributes: {
             ...newElement.extraAttributes,
             src: src,
           },
-        });
+        };
+
+        addElement(newElement, xPos / zoomLevel, yPos / zoomLevel);
       };
 
       reader.readAsDataURL(file);

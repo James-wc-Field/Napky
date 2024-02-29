@@ -26,7 +26,7 @@ export const ListBlockProjectElement: ProjectElement = {
     type,
     position: { x: 0, y: 0 },
     size: { width: 300, height: 200 },
-    parentId: parentId,
+    parentId,
     extraAttributes,
   }),
 
