@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useMemo, useRef } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { ProjectElementInstance, ProjectElements } from "./ProjectElements";
 import useProject from "./hooks/useProject";
@@ -6,6 +6,7 @@ import MiniMap from "./MiniMap";
 import CanvasControls from "./CanvasControls";
 import CanvasBackground from "./CanvasBackground";
 import CanvasToolbar from "./CanvasToolbar";
+import { getEventListeners } from "events";
 
 export default function Canvas({
   elements,
@@ -40,7 +41,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     updateCanvasViewRect,
   } = useProject();
 
-  function handleScroll(e: React.WheelEvent<HTMLDivElement>) {
+  const handleScroll = (e: React.WheelEvent) => {
     const { deltaX, deltaY } = e;
     if (e.ctrlKey) {
       updateZoomLevel(deltaY < 0, 1.05);
@@ -51,7 +52,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     }
     updateScrollLeft(deltaX);
     updateScrollTop(deltaY);
-  }
+  };
 
   const canvasViewRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -71,6 +72,35 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     };
   }, []);
 
+  const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false);
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (middleMouseIsDown) {
+      updateScrollLeft(-e.movementX);
+      updateScrollTop(-e.movementY);
+    }
+  };
+
+  const handleMouseUp = () => {
+    setMiddleMouseIsDown(false);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button === 1) {
+      setMiddleMouseIsDown(true);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      // Cleanup event listeners when component unmounts
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [middleMouseIsDown]);
+
   return (
     <>
       <div
@@ -78,6 +108,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
         className="absolute w-full h-full top-0 left-0"
         style={{ zIndex: 4 }}
         onWheel={handleScroll}
+        onMouseDown={handleMouseDown}
         ref={canvasViewRef}
       >
         <div
