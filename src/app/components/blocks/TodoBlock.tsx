@@ -71,6 +71,14 @@ function CanvasComponent({
         },
       });
       e.preventDefault();
+
+      // Focus on the next item
+      setTimeout(() => {
+        const nextInput = document.getElementById(
+          `${element.id}-todo-item-${index + 1}`
+        ) as HTMLInputElement;
+        nextInput?.focus();
+      });
     }
   }
 
@@ -114,6 +122,7 @@ function CanvasComponent({
           <div key={index} className="flex items-center">
             <Checkbox value={index + ""} />
             <Textarea
+              id={`${element.id}-todo-item-${index}`}
               key={index}
               minRows={1}
               value={item}
