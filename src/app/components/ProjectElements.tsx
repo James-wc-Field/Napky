@@ -5,14 +5,17 @@ import { LinkBlockProjectElement } from "./blocks/LinkBlock";
 import { ListBlockProjectElement } from "./blocks/ListBlock";
 import { TodoBlockProjectElement } from "./blocks/TodoBlock";
 
-export type ElementsType = "TextBlock" | "ImageBlock" | "LinkBlock" | "ListBlock" | "TodoBlock";
+export type ElementsType =
+  | "TextBlock"
+  | "ImageBlock"
+  | "LinkBlock"
+  | "ListBlock"
+  | "TodoBlock";
 
 export type ProjectElement = {
   type: ElementsType;
 
-  construct: (
-    id: string,
-  ) => ProjectElementInstance;
+  construct: (id: string, parentId: string) => ProjectElementInstance;
 
   toolbarElement: {
     icon: React.ElementType;
@@ -20,8 +23,9 @@ export type ProjectElement = {
   };
   canvasComponent: React.FC<{
     elementInstance: ProjectElementInstance;
-  }>;
-  toolbarPropertiesComponent: React.FC;
+  }>; // How the element will be rendered in the canvas
+
+  toolbarPropertiesComponent: React.FC; // How the properties of the element will be rendered in the toolbar
 };
 
 export type ProjectElementInstance = {
@@ -35,6 +39,7 @@ export type ProjectElementInstance = {
     width: number;
     height: number;
   };
+  parentId: string;
   extraAttributes?: Record<string, any>;
 };
 

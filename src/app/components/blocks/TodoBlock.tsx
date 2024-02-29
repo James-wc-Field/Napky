@@ -6,25 +6,29 @@ import {
   ProjectElement,
   ProjectElementInstance,
 } from "../ProjectElements";
-import { Card, CardBody } from "@nextui-org/card";
+import { Card } from "@nextui-org/card";
 import { Input } from "@nextui-org/input";
 import { Checkbox, CheckboxGroup } from "@nextui-org/react";
+import useProject from "../hooks/useProject";
 
 const type: ElementsType = "TodoBlock";
 
 const extraAttributes = {
   label: "Todo Block",
-  helperText: "Helper Text",
   placeHolder: "Enter a task...",
+  text: "",
+  items: [] as string[],
+  checked: [] as boolean[],
 };
 
 export const TodoBlockProjectElement: ProjectElement = {
   type,
-  construct: (id: string) => ({
+  construct: (id: string, parentId: string) => ({
     id,
     type,
     position: { x: 0, y: 0 },
     size: { width: 300, height: 75 },
+    parentId,
     extraAttributes,
   }),
 
@@ -46,28 +50,36 @@ function CanvasComponent({
 }: {
   elementInstance: ProjectElementInstance;
 }) {
+  const { updateElement } = useProject();
   const element = elementInstance as CustomInstance;
-  const { label, placeHolder, helperText } = element.extraAttributes;
+  const { placeHolder, text } = element.extraAttributes;
   const style = {
-    width: element.size.width,
-    height: element.size.height,
+    maxWidth: element.size.width,
   };
 
+  function handleOnTextChange(e: React.ChangeEvent<HTMLInputElement>) {
+    updateElement(element.id, {
+      ...element,
+      extraAttributes: {
+        ...element.extraAttributes,
+        text: e.target.value,
+      },
+    });
+  }
+
   return (
-    <Card style={style}>
-      <CardBody className="justify-center">
-        <CheckboxGroup>
-          <div className="flex flex-row grow gap-2">
-            <Checkbox className="flex"></Checkbox>
-            <Input
-              className="flex"
-              size="sm"
-              type="text"
-              placeholder={placeHolder}
-            />
-          </div>
-        </CheckboxGroup>
-      </CardBody>
+    <Card style={style} className="p-2 h-fit">
+      <CheckboxGroup>
+        <div className="flex flex-row grow gap-1">
+          <Checkbox />
+          <Input
+            size="sm"
+            placeholder={placeHolder}
+            onChange={handleOnTextChange}
+            value={text}
+          />
+        </div>
+      </CheckboxGroup>
     </Card>
   );
 }

@@ -1,12 +1,11 @@
 import { DragEvent } from "react";
-import Toolbar from "./BuilderToolbar";
 import Canvas from "./Canvas";
 import { useDndMonitor } from "@dnd-kit/core";
 import { ElementsType, ProjectElements } from "./ProjectElements";
 import { idGenerator } from "../lib/idGenerator";
 import useProject from "./hooks/useProject";
 
-function BuildArea() {
+export default function BuildArea() {
   const {
     elements,
     addElement,
@@ -21,20 +20,28 @@ function BuildArea() {
       const { active, over, delta } = event;
       if (!active || !over) return;
 
-      // Create new element
       const isToolbarBtnElement = active.data?.current?.isToolbarBtnElement;
+      const isCanvasElement = active.data?.current?.isCanvasElement;
+      const isListElement = active.data?.current?.isListElement;
+
+      const isCanvasDropArea = over.data?.current?.isCanvasDropArea;
+      const isListDroppable = over.data?.current?.isListDroppable;
+
+      // Drag new element from toolbar onto canvas
       if (isToolbarBtnElement) {
         const type = active.data?.current?.type;
+        console.log(over.data);
         const newElement = ProjectElements[type as ElementsType].construct(
-          idGenerator()
+          idGenerator(),
+          (over.data.current?.elementId as string) || "root"
         );
 
-        const canvasTop = over.rect.top;
-        const canvasLeft = over.rect.left;
-        const initialTop = active.rect.current.initial?.top || canvasTop;
-        const initialLeft = active.rect.current.initial?.left || canvasLeft;
-        const diffX = canvasLeft - initialLeft;
-        const diffY = canvasTop - initialTop;
+        const overTop = over.rect.top;
+        const overLeft = over.rect.left;
+        const initialTop = active.rect.current.initial?.top || overTop;
+        const initialLeft = active.rect.current.initial?.left || overLeft;
+        const diffX = overLeft - initialLeft;
+        const diffY = overTop - initialTop;
 
         addElement(
           newElement,
@@ -44,10 +51,8 @@ function BuildArea() {
         console.log("NEW ELEMENT:", newElement);
       }
 
-      // Drag existing element
-      const isCanvasElement = active.data?.current?.isCanvasElement;
-      if (isCanvasElement) {
-        if (over.id === "toolbar-area") return;
+      // Drag existing CanvasElement to new position
+      if (isCanvasElement && isCanvasDropArea) {
         const elementId = active.data?.current?.elementId;
         const dragged = elements.find((element) => element.id == elementId);
 
@@ -59,15 +64,172 @@ function BuildArea() {
             x: dragged.position.x + delta.x / zoomLevel,
             y: dragged.position.y + delta.y / zoomLevel,
           },
+          extraAttributes: {
+            ...dragged.extraAttributes,
+          },
         });
 
         console.log("DRAGGED:", dragged);
+      }
+
+      // Drag list element onto canvas
+      if (isListElement && isCanvasDropArea) {
+        const canvasTop = over.rect.top;
+        const canvasLeft = over.rect.left;
+        const initialTop = active.rect.current.initial?.top || canvasTop;
+        const initialLeft = active.rect.current.initial?.left || canvasLeft;
+        const diffX = canvasLeft - initialLeft;
+        const diffY = canvasTop - initialTop;
+
+        const elementId = active.data?.current?.elementId;
+        const dragged = elements.find((element) => element.id == elementId);
+        if (!dragged) return;
+
+        updateElement(dragged.id, {
+          ...dragged,
+          position: {
+            x: (delta.x - diffX - scrollLeft) / zoomLevel,
+            y: (delta.y - diffY - scrollTop) / zoomLevel,
+          },
+          parentId: "root",
+          extraAttributes: {
+            ...dragged.extraAttributes,
+          },
+        });
+
+        const listId = dragged.parentId;
+        const list = elements.find((element) => element.id == listId);
+        if (!list) return;
+
+        const childElements = list.extraAttributes?.children;
+        const newChildElements = childElements.filter(
+          (id: string) => id !== elementId
+        );
+
+        // Remove element from list
+        updateElement(listId, {
+          ...list,
+          extraAttributes: {
+            ...list.extraAttributes,
+            children: newChildElements,
+          },
+        });
+      }
+
+      // Drag canvas element onto list
+      if (isListDroppable && isCanvasElement) {
+        const elementId = active.data?.current?.elementId;
+        const dragged = elements.find((element) => element.id == elementId);
+        if (!dragged) return;
+
+        const listId = over.data?.current?.elementId;
+        const list = elements.find((element) => element.id == listId);
+        if (!list || !over.data.current?.accepts.includes(dragged.type)) return;
+
+        const childElements = list.extraAttributes?.children;
+        const newChildElements = [...childElements, elementId];
+
+        updateElement(listId, {
+          ...list,
+          extraAttributes: {
+            ...list.extraAttributes,
+            children: newChildElements,
+          },
+        });
+
+        updateElement(dragged.id, {
+          ...dragged,
+          position: {
+            x: 0,
+            y: 0,
+          },
+          parentId: listId,
+          extraAttributes: {
+            ...dragged.extraAttributes,
+          },
+        });
+
+        return;
+      }
+
+      if (isToolbarBtnElement && isListDroppable) {
+        const type = active.data?.current?.type;
+        const listId = over.data?.current?.elementId;
+        const newElement = ProjectElements[type as ElementsType].construct(
+          idGenerator(),
+          listId as string
+        );
+
+        addElement(newElement, 0, 0);
+        console.log("NEW ELEMENT:", newElement);
+
+        const list = elements.find((element) => element.id == listId);
+        if (!list || !over.data.current?.accepts.includes(type)) return;
+
+        const childElements = list.extraAttributes?.children;
+        const newChildElements = [...childElements, newElement.id];
+
+        updateElement(listId, {
+          ...list,
+          extraAttributes: {
+            ...list.extraAttributes,
+            children: newChildElements,
+          },
+        });
+      }
+
+      if (isListElement && isListDroppable) {
+        const newListId = over.data?.current?.elementId;
+        const elementId = active.data?.current?.elementId;
+        const dragged = elements.find((element) => element.id == elementId);
+        if (!dragged) return;
+        const parentListId = dragged.parentId;
+        const parentList = elements.find(
+          (element) => element.id == parentListId
+        );
+        if (!parentList || parentListId === newListId) return;
+
+        const childElements = parentList.extraAttributes?.children;
+        const newChildElements = childElements.filter(
+          (id: string) => id !== elementId
+        );
+
+        updateElement(parentListId, {
+          ...parentList,
+          extraAttributes: {
+            ...parentList.extraAttributes,
+            children: newChildElements,
+          },
+        });
+
+        const newList = elements.find((element) => element.id == newListId);
+        if (!newList || !over.data.current?.accepts.includes(dragged.type)) return;
+
+        const newChildElementsList = newList.extraAttributes?.children;
+        const newChildElementsListArray = [...newChildElementsList, elementId];
+
+        updateElement(newListId, {
+          ...newList,
+          extraAttributes: {
+            ...newList.extraAttributes,
+            children: newChildElementsListArray,
+          },
+        });
+
+        updateElement(dragged.id, {
+          ...dragged,
+          parentId: newListId,
+          extraAttributes: {
+            ...dragged.extraAttributes,
+          },
+        });
       }
     },
   });
 
   // Handler for external file drop
   function externalDropHandler(e: DragEvent<HTMLDivElement>) {
+    e.preventDefault();
     if (!e.dataTransfer.items) return;
 
     const canvasRect = document
@@ -92,29 +254,29 @@ function BuildArea() {
       reader.onload = (event) => {
         const src = event.target?.result as string;
         const type = "ImageBlock";
-        const newElement = ProjectElements[type as ElementsType].construct(
-          idGenerator()
+        let newElement = ProjectElements[type as ElementsType].construct(
+          idGenerator(),
+          "root"
         );
+        console.log("NEW ELEMENT:", newElement);
 
-        addElement(newElement, xPos / zoomLevel, yPos / zoomLevel);
-        updateElement(newElement.id, {
+        newElement = {
           ...newElement,
           extraAttributes: {
             ...newElement.extraAttributes,
             src: src,
           },
-        });
+        };
+
+        addElement(newElement, xPos / zoomLevel, yPos / zoomLevel);
       };
 
       reader.readAsDataURL(file);
     }
-    e.preventDefault();
-    e.stopPropagation();
   }
 
   return (
     <div className="flex flex-row grow">
-      <Toolbar />
       <div
         id="canvas-wrapper"
         onDrop={(e) => externalDropHandler(e)}
@@ -126,5 +288,3 @@ function BuildArea() {
     </div>
   );
 }
-
-export default BuildArea;
