@@ -268,7 +268,10 @@ export default function BuildArea() {
           },
         };
 
-        addElement(newElement, xPos / zoomLevel, yPos / zoomLevel);
+        addElement(newElement, 
+          (xPos - scrollLeft) / zoomLevel, 
+          (yPos - scrollTop) / zoomLevel
+        );
       };
 
       reader.readAsDataURL(file);
