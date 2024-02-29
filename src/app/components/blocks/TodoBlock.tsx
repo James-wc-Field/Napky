@@ -50,7 +50,7 @@ function CanvasComponent({
   const element = elementInstance as CustomInstance;
   const { label, placeHolder, helperText } = element.extraAttributes;
   const style = {
-    width: element.size.width,
+    maxWidth: element.size.width,
   };
 
   return (

@@ -37,7 +37,8 @@ export default function DragOverlayWrapper() {
     const CanvasElementComponent =
       ProjectElements[type as ElementsType].canvasComponent;
     const tempElement = ProjectElements[type as ElementsType].construct(
-      "new-element-drag-overlay"
+      "new-element-drag-overlay",
+      "root"
     );
     node = <CanvasElementComponent elementInstance={tempElement} />;
   }
@@ -70,10 +71,15 @@ export default function DragOverlayWrapper() {
     };
   };
 
+  const style = {
+    transformOrigin: "0 0",
+    width: "100%",
+  };
+
   return (
     <DragOverlay
       adjustScale
-      style={{ transformOrigin: "0 0" }}
+      style={style}
       // transition="transform 0.2s cubic-bezier(.22,1.31,.28,1.19)" // Slow when devtools are open, remove for dev for now
       modifiers={[overScale]}
     >

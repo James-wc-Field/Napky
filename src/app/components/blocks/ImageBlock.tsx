@@ -46,9 +46,7 @@ function CanvasComponent({
   const element = elementInstance as CustomInstance;
   const { src } = element.extraAttributes;
   const style = {
-    minWidth: element.size.width,
     width: element.size.width,
-    height: element.size.height,
   };
 
   return (

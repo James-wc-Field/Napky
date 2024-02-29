@@ -124,10 +124,9 @@ export default function BuildArea() {
 
         const listId = over.data?.current?.elementId;
         const list = elements.find((element) => element.id == listId);
-        if (!list) return;
+        if (!list || !over.data.current?.accepts.includes(dragged.type)) return;
 
         const childElements = list.extraAttributes?.children;
-
         const newChildElements = [...childElements, elementId];
 
         updateElement(listId, {
@@ -165,7 +164,7 @@ export default function BuildArea() {
         console.log("NEW ELEMENT:", newElement);
 
         const list = elements.find((element) => element.id == listId);
-        if (!list) return;
+        if (!list || !over.data.current?.accepts.includes(type)) return;
 
         const childElements = list.extraAttributes?.children;
         const newChildElements = [...childElements, newElement.id];
@@ -204,7 +203,7 @@ export default function BuildArea() {
         });
 
         const newList = elements.find((element) => element.id == newListId);
-        if (!newList) return;
+        if (!newList || !over.data.current?.accepts.includes(dragged.type)) return;
 
         const newChildElementsList = newList.extraAttributes?.children;
         const newChildElementsListArray = [...newChildElementsList, elementId];
