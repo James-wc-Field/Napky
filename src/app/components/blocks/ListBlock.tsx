@@ -25,7 +25,7 @@ export const ListBlockProjectElement: ProjectElement = {
     id,
     type,
     position: { x: 0, y: 0 },
-    size: { width: 300, height: 200 },
+    size: { width: 300, height: 110 },
     parentId,
     extraAttributes,
   }),
@@ -93,7 +93,8 @@ function ListDroppable({
       ref={setNodeRef}
       className={`${
         isOver ? "bg-neutral-600/50" : ""
-      } w-full h-full rounded-xl border-2 border-dashed border-neutral-700 items-center justify-center flex flex-col gap-2`}
+      } flex-1 rounded-xl border-2 border-dashed border-neutral-700
+      flex flex-col items-center justify-center gap-2`}
     >
       {children}
     </div>
