@@ -15,7 +15,7 @@ export type ElementsType =
 export type ProjectElement = {
   type: ElementsType;
 
-  construct: (id: string) => ProjectElementInstance;
+  construct: (id: string, parentId: string) => ProjectElementInstance;
 
   toolbarElement: {
     icon: React.ElementType;
@@ -39,6 +39,7 @@ export type ProjectElementInstance = {
     width: number;
     height: number;
   };
+  parentId: string;
   extraAttributes?: Record<string, any>;
 };
 

@@ -9,22 +9,24 @@ import {
 } from "../ProjectElements";
 import { Card } from "@nextui-org/card";
 import { useDroppable, useDraggable, useDndContext } from "@dnd-kit/core";
+import useProject from "../hooks/useProject";
 
 const type: ElementsType = "ListBlock";
 
 const extraAttributes = {
   label: "List Block",
   placeHolder: "Add other blocks here...",
-  items: [] as ProjectElementInstance[],
+  children: [] as string[],
 };
 
 export const ListBlockProjectElement: ProjectElement = {
   type,
-  construct: (id: string) => ({
+  construct: (id: string, parentId: string) => ({
     id,
     type,
     position: { x: 0, y: 0 },
     size: { width: 300, height: 200 },
+    parentId: parentId,
     extraAttributes,
   }),
 
@@ -47,21 +49,21 @@ function CanvasComponent({
   elementInstance: ProjectElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
-  const { label, placeHolder, items } = element.extraAttributes;
+  const { label, placeHolder, children: children } = element.extraAttributes;
   const style = {
     width: element.size.width,
-    height: element.size.height,
+    minHeight: element.size.height,
   };
 
   return (
     <Card style={style} className="gap-2 p-2">
       <p>{label}</p>
       <ListDroppable element={element}>
-        {items.length === 0 ? (
+        {children.length === 0 ? (
           <p className="text-neutral-500">{placeHolder}</p>
         ) : (
-          items.map((listElement, index) => (
-            <ListElementWrapper key={index} element={listElement} />
+          children.map((listElement, index) => (
+            <ListElementWrapper key={index} elementId={listElement} />
           ))
         )}
       </ListDroppable>
@@ -82,7 +84,7 @@ function ListDroppable({
     disabled: element.id === active?.data?.current?.elementId, // Prevent dropping onto itself
     data: {
       isListDroppable: true,
-      element: element,
+      elementId: element.id,
     },
   });
 
@@ -98,7 +100,11 @@ function ListDroppable({
   );
 }
 
-function ListElementWrapper({ element }: { element: ProjectElementInstance }) {
+function ListElementWrapper({ elementId }: { elementId: string }) {
+  const { elements } = useProject();
+  const element = elements.find((element) => element.id === elementId);
+  if (!element) return null;
+
   const { attributes, listeners, isDragging, setNodeRef } = useDraggable({
     id: element.id + "-drag-handler",
     data: {
