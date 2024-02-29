@@ -16,11 +16,12 @@ const extraAttributes = {
 
 export const ImageBlockProjectElement: ProjectElement = {
   type,
-  construct: (id: string) => ({
+  construct: (id: string, parentId: string) => ({
     id,
     type,
     position: { x: 0, y: 0 },
     size: { width: 300, height: 200 },
+    parentId,
     extraAttributes,
   }),
 

@@ -18,11 +18,12 @@ const extraAttributes = {
 
 export const LinkBlockProjectElement: ProjectElement = {
   type,
-  construct: (id: string) => ({
+  construct: (id: string, parentId: string) => ({
     id,
     type,
     position: { x: 0, y: 0 },
     size: { width: 300, height: 75 },
+    parentId,
     extraAttributes,
   }),
 
