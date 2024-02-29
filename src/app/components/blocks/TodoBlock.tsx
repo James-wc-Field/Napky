@@ -60,9 +60,10 @@ function CanvasComponent({
     e: React.KeyboardEvent<HTMLInputElement>,
     index: number
   ) {
-    if (e.key === "Enter" && !e.shiftKey && !e.altKey && !e.ctrlKey) {
-      console.log("Enter pressed");
+    if (e.key === "Enter" && !e.shiftKey && !e.ctrlKey) {
       e.preventDefault();
+
+      // Add todo item at index + 1
       const newItems = [...items];
       newItems.splice(index + 1, 0, "");
       const newChecked = [...checked];
@@ -75,6 +76,8 @@ function CanvasComponent({
           checked: newChecked,
         },
       });
+
+      // Focus on the new todo item
       setTimeout(() => {
         focusNextInput(index);
       });
@@ -92,6 +95,8 @@ function CanvasComponent({
       items.length > 1
     ) {
       e.preventDefault();
+
+      // Remove todo item at index
       const newItems = [...items];
       newItems.splice(index, 1);
       const newChecked = [...checked];
@@ -105,6 +110,7 @@ function CanvasComponent({
         },
       });
 
+      // Focus on the previous todo item
       setTimeout(() => {
         focusPrevInput(index);
       });
@@ -172,6 +178,7 @@ function CanvasComponent({
               placeholder={placeHolder}
               onValueChange={(e) => handleOnTextChange(e, index)}
               onKeyDown={(e) => handleOnKeyPress(e, index)}
+              cacheMeasurements={true}
             />
           </div>
         ))}
