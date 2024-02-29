@@ -5,7 +5,7 @@ import { ElementsType, ProjectElements } from "./ProjectElements";
 import { idGenerator } from "../lib/idGenerator";
 import useProject from "./hooks/useProject";
 
-function BuildArea() {
+export default function BuildArea() {
   const {
     elements,
     addElement,
@@ -102,7 +102,9 @@ function BuildArea() {
         if (!list) return;
 
         const childElements = list.extraAttributes?.children;
-        const newChildElements = childElements.filter((id: string) => id !== elementId);
+        const newChildElements = childElements.filter(
+          (id: string) => id !== elementId
+        );
 
         // Remove element from list
         updateElement(listId, {
@@ -111,18 +113,18 @@ function BuildArea() {
             ...list.extraAttributes,
             children: newChildElements,
           },
-        })
+        });
       }
 
       // Drag canvas element onto list
       if (isListDroppable && isCanvasElement) {
         const elementId = active.data?.current?.elementId;
         const dragged = elements.find((element) => element.id == elementId);
-        if (!dragged || dragged.type === "ListBlock") return;
+        if (!dragged) return;
 
         const listId = over.data?.current?.elementId;
         const list = elements.find((element) => element.id == listId);
-        if (!list || list.type !== "ListBlock") return;
+        if (!list) return;
 
         const childElements = list.extraAttributes?.children;
 
@@ -149,6 +151,79 @@ function BuildArea() {
         });
 
         return;
+      }
+
+      if (isToolbarBtnElement && isListDroppable) {
+        const type = active.data?.current?.type;
+        const listId = over.data?.current?.elementId;
+        const newElement = ProjectElements[type as ElementsType].construct(
+          idGenerator(),
+          listId as string
+        );
+
+        addElement(newElement, 0, 0);
+        console.log("NEW ELEMENT:", newElement);
+
+        const list = elements.find((element) => element.id == listId);
+        if (!list) return;
+
+        const childElements = list.extraAttributes?.children;
+        const newChildElements = [...childElements, newElement.id];
+
+        updateElement(listId, {
+          ...list,
+          extraAttributes: {
+            ...list.extraAttributes,
+            children: newChildElements,
+          },
+        });
+      }
+
+      if (isListElement && isListDroppable) {
+        const newListId = over.data?.current?.elementId;
+        const elementId = active.data?.current?.elementId;
+        const dragged = elements.find((element) => element.id == elementId);
+        if (!dragged) return;
+        const parentListId = dragged.parentId;
+        const parentList = elements.find(
+          (element) => element.id == parentListId
+        );
+        if (!parentList || parentListId === newListId) return;
+
+        const childElements = parentList.extraAttributes?.children;
+        const newChildElements = childElements.filter(
+          (id: string) => id !== elementId
+        );
+
+        updateElement(parentListId, {
+          ...parentList,
+          extraAttributes: {
+            ...parentList.extraAttributes,
+            children: newChildElements,
+          },
+        });
+
+        const newList = elements.find((element) => element.id == newListId);
+        if (!newList) return;
+
+        const newChildElementsList = newList.extraAttributes?.children;
+        const newChildElementsListArray = [...newChildElementsList, elementId];
+
+        updateElement(newListId, {
+          ...newList,
+          extraAttributes: {
+            ...newList.extraAttributes,
+            children: newChildElementsListArray,
+          },
+        });
+
+        updateElement(dragged.id, {
+          ...dragged,
+          parentId: newListId,
+          extraAttributes: {
+            ...dragged.extraAttributes,
+          },
+        });
       }
     },
   });
@@ -212,5 +287,3 @@ function BuildArea() {
     </div>
   );
 }
-
-export default BuildArea;
