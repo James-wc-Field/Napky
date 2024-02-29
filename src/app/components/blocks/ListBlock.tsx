@@ -54,15 +54,18 @@ function CanvasComponent({
     maxWidth: element.size.width,
     minHeight: element.size.height,
   };
+  const { elements } = useProject();
 
   return (
     <Card style={style} className="gap-2 p-2 items-center">
       <p>{label}</p>
       <ListDroppable element={element}>
         {children.length > 0 ? (
-          children.map((childId) => (
-            <ListElementWrapper key={childId} elementId={childId} />
-          ))
+          children.map((childId) => {
+            const child = elements.find((e) => e.id === childId);
+            if (!child) return null;
+            return <ListElementWrapper key={childId} element={child} />
+          })
         ) : (
           <p className="text-neutral-400">{placeHolder}</p>
         )}
@@ -100,13 +103,9 @@ function ListDroppable({
   );
 }
 
-function ListElementWrapper({ elementId }: { elementId: string }) {
-  const { elements } = useProject();
-  const element = elements.find((element) => element.id === elementId);
-  if (!element) return null;
-
+function ListElementWrapper({ element }: { element: ProjectElementInstance}) {
   const { attributes, listeners, isDragging, setNodeRef } = useDraggable({
-    id: element.id + "-drag-handler",
+    id: element?.id + "-drag-handler",
     data: {
       type: element.type,
       elementId: element.id,
