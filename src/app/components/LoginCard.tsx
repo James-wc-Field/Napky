@@ -8,8 +8,8 @@ import { Link } from "@nextui-org/link"
 import { Button } from "@nextui-org/button"
 import { Card, CardBody, CardFooter } from "@nextui-org/card"
 
-import { EyeFilledIcon } from "../../../public/icons/EyeFilledIcon";
-import { EyeSlashFilledIcon } from "../../../public/icons/EyeSlashFilledIcon";
+import { EyeIcon } from "@heroicons/react/16/solid";
+import { EyeSlashIcon } from "@heroicons/react/16/solid";
 
 import Copyright from "../components/Copyright";
 
@@ -46,13 +46,13 @@ export default function Page() {
 									label="Password"
 									placeholder="Enter your password"
 									endContent={
-										<button className="focus:outline-none" type="button" onClick={toggleVisibility}>
+										<button className="w-fit focus:outline-none" onClick={toggleVisibility}>
 											{isVisible ? (
-												<EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+												<EyeSlashIcon className="w-6" />
 											) : (
-												<EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+												<EyeIcon className="w-6" />
 											)}
-										</button>
+										</button >
 									}
 									type={isVisible ? "text" : "password"}
 								/>
@@ -63,7 +63,7 @@ export default function Page() {
 								<div className="flex flex-col gap-1">
 									<div className="flex group gap-2 justify-center">
 										<p className="text-sm text-center">
-											Don't have an account?
+											Don&apos;t have an account?
 										</p>
 										<Link className="cursor-pointer" size="sm" onPress={() => tabChange("sign-up")}>
 											Sign up
@@ -93,13 +93,13 @@ export default function Page() {
 									isRequired
 									label="Password"
 									endContent={
-										<button className="focus:outline-none" type="button" onClick={toggleVisibility}>
+										<button className="w-fit focus:outline-none" onClick={toggleVisibility}>
 											{isVisible ? (
-												<EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+												<EyeSlashIcon className="w-6" />
 											) : (
-												<EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+												<EyeIcon className="w-6" />
 											)}
-										</button>
+										</button >
 									}
 									type={isVisible ? "text" : "password"}
 									placeholder="Enter your password"

@@ -1,10 +1,12 @@
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { ProjectElementInstance, ProjectElements } from "./ProjectElements";
 import useProject from "./hooks/useProject";
 import MiniMap from "./MiniMap";
 import CanvasControls from "./CanvasControls";
 import CanvasBackground from "./CanvasBackground";
+import CanvasToolbar from "./CanvasToolbar";
+import { getEventListeners } from "events";
 
 export default function Canvas({
   elements,
@@ -13,17 +15,17 @@ export default function Canvas({
 }) {
   return (
     <MainCanvasDroppable>
-      {elements.length > 0 &&
-        elements.map((element) => (
-          <CanvasElementWrapper key={element.id} element={element} />
-        ))}
+      {elements.map((element) => {
+        if (element.parentId !== "root") return null;
+        return <CanvasElementWrapper key={element.id} element={element} />;
+      })}
     </MainCanvasDroppable>
   );
 }
 
 function MainCanvasDroppable({ children }: { children?: ReactNode }) {
   const { isOver, setNodeRef } = useDroppable({
-    id: "canvas-drop-area",
+    id: "canvas-droppable",
     data: {
       isCanvasDropArea: true,
     },
@@ -39,10 +41,10 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     updateCanvasViewRect,
   } = useProject();
 
-  function handleScroll(e: React.WheelEvent<HTMLDivElement>) {
+  const handleScroll = (e: React.WheelEvent) => {
     const { deltaX, deltaY } = e;
     if (e.ctrlKey) {
-      updateZoomLevel(deltaY > 0, 1.05);
+      updateZoomLevel(deltaY < 0, 1.05);
       return;
     } else if (e.shiftKey) {
       updateScrollLeft(deltaY);
@@ -50,7 +52,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     }
     updateScrollLeft(deltaX);
     updateScrollTop(deltaY);
-  }
+  };
 
   const canvasViewRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -68,17 +70,45 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [canvasViewRef]);
+  }, []);
+
+  const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false);
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (middleMouseIsDown) {
+      updateScrollLeft(-e.movementX);
+      updateScrollTop(-e.movementY);
+    }
+  };
+
+  const handleMouseUp = () => {
+    setMiddleMouseIsDown(false);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button === 1) {
+      setMiddleMouseIsDown(true);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      // Cleanup event listeners when component unmounts
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [middleMouseIsDown]);
 
   return (
     <>
       <div
         id="canvas-renderer"
         className="absolute w-full h-full top-0 left-0"
-        style={{
-          zIndex: 4,
-        }}
+        style={{ zIndex: 4 }}
         onWheel={handleScroll}
+        onMouseDown={handleMouseDown}
         ref={canvasViewRef}
       >
         <div
@@ -100,6 +130,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
           </div>
         </div>
       </div>
+      <CanvasToolbar />
       <CanvasControls />
       {/* <MiniMap /> */}
       <CanvasBackground />
@@ -126,9 +157,12 @@ function CanvasElementWrapper({
     left: element.position.x,
     top: element.position.y,
     visibility: isDragging ? "hidden" : undefined,
+    width: element.size.width,
   };
 
-  const CanvasElement = ProjectElements[element.type].canvasComponent;
+  const CanvasElement = useMemo(() => {
+    return ProjectElements[element.type].canvasComponent;
+  }, [element]);
   return (
     <div style={style} ref={setNodeRef} {...listeners} {...attributes}>
       <CanvasElement elementInstance={element} />
