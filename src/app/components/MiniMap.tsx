@@ -34,7 +34,7 @@ function MiniMap() {
     onDragEnd: (event) => {
       setOverlayRect(null);
     },
-  });
+  }); // This causes an maximum update depth error, fix at some point if we decide to use the minimap
 
   return (
     <div
@@ -50,6 +50,7 @@ function MiniMap() {
       >
         {/* Rect for each element */}
         {elements.map((element: ProjectElementInstance) => {
+          if (element.parentId !== "root") return null;
           return (
             <rect
               x={element.position.x * zoomLevel}

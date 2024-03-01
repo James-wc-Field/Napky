@@ -37,13 +37,15 @@ export default function DragOverlayWrapper() {
     const CanvasElementComponent =
       ProjectElements[type as ElementsType].canvasComponent;
     const tempElement = ProjectElements[type as ElementsType].construct(
-      "new-element-drag-overlay"
+      "new-element-drag-overlay",
+      "root"
     );
     node = <CanvasElementComponent elementInstance={tempElement} />;
   }
 
   const isCanvasElement = draggedItem.data?.current?.isCanvasElement;
-  if (isCanvasElement) {
+  const isListElement = draggedItem.data?.current?.isListElement;
+  if (isCanvasElement || isListElement) {
     const elementId = draggedItem.data?.current?.elementId;
     const element = elements.find((element) => element.id === elementId);
 
@@ -55,7 +57,7 @@ export default function DragOverlayWrapper() {
   }
 
   const overScale: Modifier = ({ transform, over }) => {
-    if (over?.id === "canvas-drop-area" || !over) {
+    if (!over?.data?.current?.isToolbar || !over) {
       return {
         ...transform,
         scaleX: zoomLevel,
@@ -69,11 +71,16 @@ export default function DragOverlayWrapper() {
     };
   };
 
+  const style = {
+    transformOrigin: "0 0",
+    width: "100%",
+  };
+
   return (
     <DragOverlay
       adjustScale
-      style={{ transformOrigin: "0 0" }}
-      transition="transform 0.2s cubic-bezier(.22,1.31,.28,1.19)"
+      style={style}
+      transition="transform 0.2s cubic-bezier(.22,1.31,.28,1.19)" // Slow when devtools are open, remove for dev for now
       modifiers={[overScale]}
     >
       {node}

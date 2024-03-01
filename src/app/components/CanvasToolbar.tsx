@@ -1,24 +1,24 @@
 import React from "react";
-import { ProjectElements } from "./ProjectElements";
 import ToolbarBtnElement from "./ToolbarBtnElement";
+import { ProjectElements } from "./ProjectElements";
+import { Card } from "@nextui-org/react";
 import { useDroppable } from "@dnd-kit/core";
 
-function Toolbar() {
+export default function CanvasToolbar() {
   const { setNodeRef } = useDroppable({
     id: "toolbar-area",
     data: { isToolbar: true },
   });
   return (
-    <aside
+    <Card
       ref={setNodeRef}
-      className="flex-none flex flex-col gap-2 border-r-1 border-slate-500 p-2"
+      className="absolute top-4 left-4 gap-2 p-2"
+      style={{ zIndex: 5 }}
     >
       <ToolbarBtnElement projectElement={ProjectElements.TextBlock} />
       <ToolbarBtnElement projectElement={ProjectElements.LinkBlock} />
       <ToolbarBtnElement projectElement={ProjectElements.ListBlock} />
       <ToolbarBtnElement projectElement={ProjectElements.TodoBlock} />
-    </aside>
+    </Card>
   );
 }
-
-export default Toolbar;

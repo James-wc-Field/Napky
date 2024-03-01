@@ -16,11 +16,12 @@ const extraAttributes = {
 
 export const ImageBlockProjectElement: ProjectElement = {
   type,
-  construct: (id: string) => ({
+  construct: (id: string, parentId: string) => ({
     id,
     type,
     position: { x: 0, y: 0 },
     size: { width: 300, height: 200 },
+    parentId,
     extraAttributes,
   }),
 
@@ -45,9 +46,7 @@ function CanvasComponent({
   const element = elementInstance as CustomInstance;
   const { src } = element.extraAttributes;
   const style = {
-    minWidth: element.size.width,
     width: element.size.width,
-    height: element.size.height,
   };
 
   return (

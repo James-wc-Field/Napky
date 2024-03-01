@@ -6,9 +6,9 @@ import {
   ProjectElement,
   ProjectElementInstance,
 } from "../ProjectElements";
-import { Card, CardBody } from "@nextui-org/card";
-import { Input } from "@nextui-org/input";
+import { Card } from "@nextui-org/card";
 import useProject from "../hooks/useProject";
+import { Textarea } from "@nextui-org/react";
 
 const type: ElementsType = "TextBlock";
 
@@ -19,11 +19,12 @@ const extraAttributes = {
 
 export const TextBlockProjectElement: ProjectElement = {
   type,
-  construct: (id: string) => ({
+  construct: (id: string, parentId: string) => ({
     id,
     type,
     position: { x: 0, y: 0 },
     size: { width: 300, height: 75 },
+    parentId,
     extraAttributes,
   }),
 
@@ -48,32 +49,28 @@ function CanvasComponent({
   const { updateElement } = useProject();
   const element = elementInstance as CustomInstance;
   const { text, placeHolder } = element.extraAttributes;
-  const style = {
-    width: element.size.width,
-    height: element.size.height,
-  };
 
-  function handleOnTextChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const { value } = event.target;
+  function handleOnTextChange(e: React.ChangeEvent<HTMLInputElement>) {
     updateElement(element.id, {
       ...element,
       extraAttributes: {
-        text: value,
+        ...element.extraAttributes,
+        text: e.target.value,
       },
     });
   }
+  const style = {
+    maxWidth: element.size.width,
+  };
 
   return (
-    <Card style={style}>
-      <CardBody className="justify-center">
-        <Input
-          size="sm"
-          type="text"
-          placeholder={placeHolder}
-          onChange={handleOnTextChange}
-          value={text}
-        />
-      </CardBody>
+    <Card style={style} className="p-2 h-fit">
+      <Textarea
+        size="sm"
+        placeholder={placeHolder}
+        onChange={handleOnTextChange}
+        value={text}
+      />
     </Card>
   );
 }
