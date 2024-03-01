@@ -8,8 +8,8 @@ import { Navbar, NavbarBrand, NavbarMenu, NavbarItem, NavbarMenuItem, NavbarCont
 import { Input } from "@nextui-org/input"
 import { Avatar } from "@nextui-org/avatar"
 import { generateClient } from 'aws-amplify/api';
-import { listTests } from '../../graphql/queries';
-import { Test } from '../../API';
+import { listProjects } from '../../graphql/queries';
+import { Project } from '../../API';
 export default async function Page() {
   return (
     <Suspense fallback={<p>Loading...</p>}>
@@ -17,12 +17,13 @@ export default async function Page() {
     </Suspense>
   )
 }
-
+const id = "id";
 async function Projects(){
   const client = generateClient();
-  const projects =  (await client.graphql({query: listTests})).data.listTests.items;
+  const projects =  (await client.graphql({query: listProjects,
+  variables: {filter: {userId: {eq: id}}}})).data.listProjects.items;
   return (
-    projects.map((project: Test) => (
+    projects.map((project: Project) => (
     <Card className="flex w-full sm:w-4/5 p-4 h-full">
     <p>{project.name}</p>
   </Card>

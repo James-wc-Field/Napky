@@ -2,20 +2,22 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateTestInput = {
+export type CreateProjectInput = {
   id?: string | null,
+  userId: string,
   name: string,
   description?: string | null,
-  test?: string | null,
+  content?: string | null,
 };
 
-export type ModelTestConditionInput = {
+export type ModelProjectConditionInput = {
+  userId?: ModelStringInput | null,
   name?: ModelStringInput | null,
   description?: ModelStringInput | null,
-  test?: ModelStringInput | null,
-  and?: Array< ModelTestConditionInput | null > | null,
-  or?: Array< ModelTestConditionInput | null > | null,
-  not?: ModelTestConditionInput | null,
+  content?: ModelStringInput | null,
+  and?: Array< ModelProjectConditionInput | null > | null,
+  or?: Array< ModelProjectConditionInput | null > | null,
+  not?: ModelProjectConditionInput | null,
 };
 
 export type ModelStringInput = {
@@ -58,35 +60,38 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
-export type Test = {
-  __typename: "Test",
+export type Project = {
+  __typename: "Project",
   id: string,
+  userId: string,
   name: string,
   description?: string | null,
-  test?: string | null,
+  content?: string | null,
   createdAt: string,
   updatedAt: string,
 };
 
-export type UpdateTestInput = {
+export type UpdateProjectInput = {
   id: string,
+  userId?: string | null,
   name?: string | null,
   description?: string | null,
-  test?: string | null,
+  content?: string | null,
 };
 
-export type DeleteTestInput = {
+export type DeleteProjectInput = {
   id: string,
 };
 
-export type ModelTestFilterInput = {
+export type ModelProjectFilterInput = {
   id?: ModelIDInput | null,
+  userId?: ModelStringInput | null,
   name?: ModelStringInput | null,
   description?: ModelStringInput | null,
-  test?: ModelStringInput | null,
-  and?: Array< ModelTestFilterInput | null > | null,
-  or?: Array< ModelTestFilterInput | null > | null,
-  not?: ModelTestFilterInput | null,
+  content?: ModelStringInput | null,
+  and?: Array< ModelProjectFilterInput | null > | null,
+  or?: Array< ModelProjectFilterInput | null > | null,
+  not?: ModelProjectFilterInput | null,
 };
 
 export type ModelIDInput = {
@@ -105,19 +110,20 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
-export type ModelTestConnection = {
-  __typename: "ModelTestConnection",
-  items:  Array<Test | null >,
+export type ModelProjectConnection = {
+  __typename: "ModelProjectConnection",
+  items:  Array<Project | null >,
   nextToken?: string | null,
 };
 
-export type ModelSubscriptionTestFilterInput = {
+export type ModelSubscriptionProjectFilterInput = {
   id?: ModelSubscriptionIDInput | null,
+  userId?: ModelSubscriptionStringInput | null,
   name?: ModelSubscriptionStringInput | null,
   description?: ModelSubscriptionStringInput | null,
-  test?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionTestFilterInput | null > | null,
-  or?: Array< ModelSubscriptionTestFilterInput | null > | null,
+  content?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionProjectFilterInput | null > | null,
+  or?: Array< ModelSubscriptionProjectFilterInput | null > | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -150,88 +156,93 @@ export type ModelSubscriptionStringInput = {
   notIn?: Array< string | null > | null,
 };
 
-export type CreateTestMutationVariables = {
-  input: CreateTestInput,
-  condition?: ModelTestConditionInput | null,
+export type CreateProjectMutationVariables = {
+  input: CreateProjectInput,
+  condition?: ModelProjectConditionInput | null,
 };
 
-export type CreateTestMutation = {
-  createTest?:  {
-    __typename: "Test",
+export type CreateProjectMutation = {
+  createProject?:  {
+    __typename: "Project",
     id: string,
+    userId: string,
     name: string,
     description?: string | null,
-    test?: string | null,
+    content?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type UpdateTestMutationVariables = {
-  input: UpdateTestInput,
-  condition?: ModelTestConditionInput | null,
+export type UpdateProjectMutationVariables = {
+  input: UpdateProjectInput,
+  condition?: ModelProjectConditionInput | null,
 };
 
-export type UpdateTestMutation = {
-  updateTest?:  {
-    __typename: "Test",
+export type UpdateProjectMutation = {
+  updateProject?:  {
+    __typename: "Project",
     id: string,
+    userId: string,
     name: string,
     description?: string | null,
-    test?: string | null,
+    content?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type DeleteTestMutationVariables = {
-  input: DeleteTestInput,
-  condition?: ModelTestConditionInput | null,
+export type DeleteProjectMutationVariables = {
+  input: DeleteProjectInput,
+  condition?: ModelProjectConditionInput | null,
 };
 
-export type DeleteTestMutation = {
-  deleteTest?:  {
-    __typename: "Test",
+export type DeleteProjectMutation = {
+  deleteProject?:  {
+    __typename: "Project",
     id: string,
+    userId: string,
     name: string,
     description?: string | null,
-    test?: string | null,
+    content?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type GetTestQueryVariables = {
+export type GetProjectQueryVariables = {
   id: string,
 };
 
-export type GetTestQuery = {
-  getTest?:  {
-    __typename: "Test",
+export type GetProjectQuery = {
+  getProject?:  {
+    __typename: "Project",
     id: string,
+    userId: string,
     name: string,
     description?: string | null,
-    test?: string | null,
+    content?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type ListTestsQueryVariables = {
-  filter?: ModelTestFilterInput | null,
+export type ListProjectsQueryVariables = {
+  filter?: ModelProjectFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type ListTestsQuery = {
-  listTests?:  {
-    __typename: "ModelTestConnection",
+export type ListProjectsQuery = {
+  listProjects?:  {
+    __typename: "ModelProjectConnection",
     items:  Array< {
-      __typename: "Test",
+      __typename: "Project",
       id: string,
+      userId: string,
       name: string,
       description?: string | null,
-      test?: string | null,
+      content?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -239,49 +250,52 @@ export type ListTestsQuery = {
   } | null,
 };
 
-export type OnCreateTestSubscriptionVariables = {
-  filter?: ModelSubscriptionTestFilterInput | null,
+export type OnCreateProjectSubscriptionVariables = {
+  filter?: ModelSubscriptionProjectFilterInput | null,
 };
 
-export type OnCreateTestSubscription = {
-  onCreateTest?:  {
-    __typename: "Test",
+export type OnCreateProjectSubscription = {
+  onCreateProject?:  {
+    __typename: "Project",
     id: string,
+    userId: string,
     name: string,
     description?: string | null,
-    test?: string | null,
+    content?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnUpdateTestSubscriptionVariables = {
-  filter?: ModelSubscriptionTestFilterInput | null,
+export type OnUpdateProjectSubscriptionVariables = {
+  filter?: ModelSubscriptionProjectFilterInput | null,
 };
 
-export type OnUpdateTestSubscription = {
-  onUpdateTest?:  {
-    __typename: "Test",
+export type OnUpdateProjectSubscription = {
+  onUpdateProject?:  {
+    __typename: "Project",
     id: string,
+    userId: string,
     name: string,
     description?: string | null,
-    test?: string | null,
+    content?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnDeleteTestSubscriptionVariables = {
-  filter?: ModelSubscriptionTestFilterInput | null,
+export type OnDeleteProjectSubscriptionVariables = {
+  filter?: ModelSubscriptionProjectFilterInput | null,
 };
 
-export type OnDeleteTestSubscription = {
-  onDeleteTest?:  {
-    __typename: "Test",
+export type OnDeleteProjectSubscription = {
+  onDeleteProject?:  {
+    __typename: "Project",
     id: string,
+    userId: string,
     name: string,
     description?: string | null,
-    test?: string | null,
+    content?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
