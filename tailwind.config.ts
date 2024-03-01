@@ -11,33 +11,33 @@ const config: Config = {
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-      },
+    "light1": {
+      extend: "light",
       colors: {
-        'black': '#000000',
-        'white': '#ffffff',
-        'primary-light': '#baf7c8',
-        'primary-dark': '#7ca397',
-        'card-bg-light': '#faebd7',
-        'secondary': '#ffff66',
-        'neutral-light': '#b6bab7',
-        'neutral-dark': '#505251',
-        'accent': '#daa5e6',
-      },
-      gridTemplateColumns: {
-        sidebar: "300px auto", //for sidebar layout
-        "sidebar-collapsed": "64px auto", //for collapsed sidebar layout
+        background: "#E4FBF0",
+        foreground: "#1F1E41",
+        divider: "#0B1912",
+        overlay: "#E4FBF0",
+        focus: "#357E5C",
+        content1: "#E4FBF0",
+        content2: "#5FCB99",
+        content3: "#FFFFFF"
       }
     },
-    colors: {
-      transparent: 'transparent',
-      main_purple: "#7828c8",
-    }
-  },
+    "dark1": {
+      extend: "dark",
+      colors: {
+        background: "#0B1912",
+        foreground: "#DEDDFE",
+        divider: "#E4FBF0",
+        overlay: "#0B1912",
+        focus: "#357E5C",
+        content1: "#0B1912",
+        content2: "#1A3B2C",
+        content3: "#000000"
+      }
+    } 
+  }, 
   darkMode: "class",
   plugins: [nextui()],
 }
