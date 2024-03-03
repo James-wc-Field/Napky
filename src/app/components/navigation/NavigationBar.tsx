@@ -1,27 +1,54 @@
 'use client'
 
-import {   Navbar, 
-  NavbarBrand, 
-  NavbarContent, 
-  NavbarItem, 
-  NavbarMenuToggle,
-  NavbarMenu,
-  NavbarMenuItem, Link , Image } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { Link , Image } from "@nextui-org/react";
+import { ReactElement, useEffect, useState } from "react";
+import { usePathname, useRouter } from 'next/navigation'
+import { NavDiscover } from "./NavDiscover";
+import { NavDashboard } from "./NavDashboard";
 
 export function NavigationBar () {
-  const [user, setUser] = useState(null);
+  // Needs Implemented
+  const [user, setUser] = useState("");
+  const [project, setProject] = useState("");
 
-  
+
+  const [middleState, setMiddleState] = useState(<></>);
+  const [endState, setEndState] = useState<ReactElement>(<></>);
+  const pathname = usePathname()
+
+  useEffect(() => {
+    // getUser()
+    // getProject()
+
+    if (pathname === "/discover") {
+        setMiddleState(NavDiscover());
+        setEndState(<Link className="mx-4" color="foreground" href="/dashboard">Dashboard</Link>);
+    }
+    else if (pathname === "/dashboard") {
+        setMiddleState(NavDashboard());
+        setEndState(<Link className="mx-4" color="foreground" href="/discover">Discover</Link>);
+
+    }
+    else if (pathname.startsWith("/project/")) {
+        setMiddleState(<>{project}</>);
+        setEndState(
+          <>
+          <Link className="mx-4" color="foreground" href="/discover">Discover</Link>
+          <Link className="mx-4" color="foreground" href="/dashboard">Dashboard</Link>
+          </>);
+        }
+      },[])
+
   return (
     <>
     <nav className="bg-content2 flex p-2 items-center font-main px-10">
       <Link 
       className="flex justify-center items-center ml-2 min-w-fit"
       color="foreground"
-      href="#"
+      href="/discover"
       >
         <Image
+        // Need to resolve this issue with project
         className="min-w-12"
         width={48}
         alt="Happy Squirrel"
@@ -32,11 +59,13 @@ export function NavigationBar () {
         </p>
       </Link>
       <div className="flex w-full justify-center"> 
-        {}
+      {middleState}
       </div>
       <div className="flex justify-end min-w-fit">
-        <Link className="mx-4" color="foreground" href="#">Dashboard</Link>
-        <Link className="mx-4" color="foreground" href="#">{user? "Account" : "Sign In"}</Link>
+        {endState}
+        {user? 
+          <Link className="mx-4" color="foreground" href="#">Account</Link> : 
+          <Link className="mx-4" color="foreground" href="#">Sign In</Link>}
       </div>
     </nav>
     </>
