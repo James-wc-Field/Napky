@@ -14,7 +14,6 @@ export default function BuildArea() {
     scrollTop,
     zoomLevel,
   } = useProject();
-
   useDndMonitor({
     onDragEnd: (event) => {
       const { active, over, delta } = event;
