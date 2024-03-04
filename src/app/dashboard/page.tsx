@@ -17,6 +17,7 @@ export default async function Page() {
     </Suspense>
   )
 }
+// TODO: ADD userID here
 const id = "id";
 async function Projects(){
   const client = generateClient();
