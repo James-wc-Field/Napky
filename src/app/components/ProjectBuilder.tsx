@@ -17,8 +17,6 @@ import usePreventZoom from "./hooks/usePreventZoom";
 import { Button } from "@nextui-org/react";
 import { DocumentCheckIcon } from "@heroicons/react/24/solid";
 import useProject from "./hooks/useProject";
-import { createProject } from "../../graphql/mutations";
-import { generateClient } from "aws-amplify/api";
 import config from '../../amplifyconfiguration.json';
 import { Amplify } from 'aws-amplify';
 import { ProjectElementInstance } from "./ProjectElements";
