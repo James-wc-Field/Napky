@@ -8,29 +8,34 @@ type GeneratedQuery<InputType, OutputType> = string & {
   __generatedQueryOutput: OutputType;
 };
 
-export const getTest = /* GraphQL */ `query GetTest($id: ID!) {
-  getTest(id: $id) {
+export const getProject = /* GraphQL */ `query GetProject($id: ID!) {
+  getProject(id: $id) {
     id
+    userId
     name
     description
-    test
+    content
     createdAt
     updatedAt
     __typename
   }
 }
-` as GeneratedQuery<APITypes.GetTestQueryVariables, APITypes.GetTestQuery>;
-export const listTests = /* GraphQL */ `query ListTests(
-  $filter: ModelTestFilterInput
+` as GeneratedQuery<
+  APITypes.GetProjectQueryVariables,
+  APITypes.GetProjectQuery
+>;
+export const listProjects = /* GraphQL */ `query ListProjects(
+  $filter: ModelProjectFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listTests(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listProjects(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
+      userId
       name
       description
-      test
+      content
       createdAt
       updatedAt
       __typename
@@ -39,4 +44,7 @@ export const listTests = /* GraphQL */ `query ListTests(
     __typename
   }
 }
-` as GeneratedQuery<APITypes.ListTestsQueryVariables, APITypes.ListTestsQuery>;
+` as GeneratedQuery<
+  APITypes.ListProjectsQueryVariables,
+  APITypes.ListProjectsQuery
+>;

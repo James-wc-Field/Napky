@@ -8,48 +8,51 @@ type GeneratedSubscription<InputType, OutputType> = string & {
   __generatedSubscriptionOutput: OutputType;
 };
 
-export const onCreateTest = /* GraphQL */ `subscription OnCreateTest($filter: ModelSubscriptionTestFilterInput) {
-  onCreateTest(filter: $filter) {
+export const onCreateProject = /* GraphQL */ `subscription OnCreateProject($filter: ModelSubscriptionProjectFilterInput) {
+  onCreateProject(filter: $filter) {
     id
+    userId
     name
     description
-    test
+    content
     createdAt
     updatedAt
     __typename
   }
 }
 ` as GeneratedSubscription<
-  APITypes.OnCreateTestSubscriptionVariables,
-  APITypes.OnCreateTestSubscription
+  APITypes.OnCreateProjectSubscriptionVariables,
+  APITypes.OnCreateProjectSubscription
 >;
-export const onUpdateTest = /* GraphQL */ `subscription OnUpdateTest($filter: ModelSubscriptionTestFilterInput) {
-  onUpdateTest(filter: $filter) {
+export const onUpdateProject = /* GraphQL */ `subscription OnUpdateProject($filter: ModelSubscriptionProjectFilterInput) {
+  onUpdateProject(filter: $filter) {
     id
+    userId
     name
     description
-    test
+    content
     createdAt
     updatedAt
     __typename
   }
 }
 ` as GeneratedSubscription<
-  APITypes.OnUpdateTestSubscriptionVariables,
-  APITypes.OnUpdateTestSubscription
+  APITypes.OnUpdateProjectSubscriptionVariables,
+  APITypes.OnUpdateProjectSubscription
 >;
-export const onDeleteTest = /* GraphQL */ `subscription OnDeleteTest($filter: ModelSubscriptionTestFilterInput) {
-  onDeleteTest(filter: $filter) {
+export const onDeleteProject = /* GraphQL */ `subscription OnDeleteProject($filter: ModelSubscriptionProjectFilterInput) {
+  onDeleteProject(filter: $filter) {
     id
+    userId
     name
     description
-    test
+    content
     createdAt
     updatedAt
     __typename
   }
 }
 ` as GeneratedSubscription<
-  APITypes.OnDeleteTestSubscriptionVariables,
-  APITypes.OnDeleteTestSubscription
+  APITypes.OnDeleteProjectSubscriptionVariables,
+  APITypes.OnDeleteProjectSubscription
 >;

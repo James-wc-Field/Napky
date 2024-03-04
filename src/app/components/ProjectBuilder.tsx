@@ -10,7 +10,7 @@ import {
   PointerSensor,
 } from "@dnd-kit/core";
 
-import { Project } from "../project/SchemaSimulation";
+import { Project } from "../../API";
 import SaveProjectBtn from "./SaveProjectBtn";
 import BuildArea from "./BuildArea";
 import DragOverlayWrapper from "./DragOverlayWrapper";
