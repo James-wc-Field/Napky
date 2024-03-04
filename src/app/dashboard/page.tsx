@@ -8,7 +8,6 @@ import { Navbar, NavbarBrand, NavbarMenu, NavbarItem, NavbarMenuItem, NavbarCont
 import { Input } from "@nextui-org/input"
 import { Avatar } from "@nextui-org/avatar"
 import { generateClient } from 'aws-amplify/api';
-import { listProjects } from '../../graphql/queries';
 import { Project } from '../../API';
 export default async function Page() {
   return (
