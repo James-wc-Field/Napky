@@ -8,57 +8,60 @@ type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationOutput: OutputType;
 };
 
-export const createTest = /* GraphQL */ `mutation CreateTest(
-  $input: CreateTestInput!
-  $condition: ModelTestConditionInput
+export const createProject = /* GraphQL */ `mutation CreateProject(
+  $input: CreateProjectInput!
+  $condition: ModelProjectConditionInput
 ) {
-  createTest(input: $input, condition: $condition) {
+  createProject(input: $input, condition: $condition) {
     id
+    userId
     name
     description
-    test
+    content
     createdAt
     updatedAt
     __typename
   }
 }
 ` as GeneratedMutation<
-  APITypes.CreateTestMutationVariables,
-  APITypes.CreateTestMutation
+  APITypes.CreateProjectMutationVariables,
+  APITypes.CreateProjectMutation
 >;
-export const updateTest = /* GraphQL */ `mutation UpdateTest(
-  $input: UpdateTestInput!
-  $condition: ModelTestConditionInput
+export const updateProject = /* GraphQL */ `mutation UpdateProject(
+  $input: UpdateProjectInput!
+  $condition: ModelProjectConditionInput
 ) {
-  updateTest(input: $input, condition: $condition) {
+  updateProject(input: $input, condition: $condition) {
     id
+    userId
     name
     description
-    test
+    content
     createdAt
     updatedAt
     __typename
   }
 }
 ` as GeneratedMutation<
-  APITypes.UpdateTestMutationVariables,
-  APITypes.UpdateTestMutation
+  APITypes.UpdateProjectMutationVariables,
+  APITypes.UpdateProjectMutation
 >;
-export const deleteTest = /* GraphQL */ `mutation DeleteTest(
-  $input: DeleteTestInput!
-  $condition: ModelTestConditionInput
+export const deleteProject = /* GraphQL */ `mutation DeleteProject(
+  $input: DeleteProjectInput!
+  $condition: ModelProjectConditionInput
 ) {
-  deleteTest(input: $input, condition: $condition) {
+  deleteProject(input: $input, condition: $condition) {
     id
+    userId
     name
     description
-    test
+    content
     createdAt
     updatedAt
     __typename
   }
 }
 ` as GeneratedMutation<
-  APITypes.DeleteTestMutationVariables,
-  APITypes.DeleteTestMutation
+  APITypes.DeleteProjectMutationVariables,
+  APITypes.DeleteProjectMutation
 >;
