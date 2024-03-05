@@ -4,8 +4,8 @@ const {nextui} = require("@nextui-org/react");
 
 const config: Config = {
   content: [
+    './src/**/*.{ts,tsx,js,jsx}',
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
-    './src/**/*.{ts,tsx}',
   ],
   prefix: "",
   theme: {

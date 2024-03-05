@@ -6,9 +6,9 @@ import {
   ProjectElement,
   ProjectElementInstance,
 } from "../ProjectElements";
-import { Card } from "@nextui-org/card";
+import { Card } from "@components/ui/card";
+import { Textarea } from "@components/ui/textarea";
 import useProject from "../hooks/useProject";
-import { Textarea } from "@nextui-org/react";
 
 const type: ElementsType = "TextBlock";
 
@@ -50,7 +50,7 @@ function CanvasComponent({
   const element = elementInstance as CustomInstance;
   const { text, placeHolder } = element.extraAttributes;
 
-  function handleOnTextChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleOnTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     updateElement(element.id, {
       ...element,
       extraAttributes: {
@@ -64,12 +64,11 @@ function CanvasComponent({
   };
 
   return (
-    <Card style={style} className="p-2 h-fit">
+    <Card style={style}>
       <Textarea
-        size="sm"
         placeholder={placeHolder}
-        onChange={handleOnTextChange}
         value={text}
+        onChange={handleOnTextChange}
       />
     </Card>
   );
