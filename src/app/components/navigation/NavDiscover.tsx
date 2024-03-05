@@ -9,12 +9,15 @@ export function NavDiscover() {
     <>
     <Dropdown>
       <DropdownTrigger>
-        <Button color="primary" variant="solid" >
+        <Button color="primary" variant="solid" className="min-w-24">
           <p>Categories</p>
-          <ChevronUpDownIcon className="text-foreground h-6 w-6 min-w-6 min-h-6"/>
+          <div className="flex w-12 h-12 justify-center align-center">
+            <ChevronUpDownIcon/>
+          </div>
         </Button>
       </DropdownTrigger>
-      <DropdownMenu aria-label="Static Actions" >
+      {/* This is not a good solution for bordering the drop down Menu Make my own? request Theme options */}
+      <DropdownMenu aria-label="Static Actions" classNames={{base: "border-2 rounded-lg",}}> 
         <DropdownItem key="new">Cosplay</DropdownItem>
         <DropdownItem key="copy">3D Printing</DropdownItem>
         <DropdownItem key="edit">Carpentry</DropdownItem>
