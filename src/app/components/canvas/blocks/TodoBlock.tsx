@@ -7,9 +7,9 @@ import {
   ProjectElementInstance,
 } from "@canvas/types/ProjectElements";
 import { Card } from "@nextui-org/card";
-import { Checkbox, CheckboxGroup, Textarea } from "@nextui-org/react";
+import { Textarea } from "@ui/textarea";
+import { Checkbox } from "@ui/checkbox";
 import useProject from "@canvas/hooks/useProject";
-import { FormEvent } from "react";
 
 const type: ElementsType = "TodoBlock";
 
@@ -56,8 +56,35 @@ function CanvasComponent({
     maxWidth: element.size.width,
   };
 
+  function handleOnCheckboxChange(e: string | boolean, index: number) {
+    const newChecked = [...checked];
+    newChecked[index] = e as boolean;
+    updateElement(element.id, {
+      ...element,
+      extraAttributes: {
+        ...element.extraAttributes,
+        checked: newChecked,
+      },
+    });
+  }
+
+  function handleOnTextChange(
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+    index: number
+  ) {
+    const newItems = [...items];
+    newItems[index] = e.target.value;
+    updateElement(element.id, {
+      ...element,
+      extraAttributes: {
+        ...element.extraAttributes,
+        items: newItems,
+      },
+    });
+  }
+
   function handleOnKeyPress(
-    e: React.KeyboardEvent<HTMLInputElement>,
+    e: React.KeyboardEvent<HTMLTextAreaElement>,
     index: number
   ) {
     if (e.key === "Enter" && !e.shiftKey && !e.ctrlKey) {
@@ -131,58 +158,24 @@ function CanvasComponent({
     prevInput?.focus();
   }
 
-  function handleOnTodoItemChange(e: FormEvent<HTMLElement> | string[]) {
-    if (Array.isArray(e)) {
-      handleOnCheckboxChange(e);
-    }
-  }
-
-  function handleOnCheckboxChange(e: string[]) {
-    const newChecked = items.map((_, index) => e.includes(index + ""));
-    updateElement(element.id, {
-      ...element,
-      extraAttributes: {
-        ...element.extraAttributes,
-        checked: newChecked,
-      },
-    });
-  }
-
-  function handleOnTextChange(e: string, index: number) {
-    const newItems = [...items];
-    newItems[index] = e;
-    updateElement(element.id, {
-      ...element,
-      extraAttributes: {
-        ...element.extraAttributes,
-        items: newItems,
-      },
-    });
-  }
-
   return (
-    <Card style={style} className="p-2 h-fit">
-      <CheckboxGroup
-        label={element.extraAttributes.label}
-        onChange={handleOnTodoItemChange}
-        value={checked.map((_, index) => (checked[index] ? index + "" : ""))}
-      >
-        {items.map((item, index) => (
-          <div key={index} className="flex items-center">
-            <Checkbox value={index + ""} />
-            <Textarea
-              id={`${element.id}-todo-item-${index}`}
-              key={index}
-              minRows={1}
-              value={item}
-              placeholder={placeHolder}
-              onValueChange={(e) => handleOnTextChange(e, index)}
-              onKeyDown={(e) => handleOnKeyPress(e, index)}
-              cacheMeasurements={true}
-            />
-          </div>
-        ))}
-      </CheckboxGroup>
+    <Card style={style} className="p-2 flex flex-col gap-1">
+      {items.map((item, index) => (
+        <div key={index} className="flex flex-row items-center gap-1">
+          <Checkbox
+            checked={checked[index]}
+            onCheckedChange={(e) => handleOnCheckboxChange(e, index)}
+          />
+          <Textarea
+            id={`${element.id}-todo-item-${index}`}
+            value={item}
+            rows={1} // Need a way to dynamically grow/shrink based on content like NextUI did it
+            placeholder={placeHolder}
+            onChange={(e) => handleOnTextChange(e, index)}
+            onKeyDown={(e) => handleOnKeyPress(e, index)}
+          />
+        </div>
+      ))}
     </Card>
   );
 }
