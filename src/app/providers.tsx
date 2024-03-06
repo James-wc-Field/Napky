@@ -3,7 +3,7 @@
 import * as React from "react";
 import { NextUIProvider } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import CanvasContextProvider from "./components/context/CanvasContext";
+import CanvasContextProvider from "./components/canvas/context/CanvasContext";
 import { ThemeProvider } from "./components/theme-provider";
 
 export function Providers({ children }: { children: React.ReactNode }) {

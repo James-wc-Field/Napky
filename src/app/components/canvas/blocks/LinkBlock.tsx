@@ -5,7 +5,7 @@ import {
   ElementsType,
   ProjectElement,
   ProjectElementInstance,
-} from "../ProjectElements";
+} from "../types/ProjectElements";
 import { Card } from "@components/ui/card";
 import { Input } from "@components/ui/input";
 import useProject from "../hooks/useProject";

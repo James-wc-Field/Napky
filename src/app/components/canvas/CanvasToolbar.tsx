@@ -1,9 +1,8 @@
 import React from "react";
 import ToolbarBtnElement from "./ToolbarBtnElement";
-import { ProjectElements } from "./ProjectElements";
+import { ProjectElements } from "./types/ProjectElements";
 import { Card } from "@components/ui/card";
 import { useDroppable } from "@dnd-kit/core";
-import { Separator } from "@radix-ui/react-separator";
 
 export default function CanvasToolbar() {
   const { setNodeRef } = useDroppable({

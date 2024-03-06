@@ -1,5 +1,5 @@
 import React from "react";
-import { ProjectElementInstance } from "./ProjectElements";
+import { ProjectElementInstance } from "./types/ProjectElements";
 import useProject from "./hooks/useProject";
 import { useDndMonitor } from "@dnd-kit/core";
 
