@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode, createContext, useEffect, useState } from "react";
-import { ProjectElementInstance } from "../canvas/types/ProjectElements";
+import { ProjectElementInstance } from "@canvas/types/ProjectElements";
 
 type CanvasContextType = {
   elements: ProjectElementInstance[];

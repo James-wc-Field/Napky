@@ -1,9 +1,9 @@
 import { DragEvent } from "react";
-import Canvas from "./Canvas";
+import Canvas from "@canvas/Canvas";
 import { useDndMonitor } from "@dnd-kit/core";
-import { ElementsType, ProjectElements } from "./types/ProjectElements";
-import { idGenerator } from "../../lib/idGenerator";
-import useProject from "./hooks/useProject";
+import { ElementsType, ProjectElements } from "@canvas/types/ProjectElements";
+import { idGenerator } from "@/lib/idGenerator";
+import useProject from "@canvas/hooks/useProject";
 
 export default function BuildArea() {
   const {

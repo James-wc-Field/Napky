@@ -11,7 +11,7 @@ import { Card, CardBody, CardFooter } from "@nextui-org/card"
 import { EyeIcon } from "@heroicons/react/16/solid";
 import { EyeSlashIcon } from "@heroicons/react/16/solid";
 
-import Copyright from "../components/Copyright";
+import Copyright from "@components/Copyright";
 
 export default function Page() {
 	const [selected, setSelected] = React.useState("login");

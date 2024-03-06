@@ -1,5 +1,5 @@
 import { DocumentCheckIcon } from "@heroicons/react/24/solid";
-import { Button } from "@components/ui/button";
+import { Button } from "@ui/button";
 import React from "react";
 
 function SaveProjectBtn() {

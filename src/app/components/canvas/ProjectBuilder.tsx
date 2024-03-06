@@ -10,12 +10,12 @@ import {
   PointerSensor,
 } from "@dnd-kit/core";
 
-import { Project } from "../../project/SchemaSimulation";
-import SaveProjectBtn from "./SaveProjectBtn";
-import BuildArea from "./BuildArea";
-import DragOverlayWrapper from "./DragOverlayWrapper";
-import usePreventZoom from "./hooks/usePreventZoom";
-import { ThemeToggle } from "../ThemeToggle";
+import { Project } from "@/project/SchemaSimulation";
+import SaveProjectBtn from "@canvas/SaveProjectBtn";
+import BuildArea from "@canvas/BuildArea";
+import DragOverlayWrapper from "@canvas/DragOverlayWrapper";
+import usePreventZoom from "@canvas/hooks/usePreventZoom";
+import { ThemeToggle } from "@components/ThemeToggle";
 
 export default function ProjectBuilder({ project }: { project: Project }) {
   const id = useId();

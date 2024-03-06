@@ -1,5 +1,5 @@
 import React from "react";
-import useProject from "./hooks/useProject";
+import useProject from "@canvas/hooks/useProject";
 
 export default function CanvasBackground() {
   const { zoomLevel, scrollLeft, scrollTop } = useProject();

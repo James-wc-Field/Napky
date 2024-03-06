@@ -5,7 +5,7 @@ import {
   ElementsType,
   ProjectElement,
   ProjectElementInstance,
-} from "../types/ProjectElements";
+} from "@canvas/types/ProjectElements";
 import { Image } from "@nextui-org/image";
 
 const type: ElementsType = "ImageBlock";

@@ -9,7 +9,7 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@nextui-org/modal";
-import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
+import { Card, CardHeader, CardBody } from "@nextui-org/card";
 import Link from "next/link";
 function Page(projectID: string) {
   // database call to get project data
