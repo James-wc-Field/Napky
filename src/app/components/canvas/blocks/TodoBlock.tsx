@@ -159,9 +159,9 @@ function CanvasComponent({
   }
 
   return (
-    <Card style={style} className="p-2 flex flex-col gap-1">
+    <Card style={style} className="p-2 flex flex-col gap-2">
       {items.map((item, index) => (
-        <div key={index} className="flex flex-row items-center gap-1">
+        <div key={index} className="flex flex-row items-center gap-2">
           <Checkbox
             checked={checked[index]}
             onCheckedChange={(e) => handleOnCheckboxChange(e, index)}
