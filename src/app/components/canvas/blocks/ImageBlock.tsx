@@ -6,12 +6,13 @@ import {
   ProjectElement,
   ProjectElementInstance,
 } from "@canvas/types/ProjectElements";
-import { Image } from "@nextui-org/image";
+import Image from "next/image";
 
 const type: ElementsType = "ImageBlock";
 
 const extraAttributes = {
   src: "/images/placeholder.jpg",
+  alt: "Image",
 };
 
 export const ImageBlockProjectElement: ProjectElement = {
@@ -44,12 +45,15 @@ function CanvasComponent({
   elementInstance: ProjectElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
-  const { src } = element.extraAttributes;
-  const style = {
-    width: element.size.width,
-  };
+  const { src, alt } = element.extraAttributes;
 
   return (
-    <Image style={style} src={src} alt="Image" removeWrapper disableAnimation />
+    <Image
+      src={src}
+      width={element.size.width}
+      height={element.size.height}
+      alt={alt}
+      className="rounded-md"
+    />
   );
 }
