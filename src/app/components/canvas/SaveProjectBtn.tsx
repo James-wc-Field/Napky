@@ -4,9 +4,9 @@ import React from "react";
 
 function SaveProjectBtn() {
   return (
-    <Button variant={"outline"}>
+    <Button variant={"outline"} className="gap-1">
       <DocumentCheckIcon className="h-5 w-6" />
-      Save
+      <p>Save</p>
     </Button>
   );
 }
