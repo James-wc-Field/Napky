@@ -49,7 +49,7 @@ function CanvasComponent({
 }) {
   const { updateElement } = useProject();
   const element = elementInstance as CustomInstance;
-  const { label, placeHolder, text } = element.extraAttributes;
+  const { placeHolder, text } = element.extraAttributes;
   const style = {
     maxWidth: element.size.width,
   };
@@ -65,8 +65,8 @@ function CanvasComponent({
   }
 
   return (
-    <Card style={style} className="p-2 h-fit flex flex-row gap-1 items-center">
-      <LinkIcon className="text-gray-500 h-6 w-6" />
+    <Card style={style} className="p-2 flex flex-row gap-1 items-center">
+      <LinkIcon className="text-zinc-500 h-6 w-6" />
       <Input
         placeholder={placeHolder}
         onChange={handleOnTextChange}

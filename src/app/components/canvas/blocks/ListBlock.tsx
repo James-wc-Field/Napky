@@ -25,7 +25,7 @@ export const ListBlockProjectElement: ProjectElement = {
     id,
     type,
     position: { x: 0, y: 0 },
-    size: { width: 300, height: 110 },
+    size: { width: 300, height: 100 },
     parentId,
     extraAttributes,
   }),
@@ -57,10 +57,7 @@ function CanvasComponent({
   const { elements } = useProject();
 
   return (
-    <Card
-      style={style}
-      className="flex flex-col gap-2 p-2 dark:bg-zinc-900 text-center"
-    >
+    <Card style={style} className="flex flex-col gap-2 p-2">
       <p>{label}</p>
       <ListDroppable element={element} numItems={children.length}>
         {children.length > 0 ? (
@@ -70,7 +67,7 @@ function CanvasComponent({
             return <ListElementWrapper key={childId} element={child} />;
           })
         ) : (
-          <p className="text-neutral-400">{placeHolder}</p>
+          <p>{placeHolder}</p>
         )}
       </ListDroppable>
     </Card>
@@ -102,8 +99,8 @@ function ListDroppable({
       ref={setNodeRef}
       className={`
         flex-1 flex flex-col items-center justify-center gap-1
-        ${numItems > 0 ? "dark:bg-zinc-900 bg-zinc-100 border-0" : "dark:bg-zinc-800"}
-        ${isOver && numItems == 0 ? "dark:bg-zinc-700" : ""}`}
+        ${numItems > 0 ? "border-0" : ""}
+        ${isOver ? "ring-1 ring-current" : ""}`}
     >
       {children}
     </Card>

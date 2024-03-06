@@ -22,7 +22,8 @@ export default function ToolbarBtnElement({
   return (
     <Button
       ref={setNodeRef}
-      className="flex flex-col w-full h-full aspect-square p-2 gap-1 cursor-grab rounded-xl dark:bg-zinc-800 shadow-md dark:text-white bg-zinc-100 text-black dark:hover:bg-zinc-700 dark:hover:text-white hover:bg-zinc-200 hover:text-black"
+      className="flex flex-col w-full h-full aspect-square p-2 gap-1 cursor-grab"
+      variant={"outline"}
       {...listeners}
       {...attributes}
     >

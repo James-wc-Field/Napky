@@ -12,7 +12,7 @@ export default function CanvasToolbar() {
   return (
     <Card
       ref={setNodeRef}
-      className="absolute top-4 left-4 flex flex-col p-2 gap-2 rounded-2xl dark:bg-zinc-900 shadow-md w-fit h-fit"
+      className="absolute top-4 left-4 flex flex-col p-2 gap-2"
       style={{ zIndex: 5 }}
     >
       <ToolbarBtnElement projectElement={ProjectElements.TextBlock} />

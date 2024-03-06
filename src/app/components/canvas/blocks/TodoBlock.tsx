@@ -6,7 +6,7 @@ import {
   ProjectElement,
   ProjectElementInstance,
 } from "@canvas/types/ProjectElements";
-import { Card } from "@nextui-org/card";
+import { Card } from "@ui/card";
 import { Textarea } from "@ui/textarea";
 import { Checkbox } from "@ui/checkbox";
 import useProject from "@canvas/hooks/useProject";
