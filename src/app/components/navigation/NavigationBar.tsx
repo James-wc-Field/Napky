@@ -1,5 +1,4 @@
 'use client'
-
 import { ReactElement, useEffect, useState } from "react";
 import { usePathname, useRouter } from 'next/navigation'
 import { NavDiscover } from "./NavDiscover";
@@ -42,7 +41,7 @@ export function NavigationBar () {
     <nav className="bg-content2-light dark:bg-content2-dark flex p-2 items-center font-main px-10">
       <a href="/discover" className="flex justify-center items-center ml-2 min-w-fit">
         <img
-        // Need to resolve this issue with project
+        // Need absolute path to icon
         className="min-w-12"
         width={48}
         height={48}
@@ -64,6 +63,5 @@ export function NavigationBar () {
       </div>
     </nav>
     </>
-// shadcn.com UI Framework
   );
 }
