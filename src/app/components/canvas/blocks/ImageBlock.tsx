@@ -5,7 +5,7 @@ import {
   ElementsType,
   ProjectElement,
   ProjectElementInstance,
-} from "../ProjectElements";
+} from "../types/ProjectElements";
 import { Image } from "@nextui-org/image";
 
 const type: ElementsType = "ImageBlock";

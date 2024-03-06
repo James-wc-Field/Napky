@@ -8,7 +8,7 @@ import {
   useDndMonitor,
 } from "@dnd-kit/core";
 import React, { useState } from "react";
-import { ElementsType, ProjectElements } from "./ProjectElements";
+import { ElementsType, ProjectElements } from "./types/ProjectElements";
 import useProject from "./hooks/useProject";
 
 export default function DragOverlayWrapper() {
@@ -52,7 +52,7 @@ export default function DragOverlayWrapper() {
     if (!element) return <div>Dragged element not found</div>;
 
     const CanvasElementComponent =
-      ProjectElements[element.type].canvasComponent;
+      ProjectElements[element.type as ElementsType].canvasComponent;
     node = <CanvasElementComponent elementInstance={element} />;
   }
 

@@ -5,7 +5,7 @@ import {
   ElementsType,
   ProjectElement,
   ProjectElementInstance,
-} from "../ProjectElements";
+} from "../types/ProjectElements";
 import { Card } from "@nextui-org/card";
 import { Checkbox, CheckboxGroup, Textarea } from "@nextui-org/react";
 import useProject from "../hooks/useProject";

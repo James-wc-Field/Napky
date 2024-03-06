@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ProjectElement } from "./ProjectElements";
+import { ProjectElement } from "./types/ProjectElements";
 import { Card } from "@components/ui/card";
 import { Button } from "@components/ui/button";
 import { useDraggable } from "@dnd-kit/core";
@@ -27,7 +27,7 @@ export default function ToolbarBtnElement({
       {...listeners}
       {...attributes}
     >
-      <Icon className="w-4 w-4" />
+      <Icon className="w-4 h-4" />
       <p className="text-xs font-normal">{label}</p>
     </Button>
   );
