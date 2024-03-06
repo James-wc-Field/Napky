@@ -1,8 +1,9 @@
 import React from "react";
 import ToolbarBtnElement from "./ToolbarBtnElement";
 import { ProjectElements } from "./ProjectElements";
-import { Card } from "@nextui-org/react";
+import { Card } from "@components/ui/card";
 import { useDroppable } from "@dnd-kit/core";
+import { Separator } from "@radix-ui/react-separator";
 
 export default function CanvasToolbar() {
   const { setNodeRef } = useDroppable({
@@ -12,7 +13,7 @@ export default function CanvasToolbar() {
   return (
     <Card
       ref={setNodeRef}
-      className="absolute top-4 left-4 gap-2 p-2"
+      className="absolute top-4 left-4 flex flex-col p-2 gap-2 rounded-2xl dark:bg-zinc-900 shadow-md w-fit h-fit"
       style={{ zIndex: 5 }}
     >
       <ToolbarBtnElement projectElement={ProjectElements.TextBlock} />

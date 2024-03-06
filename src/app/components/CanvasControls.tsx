@@ -1,25 +1,28 @@
 import { PlusIcon, MinusIcon } from "@heroicons/react/24/solid";
-import { Card, Button } from "@nextui-org/react";
+import { Card } from "@components/ui/card";
+import { Button } from "@components/ui/button";
 import React from "react";
 import useProject from "./hooks/useProject";
 
 export default function CanvasControls() {
-
   const { updateZoomLevel } = useProject();
 
   return (
-    <Card className="absolute top-4 right-4 gap-2 p-2" style={{ zIndex: 5 }}>
+    <Card
+      className="flex flex-col absolute top-4 right-4 gap-2 p-2 rounded-2xl dark:bg-zinc-900 shadow-md"
+      style={{ zIndex: 5 }}
+    >
       <Button
-        isIconOnly
-        variant="flat"
-        onPress={() => updateZoomLevel(true, 1.2)}
+        variant={"secondary"}
+        className="p-2 rounded-xl shadow-md dark:bg-zinc-800"
+        onClick={() => updateZoomLevel(true, 1.2)}
       >
         <PlusIcon className="w-6" />
       </Button>
       <Button
-        isIconOnly
-        variant="flat"
-        onPress={() => updateZoomLevel(false, 1.2)}
+        variant={"secondary"}
+        className="p-2 rounded-xl shadow-md dark:bg-zinc-800"
+        onClick={() => updateZoomLevel(false, 1.2)}
       >
         <MinusIcon className="w-6" />
       </Button>

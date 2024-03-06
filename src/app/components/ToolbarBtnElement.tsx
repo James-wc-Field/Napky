@@ -2,7 +2,8 @@
 
 import React from "react";
 import { ProjectElement } from "./ProjectElements";
-import { Card, cn } from "@nextui-org/react";
+import { Card } from "@components/ui/card";
+import { Button } from "@components/ui/button";
 import { useDraggable } from "@dnd-kit/core";
 
 export default function ToolbarBtnElement({
@@ -20,17 +21,14 @@ export default function ToolbarBtnElement({
   });
 
   return (
-    <Card
+    <Button
       ref={setNodeRef}
-      className={cn(
-        "flex flex-col gap-1 h-[50px] w-[50px] cursor-grab justify-center items-center",
-        isDragging && "ring-2 ring-primary"
-      )}
+      className="flex flex-col w-full h-full aspect-square p-2 gap-1 cursor-grab rounded-xl dark:bg-zinc-800 shadow-md dark:text-white bg-zinc-100 text-black dark:hover:bg-zinc-700 dark:hover:text-white hover:bg-zinc-200 hover:text-black"
       {...listeners}
       {...attributes}
     >
-      <Icon className="h-5 w-5"/>
-      <p className="text-xs">{label}</p>
-    </Card>
+      <Icon className="w-4 w-4" />
+      <p className="text-xs font-normal">{label}</p>
+    </Button>
   );
 }

@@ -33,7 +33,7 @@ export const TodoBlockProjectElement: ProjectElement = {
 
   toolbarElement: {
     icon: ListBulletIcon,
-    label: "Todo",
+    label: "To-Do",
   },
 
   canvasComponent: CanvasComponent,

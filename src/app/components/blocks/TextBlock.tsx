@@ -64,11 +64,12 @@ function CanvasComponent({
   };
 
   return (
-    <Card style={style}>
+    <Card style={style} className="p-1 dark:bg-zinc-900">
       <Textarea
         placeholder={placeHolder}
         value={text}
         onChange={handleOnTextChange}
+        className="dark:bg-zinc-800"
       />
     </Card>
   );

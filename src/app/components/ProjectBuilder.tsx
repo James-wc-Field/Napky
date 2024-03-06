@@ -15,6 +15,7 @@ import SaveProjectBtn from "./SaveProjectBtn";
 import BuildArea from "./BuildArea";
 import DragOverlayWrapper from "./DragOverlayWrapper";
 import usePreventZoom from "./hooks/usePreventZoom";
+import { ThemeToggle } from "./ThemeToggle";
 
 export default function ProjectBuilder({ project }: { project: Project }) {
   const id = useId();
@@ -34,6 +35,7 @@ export default function ProjectBuilder({ project }: { project: Project }) {
             <span className="mr-2">Project:</span>
             {project.name}
           </h2>
+          <ThemeToggle />
           <SaveProjectBtn />
         </div>
         <BuildArea />
