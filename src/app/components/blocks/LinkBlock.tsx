@@ -6,7 +6,8 @@ import {
   ProjectElement,
   ProjectElementInstance,
 } from "../ProjectElements";
-import { Card, CardBody, Input } from "@nextui-org/react";
+import { Card } from "@components/ui/card";
+import { Input } from "@components/ui/input";
 import useProject from "../hooks/useProject";
 
 const type: ElementsType = "LinkBlock";
@@ -67,7 +68,6 @@ function CanvasComponent({
     <Card style={style} className="p-2 h-fit flex flex-row gap-1 items-center">
       <LinkIcon className="text-gray-500 h-6 w-6" />
       <Input
-        size="sm"
         placeholder={placeHolder}
         onChange={handleOnTextChange}
         value={text}

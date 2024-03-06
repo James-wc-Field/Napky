@@ -7,8 +7,8 @@ import {
   ProjectElementInstance,
   ProjectElements,
 } from "../ProjectElements";
-import { Card } from "@nextui-org/card";
-import { useDroppable, useDraggable, useDndContext } from "@dnd-kit/core";
+import { Card } from "@components/ui/card";
+import { useDroppable, useDraggable } from "@dnd-kit/core";
 import useProject from "../hooks/useProject";
 
 const type: ElementsType = "ListBlock";
@@ -57,14 +57,17 @@ function CanvasComponent({
   const { elements } = useProject();
 
   return (
-    <Card style={style} className="gap-2 p-2 items-center">
+    <Card
+      style={style}
+      className="flex flex-col gap-2 p-2 dark:bg-zinc-900 text-center"
+    >
       <p>{label}</p>
-      <ListDroppable element={element}>
+      <ListDroppable element={element} numItems={children.length}>
         {children.length > 0 ? (
           children.map((childId) => {
             const child = elements.find((e) => e.id === childId);
             if (!child) return null;
-            return <ListElementWrapper key={childId} element={child} />
+            return <ListElementWrapper key={childId} element={child} />;
           })
         ) : (
           <p className="text-neutral-400">{placeHolder}</p>
@@ -77,9 +80,11 @@ function CanvasComponent({
 function ListDroppable({
   children,
   element,
+  numItems,
 }: {
   children: React.ReactNode;
   element: ProjectElementInstance;
+  numItems: number;
 }) {
   const { isOver, setNodeRef } = useDroppable({
     id: element.id + "-list-droppable",
@@ -93,17 +98,19 @@ function ListDroppable({
   });
 
   return (
-    <div
+    <Card
       ref={setNodeRef}
-      className={`${isOver ? "bg-neutral-600/50" : ""} flex-1 w-full rounded-xl 
-      flex flex-col items-center justify-center gap-1 outline-2 outline-neutral-700 outline-dashed`}
+      className={`
+        flex-1 flex flex-col items-center justify-center gap-1
+        ${numItems > 0 ? "dark:bg-zinc-900 bg-zinc-100 border-0" : "dark:bg-zinc-800"}
+        ${isOver && numItems == 0 ? "dark:bg-zinc-700" : ""}`}
     >
       {children}
-    </div>
+    </Card>
   );
 }
 
-function ListElementWrapper({ element }: { element: ProjectElementInstance}) {
+function ListElementWrapper({ element }: { element: ProjectElementInstance }) {
   const { attributes, listeners, isDragging, setNodeRef } = useDraggable({
     id: element?.id + "-drag-handler",
     data: {

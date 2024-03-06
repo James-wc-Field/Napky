@@ -1,6 +1,6 @@
 import React from "react";
 import simulatedDatabase from "../DBSimulation";
-import ProjectBuilder from "@/app/components/ProjectBuilder";
+import ProjectBuilder from "@components/ProjectBuilder";
 
 function BuilderPage() {
   const project = simulatedDatabase[0];
