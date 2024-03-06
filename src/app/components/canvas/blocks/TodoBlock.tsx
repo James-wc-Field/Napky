@@ -5,10 +5,10 @@ import {
   ElementsType,
   ProjectElement,
   ProjectElementInstance,
-} from "../types/ProjectElements";
+} from "@canvas/types/ProjectElements";
 import { Card } from "@nextui-org/card";
 import { Checkbox, CheckboxGroup, Textarea } from "@nextui-org/react";
-import useProject from "../hooks/useProject";
+import useProject from "@canvas/hooks/useProject";
 import { FormEvent } from "react";
 
 const type: ElementsType = "TodoBlock";

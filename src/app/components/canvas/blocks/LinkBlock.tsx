@@ -5,10 +5,10 @@ import {
   ElementsType,
   ProjectElement,
   ProjectElementInstance,
-} from "../types/ProjectElements";
-import { Card } from "@components/ui/card";
-import { Input } from "@components/ui/input";
-import useProject from "../hooks/useProject";
+} from "@canvas/types/ProjectElements";
+import { Card } from "@ui/card";
+import { Input } from "@ui/input";
+import useProject from "@canvas/hooks/useProject";
 
 const type: ElementsType = "LinkBlock";
 

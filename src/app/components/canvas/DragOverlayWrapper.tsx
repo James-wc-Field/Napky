@@ -8,8 +8,8 @@ import {
   useDndMonitor,
 } from "@dnd-kit/core";
 import React, { useState } from "react";
-import { ElementsType, ProjectElements } from "./types/ProjectElements";
-import useProject from "./hooks/useProject";
+import { ElementsType, ProjectElements } from "@canvas/types/ProjectElements";
+import useProject from "@canvas/hooks/useProject";
 
 export default function DragOverlayWrapper() {
   const { elements, zoomLevel } = useProject();

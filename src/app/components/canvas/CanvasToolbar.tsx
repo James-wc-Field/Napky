@@ -1,7 +1,7 @@
 import React from "react";
-import ToolbarBtnElement from "./ToolbarBtnElement";
-import { ProjectElements } from "./types/ProjectElements";
-import { Card } from "@components/ui/card";
+import ToolbarBtnElement from "@canvas/ToolbarBtnElement";
+import { ProjectElements } from "@canvas/types/ProjectElements";
+import { Card } from "@ui/card";
 import { useDroppable } from "@dnd-kit/core";
 
 export default function CanvasToolbar() {

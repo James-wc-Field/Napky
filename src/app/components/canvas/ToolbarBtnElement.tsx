@@ -1,9 +1,8 @@
 "use client";
 
 import React from "react";
-import { ProjectElement } from "./types/ProjectElements";
-import { Card } from "@components/ui/card";
-import { Button } from "@components/ui/button";
+import { ProjectElement } from "@canvas/types/ProjectElements";
+import { Button } from "@ui/button";
 import { useDraggable } from "@dnd-kit/core";
 
 export default function ToolbarBtnElement({

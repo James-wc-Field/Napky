@@ -5,10 +5,10 @@ import {
   ElementsType,
   ProjectElement,
   ProjectElementInstance,
-} from "../types/ProjectElements";
-import { Card } from "@components/ui/card";
-import { Textarea } from "@components/ui/textarea";
-import useProject from "../hooks/useProject";
+} from "@canvas/types/ProjectElements";
+import { Card } from "@ui/card";
+import { Textarea } from "@ui/textarea";
+import useProject from "@canvas/hooks/useProject";
 
 const type: ElementsType = "TextBlock";
 
