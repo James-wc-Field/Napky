@@ -1,5 +1,4 @@
-"use client";
-
+'use client'
 import React, { useId } from "react";
 import {
   DndContext,
@@ -20,19 +19,20 @@ import useProject from "./hooks/useProject";
 import config from '../../amplifyconfiguration.json';
 import { Amplify } from 'aws-amplify';
 import { ProjectElementInstance } from "./ProjectElements";
+import { useEffect } from "react";
 
-function ProjectBuilder({ project, saveProject}: { project: Project, saveProject: (elements: ProjectElementInstance[]) => void}) {
-  const {addElements} = useProject();
+export default function ProjectBuilder({ project, saveProject}: { project: Project, saveProject: (elements: ProjectElementInstance[]) => void}) {
+  const {loadElements} = useProject();
   useEffect(() => {
     if (project) {
-      addElements(JSON.parse(project.content || ""));
+      loadElements(JSON.parse(project.content || ""));
     }
   }, [project]);
   const id = useId();
   const {
     elements
   } = useProject();
-  console.log(project)
+  
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 2 } }),
     useSensor(TouchSensor, {

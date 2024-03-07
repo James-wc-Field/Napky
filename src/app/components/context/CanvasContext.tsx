@@ -20,7 +20,7 @@ type CanvasContextType = {
    * @param elements Elements to add to the canvas
    * @returns
    */
-  addElements: (elements: ProjectElementInstance[]) => void;
+  loadElements: (elements: ProjectElementInstance[]) => void;
   /**
    * Removes an element from the canvas
    * @param id ID of the element to remove
@@ -139,8 +139,9 @@ export default function CanvasContextProvider({
     setElements((prev) => prev.filter((element) => element.id !== id));
   };
 
-  const addElements = (newElements: ProjectElementInstance[]) => {
-    setElements((prev) => [...prev, ...newElements]);
+
+  const loadElements = (newElements: ProjectElementInstance[]) => {
+    setElements(() => [...newElements]);
   };
   const updateElement = (id: string, element: ProjectElementInstance) => {
     setElements((prev) => {
@@ -233,7 +234,7 @@ export default function CanvasContextProvider({
         outerMostElements,
         canvasViewRect,
         updateCanvasViewRect,
-        addElements,
+        loadElements,
       }}
     >
       {children}
