@@ -1,126 +1,321 @@
-'use client'
+"use client";
 
 import React from "react";
-import { Tabs, Tab } from "@nextui-org/tabs"
-import { Input } from "@nextui-org/input"
-import { Checkbox } from "@nextui-org/checkbox"
-import { Link } from "@nextui-org/link"
-import { Button } from "@nextui-org/button"
-import { Card, CardBody, CardFooter } from "@nextui-org/card"
 
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@ui/tabs";
+import { Input } from "@ui/input";
+import { Checkbox } from "@ui/checkbox";
+import { Button } from "@ui/button";
+import { Card, CardHeader, CardContent, CardFooter } from "@ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@ui/form";
+
+import Copyright from "@components/Copyright";
+import Link from "next/link";
 import { EyeIcon } from "@heroicons/react/16/solid";
 import { EyeSlashIcon } from "@heroicons/react/16/solid";
 
-import Copyright from "@components/Copyright";
+import { useToast } from "@ui/use-toast";
+import { UseFormReturn, useForm } from "react-hook-form";
+
+// TODO: Need to add some sort of input validation based on our backend schema
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 export default function Page() {
-	const [selected, setSelected] = React.useState("login");
-  const [isVisible, setIsVisible] = React.useState(false);
-  const toggleVisibility = () => setIsVisible(!isVisible);
-	function tabChange(key: React.Key) {
-		setIsVisible(false); // Reset password visibility when changing tabs
-		setSelected(key as string);
-	}
+  return (
+    <Card className="max-w-full w-[340px]">
+      <CardHeader className="flex justify-center">
+        <h1 className="text-2xl font-bold">Welcome</h1>
+      </CardHeader>
+      <CardContent>
+        <Tabs defaultValue="login">
+          <TabsList className="w-full grid grid-cols-2">
+            <TabsTrigger value="login">Login</TabsTrigger>
+            <TabsTrigger value="sign-up">Sign up</TabsTrigger>
+          </TabsList>
+          <TabsContent value="login">
+            <LoginForm />
+            <div className="flex flex-col items-center">
+              <div className="flex flex-row items-center">
+                <p className="text-center text-small">
+                  Don&apos;t have an account?
+                </p>
+                <Button variant={"link"}>Login</Button>
+              </div>
+              <Link href="/forgot-password" className="text-sm hover:underline">
+                Forgot password?
+              </Link>
+            </div>
+          </TabsContent>
+          <TabsContent value="sign-up">
+            <SignUpForm />
+            <div className="flex group gap-2 justify-center">
+              <p className="text-center text-small">
+                Already have an account?
+                <Button variant={"link"}>Login</Button>
+              </p>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+      <CardFooter className="flex flex-col">
+        <Copyright />
+      </CardFooter>
+    </Card>
+  );
+}
 
-	return (
-		<>
-			<Card className="max-w-full w-[340px] h-[400px]">
-				<CardBody className="overflow-hidden">
-					<Tabs
-						fullWidth
-						size="md"
-						aria-label="Tabs form"
-						selectedKey={selected}
-						onSelectionChange={(key: React.Key) => tabChange(key)}
-					>
-						<Tab key="login" title="Login">
-							<form className="flex flex-col gap-4">
-								<Input
-									isRequired
-									label="Email"
-									type="email"
-									placeholder="Enter your email"
-								/>
-								<Input
-									isRequired
-									label="Password"
-									placeholder="Enter your password"
-									endContent={
-										<button className="w-fit focus:outline-none" onClick={toggleVisibility}>
-											{isVisible ? (
-												<EyeSlashIcon className="w-6" />
-											) : (
-												<EyeIcon className="w-6" />
-											)}
-										</button >
-									}
-									type={isVisible ? "text" : "password"}
-								/>
-								<Checkbox defaultSelected>Remember me</Checkbox>
-								<Button fullWidth color="primary">
-									Login
-								</Button>
-								<div className="flex flex-col gap-1">
-									<div className="flex group gap-2 justify-center">
-										<p className="text-sm text-center">
-											Don&apos;t have an account?
-										</p>
-										<Link className="cursor-pointer" size="sm" onPress={() => tabChange("sign-up")}>
-											Sign up
-										</Link>
-									</div>
-									<Link size="sm" href='/forgot-password' className="justify-center">
-											Forgot password?
-									</Link>
-								</div>
-							</form>
-						</Tab>
-						<Tab key="sign-up" title="Sign up">
-							<form className="flex flex-col gap-4 h-[300px]">
-								<Input
-									isRequired
-									label="Name"
-									type="text"
-									placeholder="Enter your name"
-								/>
-								<Input
-									isRequired
-									label="Email"
-									type="email"
-									placeholder="Enter your email"
-								/>
-								<Input
-									isRequired
-									label="Password"
-									endContent={
-										<button className="w-fit focus:outline-none" onClick={toggleVisibility}>
-											{isVisible ? (
-												<EyeSlashIcon className="w-6" />
-											) : (
-												<EyeIcon className="w-6" />
-											)}
-										</button >
-									}
-									type={isVisible ? "text" : "password"}
-									placeholder="Enter your password"
-								/>
-								<Button fullWidth color="primary">
-									Sign up
-								</Button>
-								<p className="text-center text-small">
-									Already have an account?{" "}
-									<Link size="sm" className="cursor-pointer" onPress={() => tabChange("login")}>
-										Login
-									</Link>
-								</p>
-							</form>
-						</Tab>
-					</Tabs>
-				</CardBody>
-				<CardFooter className="flex flex-col">
-					<Copyright />
-				</CardFooter>
-			</Card>
-		</>
-	);
+// Read https://react-hook-form.com/get-started to get more info
+type LoginFormData = {
+  email: string;
+  password: string;
+  rememberMe: boolean;
+};
+
+function LoginForm() {
+  const form = useForm<LoginFormData>({
+    defaultValues: {
+      email: "",
+      password: "",
+      rememberMe: true,
+    },
+  });
+
+  // TODO: Send data to server
+  const { toast } = useToast();
+  function onSubmit(data: LoginFormData) {
+    toast({
+      title: "You submitted the following values:",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        </pre>
+      ),
+    });
+  }
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-3"
+      >
+        <EmailField form={form} />
+        <PasswordField form={form} />
+        <RememberMeField form={form} />
+        <Button type="submit">Submit</Button>
+      </form>
+    </Form>
+  );
+}
+
+type SignUpFormData = {
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+  rememberMe: boolean;
+};
+
+function SignUpForm() {
+  const form = useForm<SignUpFormData>({
+    defaultValues: {
+      email: "",
+      password: "",
+      passwordConfirmation: "",
+      rememberMe: true,
+    },
+  });
+
+  // TODO: Send data to server
+  const { toast } = useToast();
+  function onSubmit(data: SignUpFormData) {
+    toast({
+      title: "You submitted the following values:",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        </pre>
+      ),
+    });
+  }
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-3"
+      >
+        <EmailField form={form} />
+        <PasswordField form={form} />
+        <PasswordConfirmField form={form} />
+        <RememberMeField form={form} />
+        <Button type="submit">Submit</Button>
+      </form>
+    </Form>
+  );
+}
+
+function EmailField({
+  form,
+}: {
+  form: UseFormReturn<SignUpFormData | LoginFormData | any>;
+}) {
+  return (
+    <FormField
+      control={form.control}
+      name="email"
+      rules={{
+        required: true,
+        pattern: {
+          value: /\S+@\S+\.\S+/,
+          message: "Not a valid email address",
+        },
+      }}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Email</FormLabel>
+          <FormControl>
+            <Input placeholder="Enter your email" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+function PasswordField({
+  form,
+}: {
+  form: UseFormReturn<SignUpFormData | LoginFormData | any>;
+}) {
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  return (
+    <FormField
+      control={form.control}
+      name="password"
+      rules={{
+        required: true,
+        validate: (value) => {
+          return value.length >= 8 || "Password must be at least 8 characters";
+        },
+      }}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Password</FormLabel>
+          <FormControl>
+            <div className="relative">
+              <Input
+                placeholder="Enter your password"
+                type={showPassword ? "text" : "password"}
+                {...field}
+              />
+              <Button
+                variant={"ghost"}
+                size="icon"
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0"
+              >
+                {showPassword ? (
+                  <EyeSlashIcon className="h-5 w-5" />
+                ) : (
+                  <EyeIcon className="h-5 w-5" />
+                )}
+              </Button>
+            </div>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+function PasswordConfirmField({
+  form,
+}: {
+  form: UseFormReturn<SignUpFormData | LoginFormData | any>;
+}) {
+  const [showPassword, setShowPassword] = React.useState(false);
+  return (
+    <FormField
+      control={form.control}
+      name="passwordConfirmation"
+      rules={{
+        required: true,
+        validate: (value) => {
+          return (
+            value === form.getValues().password || "Passwords do not match"
+          );
+        },
+        onChange: () => {
+          form.trigger("passwordConfirmation"); // trigger validation on change
+        },
+      }}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Confirm Password</FormLabel>
+          <FormControl>
+            <div className="relative">
+              <Input
+                placeholder="Enter your password"
+                type={showPassword ? "text" : "password"}
+                {...field}
+              />
+              <Button
+                variant={"ghost"}
+                size="icon"
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0"
+              >
+                {showPassword ? (
+                  <EyeSlashIcon className="h-5 w-5" />
+                ) : (
+                  <EyeIcon className="h-5 w-5" />
+                )}
+              </Button>
+            </div>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+function RememberMeField({
+  form,
+}: {
+  form: UseFormReturn<SignUpFormData | LoginFormData | any>;
+}) {
+  return (
+    <FormField
+      control={form.control}
+      name="rememberMe"
+      render={({ field: { onChange, onBlur, value } }) => (
+        <FormItem>
+          <FormControl>
+            <div className="flex flex-row gap-2 items-center">
+              <Checkbox
+                checked={value}
+                onCheckedChange={onChange}
+                onBlur={onBlur}
+              />
+              <FormLabel>Remember me</FormLabel>
+            </div>
+          </FormControl>
+        </FormItem>
+      )}
+    />
+  );
 }

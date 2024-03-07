@@ -1,10 +1,10 @@
 "use client";
 
-import { Button } from "@nextui-org/button";
+import { Button } from "@ui/button";
 import Link from "next/link";
 import React, { useEffect } from "react";
 
-function ErrorPage({ error }: { error: Error }) {
+export default function ErrorPage({ error }: { error: Error }) {
   useEffect(() => console.error(error), [error]);
   return (
     <div className="flex w-full h-full flex-col items-center justify-center gap-4">
@@ -17,5 +17,3 @@ function ErrorPage({ error }: { error: Error }) {
     </div>
   );
 }
-
-export default ErrorPage;
