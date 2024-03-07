@@ -1,7 +1,6 @@
 import React from "react";
 import simulatedDatabase from "../DBSimulation";
 import ProjectBuilder from "@components/canvas/ProjectBuilder";
-import { LoadingSpinner } from "@/components/ui/spinner";
 
 function BuilderPage() {
   const project = simulatedDatabase[0];

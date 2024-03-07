@@ -294,15 +294,13 @@ export default function BuildArea() {
   }
 
   return (
-    <div className="flex flex-row grow">
-      <div
-        id="canvas-wrapper"
-        onDrop={(e) => externalDropHandler(e)}
-        onDragOver={(e) => e.preventDefault()}
-        className="relative overflow-hidden z-0 w-full h-full"
-      >
-        <Canvas elements={elements} />
-      </div>
+    <div
+      id="canvas-wrapper"
+      onDrop={(e) => externalDropHandler(e)}
+      onDragOver={(e) => e.preventDefault()}
+      className="relative overflow-hidden z-0 w-full h-full"
+    >
+      <Canvas elements={elements} />
     </div>
   );
 }
