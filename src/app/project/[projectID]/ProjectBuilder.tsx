@@ -9,14 +9,14 @@ import {
   PointerSensor,
 } from "@dnd-kit/core";
 
-import { Project } from "../../API";
+import { Project } from "../../../API";
 import BuildArea from "./BuildArea";
 import DragOverlayWrapper from "./DragOverlayWrapper";
 import usePreventZoom from "./hooks/usePreventZoom";
 import { Button } from "@nextui-org/react";
 import { DocumentCheckIcon } from "@heroicons/react/24/solid";
 import useProject from "./hooks/useProject";
-import config from '../../amplifyconfiguration.json';
+import config from '../../../amplifyconfiguration.json';
 import { Amplify } from 'aws-amplify';
 import { ProjectElementInstance } from "./ProjectElements";
 import { useEffect } from "react";

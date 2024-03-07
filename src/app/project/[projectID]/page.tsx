@@ -1,5 +1,5 @@
 import React from "react";
-import ProjectBuilder from "../../components/ProjectBuilder";
+import ProjectBuilder from "./ProjectBuilder";
 import { generateClient } from 'aws-amplify/api';
 import { getProject } from "../../../graphql/queries";
 import { Suspense } from "react";
@@ -8,7 +8,7 @@ import config from '../../../amplifyconfiguration.json'
 import { Amplify } from 'aws-amplify';
 import { getCurrentUser } from "aws-amplify/auth";
 import { createProject } from "../../../graphql/mutations";
-import { ProjectElementInstance } from "@/app/components/ProjectElements";
+import { ProjectElementInstance } from "@/app/project/[projectID]/ProjectElements";
 async function BuilderPage({ params }: { params: { projectID: string } }) {
   const projectID = params.projectID;
   return (
