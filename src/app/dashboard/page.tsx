@@ -1,104 +1,138 @@
-'use client';
+"use client";
 
-import {Listbox, ListboxItem} from "@nextui-org/listbox";
-import { Card } from "@nextui-org/card";
-import { Button } from "@nextui-org/button";
-import { Divider } from "@nextui-org/divider";
-import { Dropdown, DropdownTrigger, DropdownItem, DropdownMenu } from "@nextui-org/dropdown";
-import { useState } from "react";
-import { Navbar, NavbarBrand, NavbarMenu, NavbarItem, NavbarMenuItem, NavbarContent, NavbarMenuToggle} from "@nextui-org/navbar"
-import { Input } from "@nextui-org/input"
-import { Avatar } from "@nextui-org/avatar"
+import { Card, CardHeader, CardFooter, CardContent, CardTitle } from "@ui/card";
+import { Button } from "@ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@ui/dropdown-menu";
+import { Input } from "@ui/input";
 
-export default function Page() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+import Link from "next/link";
+import { ThemeToggle } from "@components/ThemeToggle";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+export default function DashboardPage() {
   return (
-    <div>
-      <Navbar isBordered onMenuOpenChange={setIsMenuOpen}>
-        <NavbarContent justify="center" className="basis-1/6">
-          <NavbarMenuToggle className="sm:hidden"/>
-          <NavbarMenu>
-            <NavbarMenuItem>Home</NavbarMenuItem>
-            <NavbarMenuItem>Favorites</NavbarMenuItem>
-            <NavbarMenuItem>Trash</NavbarMenuItem>
-          </NavbarMenu>
-          <NavbarBrand>
-            <p className="pr-2">Logo</p>
-            <p className="hidden sm:block font-bold text-inherit">Napky</p>
-          </NavbarBrand>
-        </NavbarContent>
-
-        <NavbarContent as="div" justify="center" className="basis-4/6">
-          <Input
-            placeholder="Search projects..."
-            size="sm"
-            type="search"
-          />
-        </NavbarContent>
-
-        <NavbarContent as="div" justify="center" className="basis-1/6">
-          <Dropdown placement="bottom-end">
-            <DropdownTrigger>
-              <Avatar
-                isBordered
-                as="button"
-                className="transition-transform"
-                name="John Smith"
-                size="sm"
-                src="https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg"
-              />
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Profile Actions">
-              <DropdownItem
-                textValue="Signed in as example@example.com"
-                key="profile"
-                className="h-14 gap-2"
-              >
-                <p className="font-semibold">Signed in as</p>
-                <p className="font-semibold">example@example.com</p>
-              </DropdownItem>
-              <DropdownItem key="settings">My Settings</DropdownItem>
-              <DropdownItem key="team_settings">Team Settings</DropdownItem>
-              <DropdownItem key="analytics">Analytics</DropdownItem>
-              <DropdownItem key="system">System</DropdownItem>
-              <DropdownItem key="configurations">Configurations</DropdownItem>
-              <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-              <DropdownItem key="logout" color="danger">
-                Log Out
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        </NavbarContent>
-      </Navbar>
-
-      <div className="flex p-4 sm:gap-4">
-        <Card className="hidden w-1/5 sm:flex h-fit">
-          <Dropdown placement="right">
-            <DropdownTrigger>
-              <Button className="text-lg text-center p-6 m-4">New</Button>
-            </DropdownTrigger>
-            <DropdownMenu>
-              <DropdownItem key="project" href="/project/12345">Project</DropdownItem>
-              <DropdownItem key="folder">Folder</DropdownItem>
-              <DropdownItem key="file">File Upload</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-          <Divider />
-
-          <Listbox
-            label="project-nav"
-            selectionMode="single"
-          >
-            <ListboxItem key="home" >Home</ListboxItem>
-            <ListboxItem key="favs" >Favorites</ListboxItem>
-            <ListboxItem key="trash">Trash</ListboxItem>
-          </Listbox>
+    <div className="flex flex-col h-screen">
+      <header className="sticky z-50 w-full border-b-1 dark:bg-background">
+        <div className="container flex flex-row h-14 max-w-screen-2xl items-center">
+          <div className="mr-4 hidden md:flex">
+            <Link href="/" className="mr-6 flex items-center gap-2">
+              <span className="font-bold inline-block">LOGO</span>
+              <span className="font-bold inline-block">Napky</span>
+            </Link>
+            <nav className="flex items-center gap-6 text-sm">
+              <Link href="/discover">Discover</Link>
+              <Link href="/dashboard">Dashboard</Link>
+            </nav>
+          </div>
+          <div className="flex-none md:flex-1" />
+          <div className="flex flex-1 items-center justify-end gap-2">
+            <div className="flex md:hidden" /* Small screen sizes */>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button>Menu</Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem asChild>
+                      <Link href="/discover">Discover</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/dashboard">Dashboard</Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <Input type="search" placeholder="Search..." />
+            <ThemeToggle />
+          </div>
+        </div>
+      </header>
+      <div
+        className="container max-w-screen-2xl p-3 flex flex-row gap-3 h-[calc(100%-58px)]" /* <--- TODO: Fix this magic number at some point */
+      >
+        <Card className="flex basis-1/4 flex-col p-2">
+          <Button size="lg" asChild className="w-full">
+            <Link href="/project/123">Create Project</Link>
+          </Button>
+          <Separator className="my-4" />
+          {/* Home, favorites, trash */}
+          <nav className="flex flex-col gap-2">
+          </nav>
         </Card>
-
-        <Card className="flex w-full sm:w-4/5 p-4 h-full">
-          <p>Project view here</p>
+        <Card className="flex flex-col basis-3/4 gap-2 lg:basis-5/6">
+          <div className="flex flex-row items-center gap-2 p-2">
+            <Input
+              type="search"
+              placeholder="Search Projects..."
+              className="flex-1"
+            />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button>Filter</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Sort by</DropdownMenuLabel>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>Most Recent</DropdownMenuItem>
+                  <DropdownMenuItem>Most Popular</DropdownMenuItem>
+                  <DropdownMenuItem>Most Funded</DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel>Sort by</DropdownMenuLabel>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>Ascending</DropdownMenuItem>
+                  <DropdownMenuItem>Descending</DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <ScrollArea className="p-2 max-h-full">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {Array.from({ length: 20 }).map((_, i) => (
+                <ProjectCard
+                  key={i}
+                  title={`Project ${i + 1}`}
+                  description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                />
+              ))}
+            </div>
+          </ScrollArea>
         </Card>
       </div>
     </div>
+  );
+}
+
+function ProjectCard({
+  title,
+  description,
+  className,
+}: {
+  title: string;
+  description: string;
+  className?: string;
+}) {
+  return (
+    <Card className={className}>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p>{description}</p>
+      </CardContent>
+      <CardFooter>
+        <Button>View</Button>
+      </CardFooter>
+    </Card>
   );
 }
