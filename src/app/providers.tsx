@@ -3,7 +3,7 @@
 import { NextUIProvider } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import CanvasContextProvider from "./components/context/CanvasContext";
+import CanvasContextProvider from "./project/[projectID]/context/CanvasContext";
 export function Providers({ children }: { children: React.ReactNode }) {
 
   const router = useRouter();
