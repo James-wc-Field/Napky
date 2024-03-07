@@ -40,28 +40,14 @@ export default function Page() {
             <TabsTrigger value="login">Login</TabsTrigger>
             <TabsTrigger value="sign-up">Sign up</TabsTrigger>
           </TabsList>
-          <TabsContent value="login">
+          <TabsContent value="login" className="flex flex-col gap-3">
             <LoginForm />
-            <div className="flex flex-col items-center">
-              <div className="flex flex-row items-center">
-                <p className="text-center text-small">
-                  Don&apos;t have an account?
-                </p>
-                <Button variant={"link"}>Login</Button>
-              </div>
-              <Link href="/forgot-password" className="text-sm hover:underline">
-                Forgot password?
-              </Link>
-            </div>
+            <Link href="/forgot-password" className="text-sm hover:underline text-center">
+              Forgot password?
+            </Link>
           </TabsContent>
           <TabsContent value="sign-up">
             <SignUpForm />
-            <div className="flex group gap-2 justify-center">
-              <p className="text-center text-small">
-                Already have an account?
-                <Button variant={"link"}>Login</Button>
-              </p>
-            </div>
           </TabsContent>
         </Tabs>
       </CardContent>
