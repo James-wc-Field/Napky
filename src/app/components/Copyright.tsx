@@ -1,10 +1,10 @@
-import { Link } from "@nextui-org/link";
+import Link from "next/link";
 
 export default function Copyright() {
   return (
     <div className="text-center text-gray-500 text-xs">
       &copy; {new Date().getFullYear()}{" "}
-      <Link className="text-xs" href="https://github.com/James-wc-Field/Napky">
+      <Link className="text-xs text-blue-500" href="https://github.com/James-wc-Field/Napky">
         Napky
       </Link>
       . All rights reserved.
