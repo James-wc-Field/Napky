@@ -30,7 +30,6 @@ export default function BuildArea() {
       // Drag new element from toolbar onto canvas
       if (isToolbarBtnElement) {
         const type = active.data?.current?.type;
-        console.log(over.data);
         const newElement = ProjectElements[type as ElementsType].construct(
           idGenerator(),
           (over.data.current?.elementId as string) || "root"
@@ -124,7 +123,21 @@ export default function BuildArea() {
 
         const listId = over.data?.current?.elementId;
         const list = elements.find((element) => element.id == listId);
-        if (!list || !over.data.current?.accepts.includes(dragged.type)) return;
+        if (!list) return;
+        else if (!over.data.current?.accepts.includes(dragged.type)) {
+          updateElement(dragged.id, {
+            ...dragged,
+            position: {
+              x: dragged.position.x + delta.x / zoomLevel,
+              y: dragged.position.y + delta.y / zoomLevel,
+            },
+            parentId: "root",
+            extraAttributes: {
+              ...dragged.extraAttributes,
+            },
+          });
+          return;
+        }
 
         const childElements = list.extraAttributes?.children;
         const newChildElements = [...childElements, elementId];
@@ -203,7 +216,8 @@ export default function BuildArea() {
         });
 
         const newList = elements.find((element) => element.id == newListId);
-        if (!newList || !over.data.current?.accepts.includes(dragged.type)) return;
+        if (!newList || !over.data.current?.accepts.includes(dragged.type))
+          return;
 
         const newChildElementsList = newList.extraAttributes?.children;
         const newChildElementsListArray = [...newChildElementsList, elementId];
@@ -268,8 +282,9 @@ export default function BuildArea() {
           },
         };
 
-        addElement(newElement, 
-          (xPos - scrollLeft) / zoomLevel, 
+        addElement(
+          newElement,
+          (xPos - scrollLeft) / zoomLevel,
           (yPos - scrollTop) / zoomLevel
         );
       };

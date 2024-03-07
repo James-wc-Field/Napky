@@ -15,8 +15,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  // https://github.com/pacocoursey/next-themes#html--css
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <Providers>
           {children}
