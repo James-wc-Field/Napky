@@ -13,6 +13,10 @@ const config: Config = {
       },
     },
     extend: {
+      maxHeight: {
+        // this value compensates for the Navigation bar on top
+        base: "89vh"
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
