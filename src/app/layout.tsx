@@ -25,7 +25,6 @@ export default function RootLayout({
         
         <Providers>
         <ConfigureAmplify/>
-          {children}
           <div className="relative flex min-h-screen flex-col">
           <NavigationBar></NavigationBar>
             <main className="flex-1">{children}</main>
