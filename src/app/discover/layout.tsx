@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Lusitana, Rubik_Maze } from 'next/font/google';
-import  { NavigationBar } from "@/app/components/navigation/NavigationBar";
+import  { NavigationBar } from "@components/navigation/NavigationBar";
 
 export default function DashboardLayout({
     children, // will be a page or nested layout
