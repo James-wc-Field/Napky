@@ -48,7 +48,7 @@ export default function ProjectBuilder({ project, saveProject }: { project: Proj
   usePreventZoom();
   return (
     <DndContext id={id} sensors={sensors} collisionDetection={pointerWithin}>
-      <main className="flex flex-col w-full h-full">
+      <main className="flex flex-col w-full h-full max-h-[90vh]">
         <div className="flex justify-between border-b-1 border-slate-500 p-2 gap-2 items-center">
 
           <h2 className="truncate font-medium">
@@ -64,6 +64,7 @@ export default function ProjectBuilder({ project, saveProject }: { project: Proj
           </Button>
           );
         </div>
+
         <BuildArea />
       </main>
       <DragOverlayWrapper />
