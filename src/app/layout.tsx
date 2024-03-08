@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { cn } from "@/lib/utils";
+import  { NavigationBar } from "@/components/navigation/NavigationBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,9 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("min-h-screen", inter.className)}>
+        
         <Providers>
           <div className="relative flex min-h-screen flex-col">
-            {/* Site Header */}
+          <NavigationBar></NavigationBar>
             <main className="flex-1">{children}</main>
             {/* Site Footer */}
           </div>
