@@ -1,9 +1,14 @@
-import type { Config } from "tailwindcss";
+import type { Config } from "tailwindcss"
 
-const config: Config = {
-  content: ["./src/**/*.{ts,tsx,js,jsx}"],
-  prefix: "",
+const config = {
   darkMode: ["class"],
+  content: [
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
+	],
+  prefix: "",
   theme: {
     container: {
       center: true,
@@ -13,25 +18,12 @@ const config: Config = {
       },
     },
     extend: {
-      maxHeight: {
-        // this value compensates for the Navigation bar on top
-        base: "89vh"
-      },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        navbar: {
-          DEFAULT: "hsl(var(--nav-bar)) ",
-          foreground: "hsl(var(--nav-bar-foreground))",
-        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",

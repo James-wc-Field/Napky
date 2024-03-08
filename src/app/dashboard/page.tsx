@@ -24,7 +24,8 @@ export default function DashboardPage() {
         className="container max-w-screen-2xl p-3 flex flex-row gap-3 max-h-base" /* <--- TODO: Fix this magic number at some point */
       >
         <Card className="flex basis-1/4 flex-col p-2">
-          <Button size="lg" asChild className="w-full">
+          {/* This is angry for some reason */}
+          <Button size="lg" asChild className="w-full"> 
             <Link href="/project/123">Create Project</Link>
           </Button>
           <Separator className="my-4" />
