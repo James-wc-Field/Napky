@@ -1,5 +1,5 @@
 'use server'
-import ProjectBuilder from "./components/ProjectBuilder";
+import ProjectBuilder from "../../components/ProjectBuilder";
 import { generateClient } from 'aws-amplify/api';
 import { getProject } from "../../../graphql/queries";
 import { Suspense } from "react";
@@ -8,7 +8,7 @@ import config from '../../../amplifyconfiguration.json'
 import { Amplify } from 'aws-amplify';
 import { getCurrentUser } from "aws-amplify/auth";
 import { createProject, updateProject } from "../../../graphql/mutations";
-import { ProjectElementInstance } from "@/app/project/[projectID]/components/ProjectElements";
+import { ProjectElementInstance } from "@/app/components/ProjectElements";
 
 
 /**
