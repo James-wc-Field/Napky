@@ -18,7 +18,6 @@ import { ProjectElementInstance } from "@canvas/types/ProjectElements";
 import { useEffect, useState } from "react";
 import { Input } from "@ui/input";
 import { Button } from "@ui/button";
-import SaveProjectBtn from "@canvas/SaveProjectBtn";
 import BuildArea from "@canvas/BuildArea";
 import DragOverlayWrapper from "@canvas/DragOverlayWrapper";
 import usePreventZoom from "@canvas/hooks/usePreventZoom";
