@@ -20,45 +20,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function DashboardPage() {
   return (
-    <div className="flex flex-col h-screen">
-      <header className="sticky z-50 w-full border-b-1 dark:bg-background">
-        <div className="container flex flex-row h-14 max-w-screen-2xl items-center">
-          <div className="mr-4 hidden md:flex">
-            <Link href="/" className="mr-6 flex items-center gap-2">
-              <span className="font-bold inline-block">LOGO</span>
-              <span className="font-bold inline-block">Napky</span>
-            </Link>
-            <nav className="flex items-center gap-6 text-sm">
-              <Link href="/discover">Discover</Link>
-              <Link href="/dashboard">Dashboard</Link>
-            </nav>
-          </div>
-          <div className="flex-none md:flex-1" />
-          <div className="flex flex-1 items-center justify-end gap-2">
-            <div className="flex md:hidden" /* Small screen sizes */>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button>Menu</Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem asChild>
-                      <Link href="/discover">Discover</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/dashboard">Dashboard</Link>
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-            <Input type="search" placeholder="Search..." />
-            <ThemeToggle />
-          </div>
-        </div>
-      </header>
       <div
-        className="container max-w-screen-2xl p-3 flex flex-row gap-3 h-[calc(100%-58px)]" /* <--- TODO: Fix this magic number at some point */
+        className="container max-w-screen-2xl p-3 flex flex-row gap-3 max-h-base" /* <--- TODO: Fix this magic number at some point */
       >
         <Card className="flex basis-1/4 flex-col p-2">
           <Button size="lg" asChild className="w-full">
@@ -109,7 +72,6 @@ export default function DashboardPage() {
           </ScrollArea>
         </Card>
       </div>
-    </div>
   );
 }
 

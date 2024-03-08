@@ -24,7 +24,7 @@ export default function RootLayout({
         
         <Providers>
           <div className="relative flex min-h-screen flex-col">
-          <NavigationBar></NavigationBar>
+            <NavigationBar></NavigationBar>
             <main className="flex-1">{children}</main>
             {/* Site Footer */}
           </div>
