@@ -1,15 +1,20 @@
 "use client";
 
-import { NextUIProvider } from "@nextui-org/react";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import CanvasContextProvider from "./components/context/CanvasContext";
-export function Providers({ children }: { children: React.ReactNode }) {
+import * as React from "react";
+import CanvasContextProvider from "./components/canvas/context/CanvasContext";
+import { ThemeProvider } from "./components/theme-provider";
+import { Toaster } from "@ui/toaster";
 
-  const router = useRouter();
+export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <CanvasContextProvider>
-      <NextUIProvider navigate={router.push}>{children}</NextUIProvider>
-    </CanvasContextProvider>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <Toaster />
+      <CanvasContextProvider>{children}</CanvasContextProvider>
+    </ThemeProvider>
   );
 }

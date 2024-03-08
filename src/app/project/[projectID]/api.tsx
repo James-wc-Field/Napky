@@ -1,14 +1,12 @@
 'use server'
-import ProjectBuilder from "../../components/ProjectBuilder";
 import { generateClient } from 'aws-amplify/api';
 import { getProject } from "../../../graphql/queries";
 import { Suspense } from "react";
-import { Project } from "@/API";
 import config from '../../../amplifyconfiguration.json'
 import { Amplify } from 'aws-amplify';
 import { getCurrentUser } from "aws-amplify/auth";
 import { createProject, updateProject } from "../../../graphql/mutations";
-import { ProjectElementInstance } from "@/app/components/ProjectElements";
+import { ProjectElementInstance } from "@canvas/types/ProjectElements";
 
 
 /**
