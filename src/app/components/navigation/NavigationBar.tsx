@@ -9,7 +9,6 @@ export function NavigationBar () {
   const [user, setUser] = useState("");
   const [project, setProject] = useState("");
 
-
   const [middleState, setMiddleState] = useState(<></>);
   const [endState, setEndState] = useState<ReactElement>(<></>);
   const pathname = usePathname()
@@ -20,25 +19,25 @@ export function NavigationBar () {
 
     if (pathname === "/discover") {
         setMiddleState(NavDiscover());
-        setEndState(<a className="mx-4" color="foreground" href="/dashboard">Dashboard</a>);
+        setEndState(<a className="mx-4" href="/dashboard">Dashboard</a>);
     }
     else if (pathname === "/dashboard") {
         setMiddleState(NavDashboard());
-        setEndState(<a className="mx-4" color="foreground" href="/discover">Discover</a>);
+        setEndState(<a className="mx-4" href="/discover">Discover</a>);
     }
     else if (pathname.startsWith("/project/")) {
         setMiddleState(<>{project}</>);
         setEndState(
           <>
-          <a className="mx-4" color="foreground" href="/discover">Discover</a>
-          <a className="mx-4" color="foreground" href="/dashboard">Dashboard</a>
+          <a className="mx-4" href="/discover">Discover</a>
+          <a className="mx-4" href="/dashboard">Dashboard</a>
           </>);
         }
       },[])
 
   return (
     <>
-    <nav className="bg-content2-light dark:bg-content2-dark flex p-2 items-center font-main px-10">
+    <nav className="bg-navbar text-navbar-foreground flex p-2 items-center font-main px-10">
       <a href="/discover" className="flex justify-center items-center ml-2 min-w-fit">
         <img
         // Need absolute path to icon
@@ -58,8 +57,8 @@ export function NavigationBar () {
       <div className="flex justify-end min-w-fit">
         {endState}
         {user? 
-          <a className="mx-4" color="foreground" href="#">Account</a> : 
-          <a className="mx-4" color="foreground" href="#">Sign In</a>}
+          <a className="mx-4" href="#">Account</a> : 
+          <a className="mx-4" href="#">Sign In</a>}
       </div>
     </nav>
     </>
