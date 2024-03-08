@@ -3,6 +3,7 @@ import { ReactElement, useEffect, useState } from "react";
 import { usePathname, useRouter } from 'next/navigation'
 import { NavDiscover } from "./NavDiscover";
 import { NavDashboard } from "./NavDashboard";
+import { ThemeToggle } from "../ThemeToggle";
 
 export function NavigationBar () {
   // Needs Implemented
@@ -60,6 +61,7 @@ export function NavigationBar () {
           <a className="mx-4" href="#">Account</a> : 
           <a className="mx-4" href="#">Sign In</a>}
       </div>
+      <ThemeToggle></ThemeToggle>
     </nav>
     </>
   );

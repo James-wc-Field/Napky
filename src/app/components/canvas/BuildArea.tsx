@@ -6,6 +6,9 @@ import { idGenerator } from "@/lib/idGenerator";
 import useProject from "@canvas/hooks/useProject";
 
 export default function BuildArea() {
+  // This stops the scrolling ability
+  document.body.style.overflow = "hidden";
+  
   const {
     elements,
     addElement,
