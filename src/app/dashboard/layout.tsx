@@ -19,13 +19,12 @@ import {
     Button,
     Divider,
 } from "@nextui-org/react";
-import { Amplify } from 'aws-amplify';
-import config from '../../amplifyconfiguration.json'
 import { useState } from "react";
 import React, { ReactNode } from "react";
 
+
+
 function Layout({ children }: { children: ReactNode }) {
-    Amplify.configure(config);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     return (
         <div>
@@ -85,32 +84,7 @@ function Layout({ children }: { children: ReactNode }) {
             </Dropdown>
           </NavbarContent>
         </Navbar>
-  
-        <div className="flex p-4 sm:gap-4">
-          <Card className="hidden w-1/5 sm:flex h-fit">
-            <Dropdown placement="right">
-              <DropdownTrigger>
-                <Button className="text-lg text-center p-6 m-4">New</Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem key="project" href="/builder/12345">Project</DropdownItem>
-                <DropdownItem key="folder">Folder</DropdownItem>
-                <DropdownItem key="file">File Upload</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-            <Divider />
-  
-            <Listbox
-              label="project-nav"
-              selectionMode="single"
-            >
-              <ListboxItem key="home" >Home</ListboxItem>
-              <ListboxItem key="favs" >Favorites</ListboxItem>
-              <ListboxItem key="trash">Trash</ListboxItem>
-            </Listbox>
-          </Card>
           {children}
-        </div>
       </div>
     );
 }
