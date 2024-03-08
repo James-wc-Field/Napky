@@ -2,7 +2,7 @@ import { DragEvent } from "react";
 import Canvas from "./Canvas";
 import { useDndMonitor } from "@dnd-kit/core";
 import { ElementsType, ProjectElements } from "./ProjectElements";
-import { idGenerator } from "../../lib/idGenerator";
+import { idGenerator } from "../../../lib/idGenerator";
 import useProject from "./hooks/useProject";
 
 export default function BuildArea() {

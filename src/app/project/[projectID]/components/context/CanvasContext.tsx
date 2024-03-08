@@ -15,6 +15,20 @@ type CanvasContextType = {
    */
   addElement: (element: ProjectElementInstance, x?: number, y?: number) => void;
 
+
+  /**
+   * Updates the project name
+   * @param name New name for the project
+   * @returns
+   */
+  updateProjectName: (name: string) => void;
+
+/**
+ * Gets the project name
+ * @returns the project name
+ */
+  projectName: string;
+
   /**
    * Adds multiple elements to the canvas
    * @param elements Elements to add to the canvas
@@ -101,6 +115,7 @@ export default function CanvasContextProvider({
   children: ReactNode;
 }) {
   const [elements, setElements] = useState<ProjectElementInstance[]>([]);
+  const [projectName, setProjectName] = useState("Untitled");
   const [scrollLeft, setScrollLeft] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
   const [zoomLevel, setZoomLevel] = useState(1);
@@ -139,7 +154,9 @@ export default function CanvasContextProvider({
     setElements((prev) => prev.filter((element) => element.id !== id));
   };
 
-
+  const updateProjectName = (name: string) => {
+    setProjectName(name);
+  }
   const loadElements = (newElements: ProjectElementInstance[]) => {
     setElements(() => [...newElements]);
   };
@@ -235,6 +252,8 @@ export default function CanvasContextProvider({
         canvasViewRect,
         updateCanvasViewRect,
         loadElements,
+        updateProjectName,
+        projectName
       }}
     >
       {children}
