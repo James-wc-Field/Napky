@@ -1,6 +1,6 @@
 "use client"
 
-import {Input} from "@nextui-org/react";
+import {Input} from "@ui/input";
 import { ChevronUpDownIcon } from "@heroicons/react/24/solid";
 
 export function NavDashboard() {
@@ -8,7 +8,6 @@ export function NavDashboard() {
   return (
     <Input
       placeholder="Search projects..."
-      size="sm"
       type="search"
       className="px-3"
     />
