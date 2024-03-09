@@ -34,7 +34,7 @@ export function NavigationBar () {
           <a className="mx-4" href="/dashboard">Dashboard</a>
           </>);
         }
-      },[])
+      },[pathname])
 
   return (
     <>
