@@ -12,9 +12,6 @@
       "AmplifyAppId": "d1f2rx89u9ycx"
     },
     "categories": {
-      "api": {
-        "napky": {}
-      },
       "auth": {
         "napkyb8f78fcb": {}
       }
