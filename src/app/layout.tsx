@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import { Providers } from "./providers";
-import ConfigureAmplify from "./components/configAmplify";
+import "@/globals.css";
+import { Providers } from "@/providers";
+import ConfigureAmplifyClientSide from "@components/ConfigureAmplifyClientSide";
 import { cn } from "@/lib/utils";
-import  { NavigationBar } from "@/components/navigation/NavigationBar";
+import { NavigationBar } from "@/components/navigation/NavigationBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,11 +22,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("min-h-screen", inter.className)}>
-        
         <Providers>
-        <ConfigureAmplify/>
+          <ConfigureAmplifyClientSide />
           <div className="relative flex min-h-screen flex-col">
-            <NavigationBar></NavigationBar>
+            <NavigationBar />
             <main className="flex-1">{children}</main>
             {/* Site Footer */}
           </div>
