@@ -15,7 +15,6 @@ type CanvasContextType = {
    */
   addElement: (element: ProjectElementInstance, x?: number, y?: number) => void;
 
-
   /**
    * Updates the project name
    * @param name New name for the project
@@ -23,10 +22,10 @@ type CanvasContextType = {
    */
   updateProjectName: (name: string) => void;
 
-/**
- * Gets the project name
- * @returns the project name
- */
+  /**
+   * Gets the project name
+   * @returns the project name
+   */
   projectName: string;
 
   /**
@@ -156,10 +155,12 @@ export default function CanvasContextProvider({
 
   const updateProjectName = (name: string) => {
     setProjectName(name);
-  }
+  };
+
   const loadElements = (newElements: ProjectElementInstance[]) => {
     setElements(() => [...newElements]);
   };
+
   const updateElement = (id: string, element: ProjectElementInstance) => {
     setElements((prev) => {
       let newElements = [...prev];
@@ -253,7 +254,7 @@ export default function CanvasContextProvider({
         updateCanvasViewRect,
         loadElements,
         updateProjectName,
-        projectName
+        projectName,
       }}
     >
       {children}
