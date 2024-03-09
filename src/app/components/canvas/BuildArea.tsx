@@ -1,3 +1,5 @@
+"use client";
+
 import { DragEvent } from "react";
 import Canvas from "@canvas/Canvas";
 import { useDndMonitor } from "@dnd-kit/core";
