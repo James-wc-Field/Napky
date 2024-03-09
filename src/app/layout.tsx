@@ -4,7 +4,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import ConfigureAmplify from "./components/configAmplify";
 import { cn } from "@/lib/utils";
-import  { NavigationBar } from "@/components/navigation/NavigationBar";
+import { NavigationBar } from "@/components/navigation/NavigationBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,9 +22,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("min-h-screen", inter.className)}>
-        
         <Providers>
-        <ConfigureAmplify/>
+          <ConfigureAmplify />
           <div className="relative flex min-h-screen flex-col">
             <NavigationBar></NavigationBar>
             <main className="flex-1">{children}</main>
