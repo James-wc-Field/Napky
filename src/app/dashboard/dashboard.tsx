@@ -1,4 +1,5 @@
-'use client'
+"use client";
+
 import { Card, CardHeader, CardFooter, CardContent, CardTitle } from "@ui/card";
 import { Button } from "@ui/button";
 import {
@@ -13,13 +14,11 @@ import {
 import { Input } from "@ui/input";
 
 import Link from "next/link";
-import { ThemeToggle } from "@components/ThemeToggle";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getAllProjects } from './api';
 import { Suspense } from 'react';
-import { Project } from '../../API';
-import { createNewProject } from './api';
+import { Project } from "@src/API";
+import { createNewProject } from "./api";
 import { useRouter } from "next/navigation";
 
 type props = {
