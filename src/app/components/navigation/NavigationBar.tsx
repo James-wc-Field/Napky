@@ -38,7 +38,7 @@ export function NavigationBar () {
 
   return (
     <>
-    <nav className="bg-navbar text-navbar-foreground flex p-2 items-center font-main px-10">
+    <nav className="bg-navbar text-navbar-foreground flex p-2 items-center font-main px-10 max-h-nav">
       <a href="/discover" className="flex justify-center items-center ml-2 min-w-fit">
         <img
         // Need absolute path to icon

@@ -32,7 +32,7 @@ export default function DashboardPage(props: props) {
     return (
       <div className="flex flex-col h-screen">
         <div
-          className="container max-w-screen-2xl p-3 flex flex-row gap-3 h-[calc(100%-58px)]" /* <--- TODO: Fix this magic number at some point */>
+          className="container max-w-screen-2xl p-3 flex flex-row gap-3 max-h-base" /* <--- TODO: Fix this magic number at some point */>
           <Card className="flex basis-1/4 flex-col p-2">
             <Button size="lg" className="w-full" onClick={async ()=> router.push(`../project/${await createNewProject()}`)}>
               Create Project
