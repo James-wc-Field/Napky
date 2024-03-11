@@ -4,7 +4,6 @@ import React from "react";
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@ui/tabs";
 import { Input } from "@ui/input";
-import { Checkbox } from "@ui/checkbox";
 import { Button } from "@ui/button";
 import { Card, CardHeader, CardContent, CardFooter } from "@ui/card";
 import {
@@ -23,9 +22,10 @@ import { EyeSlashIcon } from "@heroicons/react/16/solid";
 
 import { useToast } from "@ui/use-toast";
 import { UseFormReturn, useForm } from "react-hook-form";
+import { handleSignIn, handleSignUp } from "@/(accounts)/login/api";
+import { SignInInput, SignUpInput } from "aws-amplify/auth";
 
-
-export default function Page() {
+export default function LoginCard() {
   return (
     <Card className="max-w-full w-[340px]">
       <CardHeader className="flex justify-center">
@@ -38,8 +38,11 @@ export default function Page() {
             <TabsTrigger value="sign-up">Sign up</TabsTrigger>
           </TabsList>
           <TabsContent value="login" className="flex flex-col gap-3">
-            <LoginForm />
-            <Link href="/forgot-password" className="text-sm hover:underline text-center">
+            <SignInForm />
+            <Link
+              href="/forgot-password"
+              className="text-sm hover:underline text-center"
+            >
               Forgot password?
             </Link>
           </TabsContent>
@@ -56,24 +59,18 @@ export default function Page() {
 }
 
 // Read https://react-hook-form.com/get-started to get more info
-type LoginFormData = {
-  email: string;
-  password: string;
-  rememberMe: boolean;
-};
 
-function LoginForm() {
-  const form = useForm<LoginFormData>({
+function SignInForm() {
+  const form = useForm<SignInInput>({
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
-      rememberMe: true,
     },
   });
 
   // TODO: Send data to server
   const { toast } = useToast();
-  function onSubmit(data: LoginFormData) {
+  async function onSubmit(data: SignInInput) {
     toast({
       title: "You submitted the following values:",
       description: (
@@ -81,6 +78,22 @@ function LoginForm() {
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
         </pre>
       ),
+      duration: 10000,
+    });
+
+    const { isSignedIn, nextStep, error } = await handleSignIn(data);
+
+    toast({
+      title: "Server response:",
+      variant: error ? "destructive" : "default",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">
+            {JSON.stringify({ isSignedIn, nextStep, error }, null, 2)}
+          </code>
+        </pre>
+      ),
+      duration: 10000,
     });
   }
 
@@ -92,33 +105,27 @@ function LoginForm() {
       >
         <EmailField form={form} />
         <PasswordField form={form} />
-        <RememberMeField form={form} />
         <Button type="submit">Submit</Button>
       </form>
     </Form>
   );
 }
 
-type SignUpFormData = {
-  email: string;
-  password: string;
-  passwordConfirmation: string;
-  rememberMe: boolean;
+export type SignUpInputExtended = SignUpInput & {
+  confirmPassword: string;
 };
 
 function SignUpForm() {
-  const form = useForm<SignUpFormData>({
+  const form = useForm<SignUpInputExtended>({
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
-      passwordConfirmation: "",
-      rememberMe: true,
+      confirmPassword: "",
     },
   });
 
-  // TODO: Send data to server
   const { toast } = useToast();
-  function onSubmit(data: SignUpFormData) {
+  async function onSubmit(data: SignUpInputExtended) {
     toast({
       title: "You submitted the following values:",
       description: (
@@ -126,6 +133,28 @@ function SignUpForm() {
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
         </pre>
       ),
+      duration: 10000,
+    });
+
+    const { isSignUpComplete, nextStep, userId, error } = await handleSignUp(
+      data
+    );
+
+    toast({
+      title: "Server response:",
+      variant: error ? "destructive" : "default",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">
+            {JSON.stringify(
+              { isSignUpComplete, nextStep, userId, error },
+              null,
+              2
+            )}
+          </code>
+        </pre>
+      ),
+      duration: 10000,
     });
   }
 
@@ -138,7 +167,6 @@ function SignUpForm() {
         <EmailField form={form} />
         <PasswordField form={form} />
         <PasswordConfirmField form={form} />
-        <RememberMeField form={form} />
         <Button type="submit">Submit</Button>
       </form>
     </Form>
@@ -148,12 +176,12 @@ function SignUpForm() {
 function EmailField({
   form,
 }: {
-  form: UseFormReturn<SignUpFormData | LoginFormData | any>;
+  form: UseFormReturn<SignInInput | SignUpInputExtended | any>;
 }) {
   return (
     <FormField
       control={form.control}
-      name="email"
+      name="username"
       rules={{
         required: true,
         pattern: {
@@ -163,9 +191,14 @@ function EmailField({
       }}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Email</FormLabel>
+          <FormLabel htmlFor="email">Email</FormLabel>
           <FormControl>
-            <Input placeholder="Enter your email" {...field} />
+            <Input
+              autoComplete="email"
+              id="email"
+              placeholder="Enter your email"
+              {...field}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -177,7 +210,7 @@ function EmailField({
 function PasswordField({
   form,
 }: {
-  form: UseFormReturn<SignUpFormData | LoginFormData | any>;
+  form: UseFormReturn<SignInInput | SignUpInputExtended | any>;
 }) {
   const [showPassword, setShowPassword] = React.useState(false);
 
@@ -193,10 +226,11 @@ function PasswordField({
       }}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Password</FormLabel>
+          <FormLabel htmlFor="password">Password</FormLabel>
           <FormControl>
             <div className="relative">
               <Input
+                id="password"
                 placeholder="Enter your password"
                 type={showPassword ? "text" : "password"}
                 {...field}
@@ -226,13 +260,13 @@ function PasswordField({
 function PasswordConfirmField({
   form,
 }: {
-  form: UseFormReturn<SignUpFormData | LoginFormData | any>;
+  form: UseFormReturn<SignInInput | SignUpInputExtended | any>;
 }) {
   const [showPassword, setShowPassword] = React.useState(false);
   return (
     <FormField
       control={form.control}
-      name="passwordConfirmation"
+      name="confirmPassword"
       rules={{
         required: true,
         validate: (value) => {
@@ -246,10 +280,11 @@ function PasswordConfirmField({
       }}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Confirm Password</FormLabel>
+          <FormLabel htmlFor="confirm-password">Confirm Password</FormLabel>
           <FormControl>
             <div className="relative">
               <Input
+                id="confirm-password"
                 placeholder="Enter your password"
                 type={showPassword ? "text" : "password"}
                 {...field}
@@ -270,33 +305,6 @@ function PasswordConfirmField({
             </div>
           </FormControl>
           <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
-}
-
-function RememberMeField({
-  form,
-}: {
-  form: UseFormReturn<SignUpFormData | LoginFormData | any>;
-}) {
-  return (
-    <FormField
-      control={form.control}
-      name="rememberMe"
-      render={({ field: { onChange, onBlur, value } }) => (
-        <FormItem>
-          <FormControl>
-            <div className="flex flex-row gap-2 items-center">
-              <Checkbox
-                checked={value}
-                onCheckedChange={onChange}
-                onBlur={onBlur}
-              />
-              <FormLabel>Remember me</FormLabel>
-            </div>
-          </FormControl>
         </FormItem>
       )}
     />
