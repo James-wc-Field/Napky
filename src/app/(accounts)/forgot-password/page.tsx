@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "@ui/button";
 import { Card, CardHeader, CardContent, CardFooter } from "@ui/card";
 
-import Copyright from "../../components/Copyright";
+import { Copyright } from "../../components/Copyright";
 
 export default function Page() {
   return (
@@ -22,7 +22,10 @@ export default function Page() {
             </p>
             <Input type="email" placeholder="Enter your email" />
             <Button color="primary">Email me</Button>
-            <Link href="/sign-in" className="text-center text-sm hover:underline">
+            <Link
+              href="/sign-in"
+              className="text-center text-sm hover:underline"
+            >
               Back to Login
             </Link>
           </form>
