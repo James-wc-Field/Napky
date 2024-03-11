@@ -22,7 +22,7 @@ import { EyeSlashIcon } from "@heroicons/react/16/solid";
 
 import { useToast } from "@ui/use-toast";
 import { UseFormReturn, useForm } from "react-hook-form";
-import { handleSignIn, handleSignUp } from "@/(accounts)/login/api";
+import { handleSignIn, handleSignUp } from "@/(accounts)/sign-in/api";
 import { SignInInput, SignUpInput } from "aws-amplify/auth";
 
 export default function LoginCard() {
@@ -34,7 +34,7 @@ export default function LoginCard() {
       <CardContent>
         <Tabs defaultValue="login">
           <TabsList className="w-full grid grid-cols-2">
-            <TabsTrigger value="login">Login</TabsTrigger>
+            <TabsTrigger value="login">Sign in</TabsTrigger>
             <TabsTrigger value="sign-up">Sign up</TabsTrigger>
           </TabsList>
           <TabsContent value="login" className="flex flex-col gap-3">
