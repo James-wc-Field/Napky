@@ -24,7 +24,7 @@ import { UseFormReturn, useForm } from "react-hook-form";
 import { handleConfirmSignUp } from "@/(accounts)/confirm-signup/api";
 import { ConfirmSignUpInput } from "aws-amplify/auth";
 
-export default function ConfirmSignUpCard() {
+export function ConfirmSignUpCard() {
   return (
     <Card className="max-w-full w-[340px]">
       <CardHeader className="flex justify-center">
