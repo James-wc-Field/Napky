@@ -32,12 +32,12 @@ export default function LoginCard() {
         <h1 className="text-2xl font-bold">Welcome</h1>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="login">
+        <Tabs defaultValue="sign-in">
           <TabsList className="w-full grid grid-cols-2">
-            <TabsTrigger value="login">Sign in</TabsTrigger>
+            <TabsTrigger value="sign-in">Sign in</TabsTrigger>
             <TabsTrigger value="sign-up">Sign up</TabsTrigger>
           </TabsList>
-          <TabsContent value="login" className="flex flex-col gap-3">
+          <TabsContent value="sign-in" className="flex flex-col gap-3">
             <SignInForm />
             <Link
               href="/forgot-password"
