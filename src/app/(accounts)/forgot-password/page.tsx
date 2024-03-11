@@ -22,7 +22,7 @@ export default function Page() {
             </p>
             <Input type="email" placeholder="Enter your email" />
             <Button color="primary">Email me</Button>
-            <Link href="/login" className="text-center text-sm hover:underline">
+            <Link href="/sign-in" className="text-center text-sm hover:underline">
               Back to Login
             </Link>
           </form>
