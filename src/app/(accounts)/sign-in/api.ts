@@ -1,4 +1,4 @@
-import { SignUpInputExtended } from "@/components/SignInCard";
+import { SignUpInputExtended } from "@/components/SignUpForm";
 import { SignInInput, signUp } from "aws-amplify/auth";
 import { signIn } from "aws-amplify/auth";
 
