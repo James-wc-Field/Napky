@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { ReactNode, use, useEffect, useMemo, useRef, useState } from "react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { ProjectElementInstance, ProjectElements } from "@canvas/types/ProjectElements";
 import useProject from "@canvas/hooks/useProject";
@@ -6,7 +6,7 @@ import MiniMap from "@canvas/MiniMap";
 import CanvasControls from "@canvas/CanvasControls";
 import CanvasBackground from "@canvas/CanvasBackground";
 import CanvasToolbar from "@canvas/CanvasToolbar";
-
+import Selectable, {SelectableRef, useSelectable } from 'react-selectable-box';
 export default function Canvas({
   elements,
 }: {
@@ -89,7 +89,6 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
       setMiddleMouseIsDown(true);
     }
   };
-
   useEffect(() => {
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
@@ -100,35 +99,63 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     };
   }, [middleMouseIsDown]);
 
+  // const ds = useDragSelect();
+  // useEffect(() => {
+  // ds?.subscribe('DS:start', (e) => {
+  //   console.log(ds)
+  //   if ((e.event.target as HTMLElement).id !== "canvas-viewport"){
+  //     console.log("tried to")
+  //     ds.stop();
+  //   };
+  // });}, [ds]);
+  // useEffect(() => {
+  //   if (!ds) return;
+  //   const id = ds.subscribe("DS:end", (e) => {
+  //     // do something
+  //     console.log(e);
+  //   });
+
+  //   return () => ds.unsubscribe("DS:end", undefined, id!);
+  // }, [ds]);
+  const selectableRef = useRef<SelectableRef>(null);
+
   return (
     <>
-      <div
-        id="canvas-renderer"
-        className="absolute w-full h-full top-0 left-0"
-        style={{ zIndex: 4 }}
-        onWheel={handleScroll}
-        onMouseDown={handleMouseDown}
-        ref={canvasViewRef}
-      >
+      <Selectable ref={selectableRef} onStart={(e) => {
+        if ((e.target as HTMLElement).id !== "canvas-viewport") {
+          selectableRef.current?.cancel();
+        }
+        console.log(e)
+      }}>
+
         <div
-          id="canvas-pane-droppable"
-          className="absolute w-full h-full top-0 left-0 bg-white/20"
-          style={{ zIndex: 1 }}
-          ref={setNodeRef}
+          id="canvas-renderer"
+          className="absolute w-full h-full top-0 left-0"
+          style={{ zIndex: 4 }}
+          onWheel={handleScroll}
+          onMouseDown={handleMouseDown}
+          ref={canvasViewRef}
         >
           <div
-            id="canvas-viewport"
-            className="absolute top-0 left-0 w-full h-full"
-            style={{
-              transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
-              transformOrigin: "top left",
-              zIndex: 2,
-            }}
+            id="canvas-pane-droppable"
+            className="absolute w-full h-full top-0 left-0 bg-white/20"
+            style={{ zIndex: 1 }}
+            ref={setNodeRef}
           >
-            {children}
+            <div
+              id="canvas-viewport"
+              className="absolute top-0 left-0 w-full h-full"
+              style={{
+                transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
+                transformOrigin: "top left",
+                zIndex: 2,
+              }}
+            >
+              {children}
+            </div>
           </div>
         </div>
-      </div>
+      </Selectable>
       <CanvasToolbar />
       <CanvasControls />
       {/* <MiniMap /> */}
