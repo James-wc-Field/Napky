@@ -6,6 +6,8 @@ import { useDndMonitor } from "@dnd-kit/core";
 import { ElementsType, ProjectElements } from "@canvas/types/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
 import useProject from "@canvas/hooks/useProject";
+import { DragSelectProvider } from "@canvas/context/DragSelectContext";
+import { useState } from "react";
 
 export default function BuildArea() {
   // This stops the scrolling ability
@@ -19,6 +21,14 @@ export default function BuildArea() {
     scrollTop,
     zoomLevel,
   } = useProject();
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [startY, setStartY] = useState(0);
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
+  const [backX, setBackX] = useState(false);
+  const [backY, setBackY] = useState(false);
+
   useDndMonitor({
     onDragEnd: (event) => {
       const { active, over, delta } = event;
@@ -45,6 +55,11 @@ export default function BuildArea() {
         const initialLeft = active.rect.current.initial?.left || overLeft;
         const diffX = overLeft - initialLeft;
         const diffY = overTop - initialTop;
+        console.log(diffX)
+        console.log(diffY)
+        console.log(scrollLeft)
+        console.log(scrollTop)
+        console.log(zoomLevel)
 
         addElement(
           newElement,
@@ -297,6 +312,32 @@ export default function BuildArea() {
     }
   }
 
+  // const handleMouseDown = (event:any) => {
+  //   console.log(event);
+  //   if (event.target.id ==="canvas-viewport") {
+  //     setIsDragging(true);
+  //     setStartX(event.clientX);
+  //     setStartY(event.clientY);
+  //   }
+  // };
+
+  // const handleMouseMove = (event:any) => {
+  //   if (isDragging) {
+  //     const currentX = event.clientX;
+  //     const currentY = event.clientY;
+      
+  //     const newWidth = Math.abs(currentX - startX);
+  //     const newHeight = Math.abs(currentY - startY);
+  //     setWidth(newWidth);
+  //     setHeight(newHeight);
+  //   }
+  // };
+
+  // const handleMouseUp = () => {
+  //   setIsDragging(false);
+  // };
+
+  
   return (
     <div
       id="canvas-wrapper"
@@ -304,7 +345,20 @@ export default function BuildArea() {
       onDragOver={(e) => e.preventDefault()}
       className="relative overflow-hidden z-0 w-full h-full"
     >
+    {/* <div
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+    >
+      <div
+        id="selection-box"
+        className={`absolute border-dashed border-2 border-black opacity-50 bg-white ${isDragging ? 'block' : 'hidden'}`}
+        style={{ left: startX + 'px', top: startY + 'px', width: width + 'px', height: height + 'px' }}
+      ></div> */}
+      {/* <DragSelectProvider> */}
       <Canvas elements={elements} />
+    {/* </div> */}
+    {/* </DragSelectProvider> */}
     </div>
   );
 }

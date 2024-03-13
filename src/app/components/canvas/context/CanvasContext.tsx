@@ -2,6 +2,7 @@
 
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { ProjectElementInstance } from "@canvas/types/ProjectElements";
+import { useDragSelect } from "./DragSelectContext";
 
 type CanvasContextType = {
   elements: ProjectElementInstance[];
@@ -114,6 +115,7 @@ export default function CanvasContextProvider({
 }: {
   children: ReactNode;
 }) {
+  const ds = useDragSelect();
   const [elements, setElements] = useState<ProjectElementInstance[]>([]);
   const [projectName, setProjectName] = useState("Untitled");
   const [scrollLeft, setScrollLeft] = useState(0);
@@ -148,6 +150,7 @@ export default function CanvasContextProvider({
       newElements = [...newElements, element];
       return newElements;
     });
+    ds?.addSelectables(Array.from(document.querySelectorAll(".canvas-element")));
   };
 
   const removeElement = (id: string) => {
