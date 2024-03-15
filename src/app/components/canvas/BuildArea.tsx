@@ -8,7 +8,7 @@ import useProject from "@canvas/hooks/useProject";
 export default function BuildArea() {
   // This stops the scrolling ability
   document.body.style.overflow = "hidden";
-  
+
   const {
     elements,
     addElement,
@@ -16,7 +16,8 @@ export default function BuildArea() {
     scrollLeft,
     scrollTop,
     zoomLevel,
-    selectedElements
+    selectedElements,
+    removeSelectedElements
   } = useProject();
   useDndMonitor({
     onDragEnd: (event) => {
@@ -58,37 +59,35 @@ export default function BuildArea() {
         const elementId = active.data?.current?.elementId;
         const dragged = elements.find((element) => element.id == elementId);
         const wasDraggedSelected = selectedElements.includes(dragged!)
-        // if (!wasDraggedSelected) return; 
-        // TODO change to remove selectedItems
-
-
-
         if (!dragged) return;
-
-        selectedElements.forEach((element) => {
-          updateElement(element.id, {
-            ...element,
+        if (!wasDraggedSelected) {
+          removeSelectedElements()
+          updateElement(dragged.id, {
+            ...dragged,
             position: {
-              x: element.position.x + delta.x / zoomLevel,
-              y: element.position.y + delta.y / zoomLevel,
+              x: dragged.position.x + delta.x / zoomLevel,
+              y: dragged.position.y + delta.y / zoomLevel,
             },
             extraAttributes: {
-              ...element.extraAttributes,
+              ...dragged.extraAttributes,
             },
           });
-        }
-        );
-        // updateElement(dragged.id, {
-        //   ...dragged,
-        //   position: {
-        //     x: dragged.position.x + delta.x / zoomLevel,
-        //     y: dragged.position.y + delta.y / zoomLevel,
-        //   },
-        //   extraAttributes: {
-        //     ...dragged.extraAttributes,
-        //   },
-        // });
+        } else {
+          selectedElements.forEach((element) => {
+            updateElement(element.id, {
+              ...element,
+              position: {
+                x: element.position.x + delta.x / zoomLevel,
+                y: element.position.y + delta.y / zoomLevel,
+              },
+              extraAttributes: {
+                ...element.extraAttributes,
+              },
+            });
+          }
+          );
 
+        }
         console.log("DRAGGED:", dragged);
       }
 

@@ -54,6 +54,10 @@ type CanvasContextType = {
   addSelectedElements: (elements: ProjectElementInstance[]) => void;
 
   /**
+   * Removes multiple elements from the selected elements
+   */
+  removeSelectedElements: () => void;
+  /**
    * Updates an element on the canvas
    * @param id ID of the element to update
    * @param element New element to replace the old one
@@ -174,6 +178,11 @@ export default function CanvasContextProvider({
     setSelectedElements((prev) => [...prev, ...elements]);
   };
 
+  const removeSelectedElements = () => {
+    setSelectedElements(() => []);
+  }
+
+
   const loadElements = (newElements: ProjectElementInstance[]) => {
     setElements(() => [...newElements]);
   };
@@ -274,6 +283,7 @@ export default function CanvasContextProvider({
         loadElements,
         updateProjectName,
         projectName,
+        removeSelectedElements
       }}
     >
       {children}
