@@ -42,6 +42,18 @@ type CanvasContextType = {
   removeElement: (id: string) => void;
 
   /**
+   * Gets the selected elements
+  */
+   selectedElements: ProjectElementInstance[];
+
+   /**
+   * Adds multiple elements to the selected elements
+   * @param elements Elements to add to the selected elements
+   * @returns
+   */
+  addSelectedElements: (elements: ProjectElementInstance[]) => void;
+
+  /**
    * Updates an element on the canvas
    * @param id ID of the element to update
    * @param element New element to replace the old one
@@ -114,6 +126,7 @@ export default function CanvasContextProvider({
   children: ReactNode;
 }) {
   const [elements, setElements] = useState<ProjectElementInstance[]>([]);
+  const [selectedElements, setSelectedElements] = useState<ProjectElementInstance[]>([]);
   const [projectName, setProjectName] = useState("Untitled");
   const [scrollLeft, setScrollLeft] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
@@ -155,6 +168,10 @@ export default function CanvasContextProvider({
 
   const updateProjectName = (name: string) => {
     setProjectName(name);
+  };
+
+  const addSelectedElements = (elements: ProjectElementInstance[]) => {
+    setSelectedElements((prev) => [...prev, ...elements]);
   };
 
   const loadElements = (newElements: ProjectElementInstance[]) => {
@@ -243,6 +260,8 @@ export default function CanvasContextProvider({
         addElement,
         removeElement,
         updateElement,
+        selectedElements,
+        addSelectedElements,
         scrollLeft,
         updateScrollLeft,
         scrollTop,
