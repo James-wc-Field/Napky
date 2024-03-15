@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { ReactNode, use, useEffect, useMemo, useRef, useState } from "react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { ProjectElementInstance, ProjectElements } from "@canvas/types/ProjectElements";
 import useProject from "@canvas/hooks/useProject";
@@ -6,7 +6,7 @@ import MiniMap from "@canvas/MiniMap";
 import CanvasControls from "@canvas/CanvasControls";
 import CanvasBackground from "@canvas/CanvasBackground";
 import CanvasToolbar from "@canvas/CanvasToolbar";
-
+import Selectable, {SelectableRef, useSelectable } from 'react-selectable-box';
 export default function Canvas({
   elements,
 }: {
@@ -89,7 +89,6 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
       setMiddleMouseIsDown(true);
     }
   };
-
   useEffect(() => {
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
@@ -100,35 +99,44 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     };
   }, [middleMouseIsDown]);
 
+  const selectableRef = useRef<SelectableRef>(null);
+
   return (
     <>
-      <div
-        id="canvas-renderer"
-        className="absolute w-full h-full top-0 left-0"
-        style={{ zIndex: 4 }}
-        onWheel={handleScroll}
-        onMouseDown={handleMouseDown}
-        ref={canvasViewRef}
-      >
+      <Selectable ref={selectableRef} onStart={(e) => {
+        if ((e.target as HTMLElement).id !== "canvas-viewport") {
+          selectableRef.current?.cancel();
+        }
+      }}>
+
         <div
-          id="canvas-pane-droppable"
-          className="absolute w-full h-full top-0 left-0 bg-white/20"
-          style={{ zIndex: 1 }}
-          ref={setNodeRef}
+          id="canvas-renderer"
+          className="absolute w-full h-full top-0 left-0"
+          style={{ zIndex: 4 }}
+          onWheel={handleScroll}
+          onMouseDown={handleMouseDown}
+          ref={canvasViewRef}
         >
           <div
-            id="canvas-viewport"
-            className="absolute top-0 left-0 w-full h-full"
-            style={{
-              transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
-              transformOrigin: "top left",
-              zIndex: 2,
-            }}
+            id="canvas-pane-droppable"
+            className="absolute w-full h-full top-0 left-0 bg-white/20"
+            style={{ zIndex: 1 }}
+            ref={setNodeRef}
           >
-            {children}
+            <div
+              id="canvas-viewport"
+              className="absolute top-0 left-0 w-full h-full"
+              style={{
+                transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
+                transformOrigin: "top left",
+                zIndex: 2,
+              }}
+            >
+              {children}
+            </div>
           </div>
         </div>
-      </div>
+      </Selectable>
       <CanvasToolbar />
       <CanvasControls />
       {/* <MiniMap /> */}
@@ -142,7 +150,7 @@ function CanvasElementWrapper({
 }: {
   element: ProjectElementInstance;
 }) {
-  const { attributes, listeners, isDragging, setNodeRef } = useDraggable({
+  const { attributes, listeners, isDragging, setNodeRef: setDragRef } = useDraggable({
     id: element.id + "-drag-handler",
     data: {
       type: element.type,
@@ -151,19 +159,25 @@ function CanvasElementWrapper({
     },
   });
 
+  const { setNodeRef:setSelectRef,isSelected} = useSelectable({value: element});
   const style: React.CSSProperties = {
     position: "absolute",
     left: element.position.x,
     top: element.position.y,
     visibility: isDragging ? "hidden" : undefined,
     width: element.size.width,
+    cursor: isSelected ? "move" : "default",
+    border: isSelected ? '1px solid #1677ff' : undefined
   };
 
   const CanvasElement = useMemo(() => {
     return ProjectElements[element.type].canvasComponent;
   }, [element]);
   return (
-    <div style={style} ref={setNodeRef} {...listeners} {...attributes}>
+    <div style={style} ref={(ref) => {
+      setDragRef(ref);
+      setSelectRef(ref);
+    }} {...listeners} {...attributes}>
       <CanvasElement elementInstance={element} />
     </div>
   );
