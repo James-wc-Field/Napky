@@ -103,7 +103,6 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
   }, [middleMouseIsDown]);
 
   const selectableRef = useRef<SelectableRef>(null);
-  console.log(selectedElements)
   return (
     <>
       <Selectable ref={selectableRef} onStart={(e) => {
@@ -111,8 +110,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
           selectableRef.current?.cancel();
         }
       }}
-      onEnd={(value)=> {console.log(value[0])
-        console.log(value as ProjectElementInstance[])
+      onEnd={(value)=> {
         addSelectedElements(value as ProjectElementInstance[])
       }}>
 
