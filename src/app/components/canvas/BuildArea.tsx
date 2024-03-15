@@ -16,6 +16,7 @@ export default function BuildArea() {
     scrollLeft,
     scrollTop,
     zoomLevel,
+    selectedElements
   } = useProject();
   useDndMonitor({
     onDragEnd: (event) => {
@@ -56,19 +57,37 @@ export default function BuildArea() {
       if (isCanvasElement && isCanvasDropArea) {
         const elementId = active.data?.current?.elementId;
         const dragged = elements.find((element) => element.id == elementId);
+        const wasDraggedSelected = selectedElements.includes(dragged!)
+        // if (!wasDraggedSelected) return; 
+        // TODO change to remove selectedItems
+
+
 
         if (!dragged) return;
 
-        updateElement(dragged.id, {
-          ...dragged,
-          position: {
-            x: dragged.position.x + delta.x / zoomLevel,
-            y: dragged.position.y + delta.y / zoomLevel,
-          },
-          extraAttributes: {
-            ...dragged.extraAttributes,
-          },
-        });
+        selectedElements.forEach((element) => {
+          updateElement(element.id, {
+            ...element,
+            position: {
+              x: element.position.x + delta.x / zoomLevel,
+              y: element.position.y + delta.y / zoomLevel,
+            },
+            extraAttributes: {
+              ...element.extraAttributes,
+            },
+          });
+        }
+        );
+        // updateElement(dragged.id, {
+        //   ...dragged,
+        //   position: {
+        //     x: dragged.position.x + delta.x / zoomLevel,
+        //     y: dragged.position.y + delta.y / zoomLevel,
+        //   },
+        //   extraAttributes: {
+        //     ...dragged.extraAttributes,
+        //   },
+        // });
 
         console.log("DRAGGED:", dragged);
       }

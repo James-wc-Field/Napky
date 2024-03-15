@@ -38,6 +38,9 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     updateScrollLeft,
     updateScrollTop,
     updateCanvasViewRect,
+    addSelectedElements,
+    selectedElements,
+    elements
   } = useProject();
 
   const handleScroll = (e: React.WheelEvent) => {
@@ -100,13 +103,17 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
   }, [middleMouseIsDown]);
 
   const selectableRef = useRef<SelectableRef>(null);
-
+  console.log(selectedElements)
   return (
     <>
       <Selectable ref={selectableRef} onStart={(e) => {
         if ((e.target as HTMLElement).id !== "canvas-viewport") {
           selectableRef.current?.cancel();
         }
+      }}
+      onEnd={(value)=> {console.log(value[0])
+        console.log(value as ProjectElementInstance[])
+        addSelectedElements(value as ProjectElementInstance[])
       }}>
 
         <div
