@@ -8,7 +8,6 @@ import Selectable,{SelectableRef, useSelectable} from 'react-selectable-box';
 import { useRef } from "react";
 import { ProjectElementInstance } from "@canvas/types/ProjectElements";
 
-
 export default function BuildArea() {
   // This stops the scrolling ability
   document.body.style.overflow = "hidden";
@@ -27,15 +26,9 @@ export default function BuildArea() {
   const selectableRef = useRef<SelectableRef>(null);
   useDndMonitor({onDragStart: (event) => {
     const elementId = event.active.data.current?.elementId;
-    console.log(elementId)
-    console.log(!selectedElements.find((element) => element.id == elementId))
     if (!selectedElements.find((element) => element.id == elementId)){
-      removeSelectedElements()
-      // const dragged = elements.find((element) => element.id == elementId);
-      // console.log(dragged)
-      // updateElement(elementId, dragged!);
-      // selectableRef.current?.cancel();
-
+      const selected = [elements.find((element) => element.id == elementId)]
+      changeSelectedElements(selected as ProjectElementInstance[])
     }
     },
     onDragEnd: (event) => {
@@ -79,7 +72,6 @@ export default function BuildArea() {
         const wasDraggedSelected = selectedElements.includes(dragged!)
         if (!dragged) return;
         if (!wasDraggedSelected) {
-          removeSelectedElements()
           updateElement(dragged.id, {
             ...dragged,
             position: {
