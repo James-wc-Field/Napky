@@ -6,7 +6,7 @@ import MiniMap from "@canvas/MiniMap";
 import CanvasControls from "@canvas/CanvasControls";
 import CanvasBackground from "@canvas/CanvasBackground";
 import CanvasToolbar from "@canvas/CanvasToolbar";
-import Selectable, {SelectableRef, useSelectable } from 'react-selectable-box';
+import {useSelectable } from 'react-selectable-box';
 export default function Canvas({
   elements,
 }: {
@@ -38,9 +38,6 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     updateScrollLeft,
     updateScrollTop,
     updateCanvasViewRect,
-    addSelectedElements,
-    selectedElements,
-    elements
   } = useProject();
 
   const handleScroll = (e: React.WheelEvent) => {
@@ -102,18 +99,9 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     };
   }, [middleMouseIsDown]);
 
-  const selectableRef = useRef<SelectableRef>(null);
+
   return (
     <>
-      <Selectable ref={selectableRef} onStart={(e) => {
-        if ((e.target as HTMLElement).id !== "canvas-viewport") {
-          selectableRef.current?.cancel();
-        }
-      }}
-      onEnd={(value)=> {
-        addSelectedElements(value as ProjectElementInstance[])
-      }}>
-
         <div
           id="canvas-renderer"
           className="absolute w-full h-full top-0 left-0"
@@ -141,7 +129,6 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
             </div>
           </div>
         </div>
-      </Selectable>
       <CanvasToolbar />
       <CanvasControls />
       {/* <MiniMap /> */}
@@ -165,6 +152,8 @@ function CanvasElementWrapper({
   });
 
   const { setNodeRef:setSelectRef,isSelected} = useSelectable({value: element});
+  // console.log(isSelected);
+  // console.log(element);
   const style: React.CSSProperties = {
     position: "absolute",
     left: element.position.x,

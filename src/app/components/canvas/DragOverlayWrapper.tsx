@@ -60,11 +60,12 @@ export default function DragOverlayWrapper() {
       {selectedElements.map((element) => {
         const CanvasElementComponent =
           ProjectElements[element.type as ElementsType].canvasComponent;
-        return <CanvasElementComponent elementInstance={element} />;
+        return <CanvasElementComponent key={element.id} elementInstance={element} />;
       })}</>;
     }else{
       const CanvasElementComponent =
         ProjectElements[element.type as ElementsType].canvasComponent;
+        console.log(element)
       node = <CanvasElementComponent elementInstance={element} />;
     }
   }
