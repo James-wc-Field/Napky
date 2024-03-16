@@ -60,7 +60,7 @@ export function NavigationBar () {
         {endState}
         {user? 
           <a className="mx-4" href="#">Account</a> : 
-          <a className="mx-4" href="#">Sign In</a>}
+          <a className="mx-4" href="/sign-in">Sign in</a>}
       </div>
       <ThemeToggle></ThemeToggle>
     </nav>

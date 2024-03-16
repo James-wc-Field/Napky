@@ -1,4 +1,6 @@
-import { generateClient } from "aws-amplify/api";
+"use server";
+
+import { cookieBasedClient } from "@/lib/amplifyServerUtils";
 import { listProjects } from "../../graphql/queries";
 import { createProject } from "../../graphql/mutations";
 import { getCurrentUser } from "aws-amplify/auth";
@@ -8,9 +10,8 @@ import { getCurrentUser } from "aws-amplify/auth";
  * @returns an array of all projects
  */
 export async function getAllProjects() {
-  const client = generateClient();
   return (
-    await client.graphql({
+    await cookieBasedClient.graphql({
       query: listProjects,
     })
   ).data.listProjects.items;
@@ -21,9 +22,8 @@ export async function getAllProjects() {
  * @returns the id of the new project
  */
 export async function createNewProject() {
-  const client = generateClient();
   const project = (
-    await client.graphql({
+    await cookieBasedClient.graphql({
       query: createProject,
       variables: {
         input: {
@@ -47,6 +47,6 @@ export async function currentAuthenticatedUser() {
     return { username, userId, signInDetails };
   } catch (err) {
     console.log(err);
-    return null;
+    return { username: undefined, userId: undefined, signInDetails: undefined };
   }
 }
