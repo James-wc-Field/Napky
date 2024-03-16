@@ -51,7 +51,7 @@ type CanvasContextType = {
    * @param elements Elements to add to the selected elements
    * @returns
    */
-  addSelectedElements: (elements: ProjectElementInstance[]) => void;
+  changeSelectedElements: (elements: ProjectElementInstance[]) => void;
 
   /**
    * Removes multiple elements from the selected elements
@@ -174,8 +174,8 @@ export default function CanvasContextProvider({
     setProjectName(name);
   };
 
-  const addSelectedElements = (elements: ProjectElementInstance[]) => {
-    setSelectedElements((prev) => [...prev, ...elements]);
+  const changeSelectedElements = (elements: ProjectElementInstance[]) => {
+    setSelectedElements(() => [...elements]);
   };
 
   const removeSelectedElements = () => {
@@ -270,7 +270,7 @@ export default function CanvasContextProvider({
         removeElement,
         updateElement,
         selectedElements,
-        addSelectedElements,
+        changeSelectedElements,
         scrollLeft,
         updateScrollLeft,
         scrollTop,
