@@ -6,7 +6,7 @@ import MiniMap from "@canvas/MiniMap";
 import CanvasControls from "@canvas/CanvasControls";
 import CanvasBackground from "@canvas/CanvasBackground";
 import CanvasToolbar from "@canvas/CanvasToolbar";
-import {useSelectable } from 'react-selectable-box';
+import { useSelectable } from 'react-selectable-box';
 export default function Canvas({
   elements,
 }: {
@@ -38,6 +38,9 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     updateScrollLeft,
     updateScrollTop,
     updateCanvasViewRect,
+    removeSelectedElements,
+    selectedElements,
+    removeElement
   } = useProject();
 
   const handleScroll = (e: React.WheelEvent) => {
@@ -53,6 +56,15 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     updateScrollTop(deltaY);
   };
 
+  const handleKeyDown = (e: KeyboardEvent): void => {
+    console.log(e.key);
+    if (e.key === "Delete") {
+      selectedElements.forEach((element) => {
+        removeElement(element.id);
+      });
+      removeSelectedElements();
+    };
+  }
   const canvasViewRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const handleResize = () => {
@@ -98,37 +110,42 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
       document.removeEventListener("mouseup", handleMouseUp);
     };
   }, [middleMouseIsDown]);
-
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedElements]);
 
   return (
     <>
+      <div
+        id="canvas-renderer"
+        className="absolute w-full h-full top-0 left-0"
+        style={{ zIndex: 4 }}
+        onWheel={handleScroll}
+        onMouseDown={handleMouseDown}
+        ref={canvasViewRef}
+      >
         <div
-          id="canvas-renderer"
-          className="absolute w-full h-full top-0 left-0"
-          style={{ zIndex: 4 }}
-          onWheel={handleScroll}
-          onMouseDown={handleMouseDown}
-          ref={canvasViewRef}
+          id="canvas-pane-droppable"
+          className="absolute w-full h-full top-0 left-0 bg-white/20"
+          style={{ zIndex: 1 }}
+          ref={setNodeRef}
         >
           <div
-            id="canvas-pane-droppable"
-            className="absolute w-full h-full top-0 left-0 bg-white/20"
-            style={{ zIndex: 1 }}
-            ref={setNodeRef}
+            id="canvas-viewport"
+            className="absolute top-0 left-0 w-full h-full"
+            style={{
+              transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
+              transformOrigin: "top left",
+              zIndex: 2,
+            }}
           >
-            <div
-              id="canvas-viewport"
-              className="absolute top-0 left-0 w-full h-full"
-              style={{
-                transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
-                transformOrigin: "top left",
-                zIndex: 2,
-              }}
-            >
-              {children}
-            </div>
+            {children}
           </div>
         </div>
+      </div>
       <CanvasToolbar />
       <CanvasControls />
       {/* <MiniMap /> */}
@@ -151,9 +168,7 @@ function CanvasElementWrapper({
     },
   });
 
-  const { setNodeRef:setSelectRef,isSelected} = useSelectable({value: element});
-  // console.log(isSelected);
-  // console.log(element);
+  const { setNodeRef: setSelectRef, isSelected } = useSelectable({ value: element });
   const style: React.CSSProperties = {
     position: "absolute",
     left: element.position.x,
