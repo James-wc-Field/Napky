@@ -1,14 +1,18 @@
-import { DragEvent } from "react";
+import { DragEvent, use } from "react";
 import Canvas from "@canvas/Canvas";
 import { useDndMonitor } from "@dnd-kit/core";
 import { ElementsType, ProjectElements } from "@canvas/types/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
 import useProject from "@canvas/hooks/useProject";
+import Selectable,{SelectableRef, useSelectable} from 'react-selectable-box';
+import { useRef } from "react";
+import { ProjectElementInstance } from "@canvas/types/ProjectElements";
+
 
 export default function BuildArea() {
   // This stops the scrolling ability
   document.body.style.overflow = "hidden";
-  
+
   const {
     elements,
     addElement,
@@ -16,8 +20,24 @@ export default function BuildArea() {
     scrollLeft,
     scrollTop,
     zoomLevel,
+    selectedElements,
+    removeSelectedElements,
+    changeSelectedElements
   } = useProject();
-  useDndMonitor({
+  const selectableRef = useRef<SelectableRef>(null);
+  useDndMonitor({onDragStart: (event) => {
+    const elementId = event.active.data.current?.elementId;
+    console.log(elementId)
+    console.log(!selectedElements.find((element) => element.id == elementId))
+    if (!selectedElements.find((element) => element.id == elementId)){
+      removeSelectedElements()
+      // const dragged = elements.find((element) => element.id == elementId);
+      // console.log(dragged)
+      // updateElement(elementId, dragged!);
+      // selectableRef.current?.cancel();
+
+    }
+    },
     onDragEnd: (event) => {
       const { active, over, delta } = event;
       if (!active || !over) return;
@@ -56,20 +76,36 @@ export default function BuildArea() {
       if (isCanvasElement && isCanvasDropArea) {
         const elementId = active.data?.current?.elementId;
         const dragged = elements.find((element) => element.id == elementId);
-
+        const wasDraggedSelected = selectedElements.includes(dragged!)
         if (!dragged) return;
+        if (!wasDraggedSelected) {
+          removeSelectedElements()
+          updateElement(dragged.id, {
+            ...dragged,
+            position: {
+              x: dragged.position.x + delta.x / zoomLevel,
+              y: dragged.position.y + delta.y / zoomLevel,
+            },
+            extraAttributes: {
+              ...dragged.extraAttributes,
+            },
+          });
+        } else {
+          selectedElements.forEach((element) => {
+            updateElement(element.id, {
+              ...element,
+              position: {
+                x: element.position.x + delta.x / zoomLevel,
+                y: element.position.y + delta.y / zoomLevel,
+              },
+              extraAttributes: {
+                ...element.extraAttributes,
+              },
+            });
+          }
+          );
 
-        updateElement(dragged.id, {
-          ...dragged,
-          position: {
-            x: dragged.position.x + delta.x / zoomLevel,
-            y: dragged.position.y + delta.y / zoomLevel,
-          },
-          extraAttributes: {
-            ...dragged.extraAttributes,
-          },
-        });
-
+        }
         console.log("DRAGGED:", dragged);
       }
 
@@ -296,6 +332,14 @@ export default function BuildArea() {
   }
 
   return (
+    <Selectable ref={selectableRef} value={selectedElements} onStart={(e) => {
+      if ((e.target as HTMLElement).id !== "canvas-viewport") {
+        selectableRef.current?.cancel();
+      }
+    }}
+    onEnd={(value)=> {
+      changeSelectedElements(value as ProjectElementInstance[])
+    }}>
     <div
       id="canvas-wrapper"
       onDrop={(e) => externalDropHandler(e)}
@@ -304,5 +348,6 @@ export default function BuildArea() {
     >
       <Canvas elements={elements} />
     </div>
+    </Selectable>
   );
 }

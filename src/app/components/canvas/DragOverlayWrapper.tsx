@@ -12,7 +12,8 @@ import { ElementsType, ProjectElements } from "@canvas/types/ProjectElements";
 import useProject from "@canvas/hooks/useProject";
 
 export default function DragOverlayWrapper() {
-  const { elements, zoomLevel } = useProject();
+  const {} = useProject();
+  const { elements, zoomLevel, selectedElements, removeSelectedElements} = useProject();
   const [draggedItem, setDraggedItem] = useState<Active | null>(null);
 
   useDndMonitor({
@@ -21,9 +22,12 @@ export default function DragOverlayWrapper() {
     },
     onDragCancel: (event: DragCancelEvent) => {
       setDraggedItem(null);
+      removeSelectedElements();
     },
     onDragEnd: (event: DragEndEvent) => {
       setDraggedItem(null);
+      removeSelectedElements();
+      
     },
   });
 
@@ -47,13 +51,23 @@ export default function DragOverlayWrapper() {
   const isListElement = draggedItem.data?.current?.isListElement;
   if (isCanvasElement || isListElement) {
     const elementId = draggedItem.data?.current?.elementId;
+    const isSelected = selectedElements.find((element) => element.id === elementId) ? true : false;
     const element = elements.find((element) => element.id === elementId);
 
     if (!element) return <div>Dragged element not found</div>;
-
-    const CanvasElementComponent =
-      ProjectElements[element.type as ElementsType].canvasComponent;
-    node = <CanvasElementComponent elementInstance={element} />;
+    if (isSelected){
+      node = <>
+      {selectedElements.map((element) => {
+        const CanvasElementComponent =
+          ProjectElements[element.type as ElementsType].canvasComponent;
+        return <CanvasElementComponent key={element.id} elementInstance={element} />;
+      })}</>;
+    }else{
+      const CanvasElementComponent =
+        ProjectElements[element.type as ElementsType].canvasComponent;
+        console.log(element)
+      node = <CanvasElementComponent elementInstance={element} />;
+    }
   }
 
   const overScale: Modifier = ({ transform, over }) => {
