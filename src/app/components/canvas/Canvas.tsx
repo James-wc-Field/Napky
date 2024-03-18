@@ -182,19 +182,20 @@ function CanvasElementWrapper({
     },
   });
   const resizeRef = useRef<HTMLDivElement>(null);
+  const {updateElement, zoomLevel} = useProject()
   const [isResizing, setIsResizing] = useState(false)
   const [startSize, setStartSize] = useState({ width: element.size.width, height: element.size.height })
   const [startPos, setStartPos] = useState({ x: element.position.x, y: element.position.y })
   const { setNodeRef: setSelectRef, isSelected } = useSelectable({ value: element });
   const style: React.CSSProperties = {
     position: "absolute",
-    left: startPos.x,
-    top: startPos.y,
+    left: element.position.x,
+    top: element.position.y,
     visibility: isDragging ? "hidden" : undefined,
-    width: startSize.width,
-    height: startSize.height,
+    width: element.size.width,
+    height: element.size.height,
     cursor: isSelected ? "move" : "default",
-    border: isSelected ? '1px solid #1677ff' : '10px solid',
+    border: isSelected ? '1px solid #1677ff' : undefined,
   };
 
   const CanvasElement = useMemo(() => {
@@ -202,11 +203,17 @@ function CanvasElementWrapper({
   }, [element]);
 
   const handleMouseMove = useCallback(
-    (e:MouseEvent) => {
+    (e: MouseEvent) => {
       if (!isResizing) return
       const newWidth = startSize.width + e.clientX - startPos.x
       const newHeight = startSize.height + e.clientY - startPos.y
-      setStartSize({ width: newWidth, height: newHeight })
+      updateElement(element.id,  {
+        ...element,
+        size: {
+          width: newWidth,
+          height: newHeight
+        }
+    })
     },
     [isResizing, startSize, startPos]
   )
@@ -235,29 +242,27 @@ function CanvasElementWrapper({
       setSelectRef(ref);
     }}
     >
-      <div ref={resizeRef}
-      >
-        <div {...listeners} {...attributes}>
-          <CanvasElement elementInstance={element} />
-        </div>
-        <div
-            className="resize-handle"
-            onMouseDown={(e) => {
-              console.log('mousedown')
-              e.preventDefault()
-              setIsResizing(true)
-              setStartPos({ x: e.clientX, y: e.clientY })}}
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              right: 0,
-              width: '10px',
-              height: '10px',
-              backgroundColor: 'grey',
-              cursor: 'nwse-resize',
-            }}
-          ></div>
+      <div {...listeners} {...attributes}>
+        <CanvasElement elementInstance={element} />
       </div>
+      <div
+        className="resize-handle"
+        onMouseDown={(e) => {
+          console.log('mousedown')
+          e.preventDefault()
+          setIsResizing(true)
+          setStartPos({ x: e.clientX, y: e.clientY })
+        }}
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          right: 0,
+          width: '10px',
+          height: '10px',
+          backgroundColor: 'grey',
+          cursor: 'nwse-resize',
+        }}
+      ></div>
     </div>
   );
 }
