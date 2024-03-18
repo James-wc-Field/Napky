@@ -19,7 +19,6 @@ export default function BuildArea() {
     scrollTop,
     zoomLevel,
     selectedElements,
-    removeSelectedElements,
     changeSelectedElements
   } = useProject();
   useDndMonitor({onDragStart: (event) => {
