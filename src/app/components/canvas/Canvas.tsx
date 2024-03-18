@@ -181,11 +181,14 @@ function CanvasElementWrapper({
       isCanvasElement: true,
     },
   });
-  const resizeRef = useRef<HTMLDivElement>(null);
   const {updateElement, zoomLevel} = useProject()
   const [isResizing, setIsResizing] = useState(false)
   const [startSize, setStartSize] = useState({ width: element.size.width, height: element.size.height })
-  const [startPos, setStartPos] = useState({ x: element.position.x, y: element.position.y })
+  type Position = {
+    x: number | null;
+    y: number | null;
+  }
+  const [startPos, setStartPos] = useState<Position>({ x: null, y: null})
   const { setNodeRef: setSelectRef, isSelected } = useSelectable({ value: element });
   const style: React.CSSProperties = {
     position: "absolute",
@@ -205,8 +208,8 @@ function CanvasElementWrapper({
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
       if (!isResizing) return
-      const newWidth = startSize.width + e.clientX - startPos.x
-      const newHeight = startSize.height + e.clientY - startPos.y
+      const newWidth = element.size.width + e.clientX - startPos.x!
+      const newHeight = element.size.height + e.clientY - startPos.y!
       updateElement(element.id,  {
         ...element,
         size: {
@@ -255,8 +258,8 @@ function CanvasElementWrapper({
         }}
         style={{
           position: 'absolute',
-          bottom: 0,
-          right: 0,
+          bottom: -5,
+          right: -5,
           width: '10px',
           height: '10px',
           backgroundColor: 'grey',
