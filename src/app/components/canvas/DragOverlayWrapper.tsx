@@ -55,7 +55,8 @@ export default function DragOverlayWrapper() {
     const elementId = draggedItem.data?.current?.elementId;
     const isSelected = selectedElements.find((element) => element.id === elementId) ? true : false;
     const element = elements.find((element) => element.id === elementId);
-
+    console.log(element)
+    console.log(isSelected)
     if (!element) return <div>Dragged element not found</div>;
     if (isSelected){
       node = <>
@@ -65,6 +66,7 @@ export default function DragOverlayWrapper() {
         return <CanvasElementComponent key={element.id} elementInstance={element} />;
       })}</>;
     }else{
+      console.log("HERE")
       const CanvasElementComponent =
         ProjectElements[element.type as ElementsType].canvasComponent;
         console.log(element)
