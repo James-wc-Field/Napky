@@ -6,7 +6,8 @@ import MiniMap from "@canvas/MiniMap";
 import CanvasControls from "@canvas/CanvasControls";
 import CanvasBackground from "@canvas/CanvasBackground";
 import CanvasToolbar from "@canvas/CanvasToolbar";
-import { useSelectable } from 'react-selectable-box';
+import { Resizable, ResizeCallbackData } from 'react-resizable';
+import Selectable,{SelectableRef, useSelectable} from 'react-selectable-box';
 export default function Canvas({
   elements,
 }: {
@@ -23,6 +24,7 @@ export default function Canvas({
 }
 
 function MainCanvasDroppable({ children }: { children?: ReactNode }) {
+  const selectableRef = useRef<SelectableRef>(null);
   const { isOver, setNodeRef } = useDroppable({
     id: "canvas-droppable",
     data: {
@@ -40,7 +42,8 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     updateCanvasViewRect,
     removeSelectedElements,
     selectedElements,
-    removeElement
+    removeElement,
+    changeSelectedElements
   } = useProject();
 
   const handleScroll = (e: React.WheelEvent) => {
@@ -87,6 +90,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
 
   const handleMouseMove = (e: MouseEvent) => {
     if (middleMouseIsDown) {
+      selectableRef.current?.cancel();
       updateScrollLeft(-e.movementX);
       updateScrollTop(-e.movementY);
     }
@@ -119,6 +123,15 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
 
   return (
     <>
+    <Selectable ref={selectableRef} value={selectedElements} onStart={(e) => {
+      console.log(e);
+      if ((e.target as HTMLElement).id !== "canvas-viewport") {
+        selectableRef.current?.cancel();
+      }
+    }}
+    onEnd={(value)=> {
+      changeSelectedElements(value as ProjectElementInstance[])
+    }}>
       <div
         id="canvas-renderer"
         className="absolute w-full h-full top-0 left-0"
@@ -146,6 +159,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
           </div>
         </div>
       </div>
+      </Selectable>
       <CanvasToolbar />
       <CanvasControls />
       {/* <MiniMap /> */}
@@ -182,12 +196,19 @@ function CanvasElementWrapper({
   const CanvasElement = useMemo(() => {
     return ProjectElements[element.type].canvasComponent;
   }, [element]);
+
   return (
-    <div style={style} ref={(ref) => {
-      setDragRef(ref);
-      setSelectRef(ref);
-    }} {...listeners} {...attributes}>
-      <CanvasElement elementInstance={element} />
-    </div>
+    <Resizable height={element.size.height} width={element.size.width} onResize={(event, {node, size}) => {
+      console.log(size);
+      console.log(node);
+
+    }}>
+      <div style={style} ref={(ref) => {
+        setDragRef(ref);
+        setSelectRef(ref);
+      }} {...listeners} {...attributes}>
+        <CanvasElement elementInstance={element} />
+      </div>
+    </Resizable>
   );
 }
