@@ -4,7 +4,6 @@ import { useDndMonitor } from "@dnd-kit/core";
 import { ElementsType, ProjectElements } from "@canvas/types/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
 import useProject from "@canvas/hooks/useProject";
-import Selectable,{SelectableRef, useSelectable} from 'react-selectable-box';
 import { useRef } from "react";
 import { ProjectElementInstance } from "@canvas/types/ProjectElements";
 
@@ -23,7 +22,6 @@ export default function BuildArea() {
     removeSelectedElements,
     changeSelectedElements
   } = useProject();
-  const selectableRef = useRef<SelectableRef>(null);
   useDndMonitor({onDragStart: (event) => {
     const elementId = event.active.data.current?.elementId;
     if (!selectedElements.find((element) => element.id == elementId)){
@@ -324,14 +322,6 @@ export default function BuildArea() {
   }
 
   return (
-    <Selectable ref={selectableRef} value={selectedElements} onStart={(e) => {
-      if ((e.target as HTMLElement).id !== "canvas-viewport") {
-        selectableRef.current?.cancel();
-      }
-    }}
-    onEnd={(value)=> {
-      changeSelectedElements(value as ProjectElementInstance[])
-    }}>
     <div
       id="canvas-wrapper"
       onDrop={(e) => externalDropHandler(e)}
@@ -340,6 +330,5 @@ export default function BuildArea() {
     >
       <Canvas elements={elements} />
     </div>
-    </Selectable>
   );
 }
