@@ -16,8 +16,10 @@ export default function DragOverlayWrapper() {
   const { elements, zoomLevel, selectedElements, removeSelectedElements} = useProject();
   const [draggedItem, setDraggedItem] = useState<Active | null>(null);
 
+
   useDndMonitor({
     onDragStart: (event: DragStartEvent) => {
+      console.log("Drag start", event);
       setDraggedItem(event.active);
     },
     onDragCancel: (event: DragCancelEvent) => {

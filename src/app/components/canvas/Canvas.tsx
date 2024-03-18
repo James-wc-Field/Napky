@@ -6,8 +6,10 @@ import MiniMap from "@canvas/MiniMap";
 import CanvasControls from "@canvas/CanvasControls";
 import CanvasBackground from "@canvas/CanvasBackground";
 import CanvasToolbar from "@canvas/CanvasToolbar";
-import { Resizable, ResizeCallbackData } from 'react-resizable';
-import Selectable,{SelectableRef, useSelectable} from 'react-selectable-box';
+import { Resizable } from 'react-resizable';
+import useResizable from '@canvas/hooks/useResizable';
+import Selectable, { SelectableRef, useSelectable } from 'react-selectable-box';
+import { useCallback } from "react";
 export default function Canvas({
   elements,
 }: {
@@ -60,7 +62,6 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
   };
 
   const handleKeyDown = (e: KeyboardEvent): void => {
-    console.log(e.key);
     if (e.key === "Delete") {
       selectedElements.forEach((element) => {
         removeElement(element.id);
@@ -123,42 +124,41 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
 
   return (
     <>
-    <Selectable ref={selectableRef} value={selectedElements} onStart={(e) => {
-      console.log(e);
-      if ((e.target as HTMLElement).id !== "canvas-viewport") {
-        selectableRef.current?.cancel();
-      }
-    }}
-    onEnd={(value)=> {
-      changeSelectedElements(value as ProjectElementInstance[])
-    }}>
-      <div
-        id="canvas-renderer"
-        className="absolute w-full h-full top-0 left-0"
-        style={{ zIndex: 4 }}
-        onWheel={handleScroll}
-        onMouseDown={handleMouseDown}
-        ref={canvasViewRef}
-      >
+      <Selectable ref={selectableRef} value={selectedElements} onStart={(e) => {
+        if ((e.target as HTMLElement).id !== "canvas-viewport") {
+          selectableRef.current?.cancel();
+        }
+      }}
+        onEnd={(value) => {
+          changeSelectedElements(value as ProjectElementInstance[])
+        }}>
         <div
-          id="canvas-pane-droppable"
-          className="absolute w-full h-full top-0 left-0 bg-white/20"
-          style={{ zIndex: 1 }}
-          ref={setNodeRef}
+          id="canvas-renderer"
+          className="absolute w-full h-full top-0 left-0"
+          style={{ zIndex: 4 }}
+          onWheel={handleScroll}
+          onMouseDown={handleMouseDown}
+          ref={canvasViewRef}
         >
           <div
-            id="canvas-viewport"
-            className="absolute top-0 left-0 w-full h-full"
-            style={{
-              transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
-              transformOrigin: "top left",
-              zIndex: 2,
-            }}
+            id="canvas-pane-droppable"
+            className="absolute w-full h-full top-0 left-0 bg-white/20"
+            style={{ zIndex: 1 }}
+            ref={setNodeRef}
           >
-            {children}
+            <div
+              id="canvas-viewport"
+              className="absolute top-0 left-0 w-full h-full"
+              style={{
+                transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
+                transformOrigin: "top left",
+                zIndex: 2,
+              }}
+            >
+              {children}
+            </div>
           </div>
         </div>
-      </div>
       </Selectable>
       <CanvasToolbar />
       <CanvasControls />
@@ -181,34 +181,83 @@ function CanvasElementWrapper({
       isCanvasElement: true,
     },
   });
-
+  const resizeRef = useRef<HTMLDivElement>(null);
+  const [isResizing, setIsResizing] = useState(false)
+  const [startSize, setStartSize] = useState({ width: element.size.width, height: element.size.height })
+  const [startPos, setStartPos] = useState({ x: element.position.x, y: element.position.y })
   const { setNodeRef: setSelectRef, isSelected } = useSelectable({ value: element });
   const style: React.CSSProperties = {
     position: "absolute",
-    left: element.position.x,
-    top: element.position.y,
+    left: startPos.x,
+    top: startPos.y,
     visibility: isDragging ? "hidden" : undefined,
-    width: element.size.width,
+    width: startSize.width,
+    height: startSize.height,
     cursor: isSelected ? "move" : "default",
-    border: isSelected ? '1px solid #1677ff' : undefined
+    border: isSelected ? '1px solid #1677ff' : '10px solid',
   };
 
   const CanvasElement = useMemo(() => {
     return ProjectElements[element.type].canvasComponent;
   }, [element]);
 
-  return (
-    <Resizable height={element.size.height} width={element.size.width} onResize={(event, {node, size}) => {
-      console.log(size);
-      console.log(node);
+  const handleMouseMove = useCallback(
+    (e:MouseEvent) => {
+      if (!isResizing) return
+      const newWidth = startSize.width + e.clientX - startPos.x
+      const newHeight = startSize.height + e.clientY - startPos.y
+      setStartSize({ width: newWidth, height: newHeight })
+    },
+    [isResizing, startSize, startPos]
+  )
 
-    }}>
-      <div style={style} ref={(ref) => {
-        setDragRef(ref);
-        setSelectRef(ref);
-      }} {...listeners} {...attributes}>
-        <CanvasElement elementInstance={element} />
+  const handleMouseUp = () => {
+    setIsResizing(false)
+  }
+
+  useEffect(() => {
+    if (isResizing) {
+      window.addEventListener('mousemove', handleMouseMove)
+      window.addEventListener('mouseup', handleMouseUp)
+    } else {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseup', handleMouseUp)
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [isResizing, handleMouseMove])
+  return (
+    <div style={style} ref={(ref) => {
+      setDragRef(ref);
+      setSelectRef(ref);
+    }}
+    >
+      <div ref={resizeRef}
+      >
+        <div {...listeners} {...attributes}>
+          <CanvasElement elementInstance={element} />
+        </div>
+        <div
+            className="resize-handle"
+            onMouseDown={(e) => {
+              console.log('mousedown')
+              e.preventDefault()
+              setIsResizing(true)
+              setStartPos({ x: e.clientX, y: e.clientY })}}
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              right: 0,
+              width: '10px',
+              height: '10px',
+              backgroundColor: 'grey',
+              cursor: 'nwse-resize',
+            }}
+          ></div>
       </div>
-    </Resizable>
+    </div>
   );
 }
