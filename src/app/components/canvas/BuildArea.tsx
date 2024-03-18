@@ -28,7 +28,7 @@ export default function BuildArea() {
       const selected = [elements.find((element) => element.id == elementId)]
       changeSelectedElements(selected as ProjectElementInstance[])
     }
-    },
+  },
     onDragEnd: (event) => {
       const { active, over, delta } = event;
       if (!active || !over) return;
