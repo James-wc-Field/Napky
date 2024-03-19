@@ -6,7 +6,6 @@ import MiniMap from "@canvas/MiniMap";
 import CanvasControls from "@canvas/CanvasControls";
 import CanvasBackground from "@canvas/CanvasBackground";
 import CanvasToolbar from "@canvas/CanvasToolbar";
-import useResizable from '@canvas/hooks/useResizable';
 import Selectable, { SelectableRef, useSelectable } from 'react-selectable-box';
 import { useCallback } from "react";
 export default function Canvas({
