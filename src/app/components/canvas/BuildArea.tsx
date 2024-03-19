@@ -4,12 +4,9 @@ import { useDndMonitor } from "@dnd-kit/core";
 import { ElementsType, ProjectElements } from "@canvas/types/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
 import useProject from "@canvas/hooks/useProject";
-import { useRef } from "react";
 import { ProjectElementInstance } from "@canvas/types/ProjectElements";
 
 export default function BuildArea() {
-  // This stops the scrolling ability
-  // document.body.style.overflow = "hidden";
 
   const {
     elements,
