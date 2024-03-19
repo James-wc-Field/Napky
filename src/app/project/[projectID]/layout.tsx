@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex w-full grow mx-auto">
+    <div className="flex w-full grow mx-auto overflow-hidden">
       {children}
     </div>
   );

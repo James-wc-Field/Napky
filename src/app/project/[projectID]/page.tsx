@@ -2,7 +2,7 @@ import React from "react";
 import ProjectBuilder from "@canvas/ProjectBuilder";
 import { Suspense } from "react";
 import { Project } from "../../../API";
-import {saveProject, getProjectData} from './api';
+import {getProjectData} from './api';
 async function BuilderPage({ params }: { params: { projectID: string } }) {
   const projectID = params.projectID;
   const project = await getProjectData(projectID);
