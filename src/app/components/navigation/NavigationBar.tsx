@@ -38,7 +38,7 @@ export function NavigationBar () {
 
   return (
     <>
-    <nav className="bg-navbar text-navbar-foreground flex p-2 items-center font-main px-10 max-h-nav">
+    <nav className="bg-navbar text-navbar-foreground flex p-2 items-center font-main px-10 h-nav">
       <a href="/discover" className="flex justify-center items-center ml-2 min-w-fit">
         <img
         // Need absolute path to icon
@@ -52,7 +52,7 @@ export function NavigationBar () {
           KorkBored
         </p>
       </a>
-      <div className="flex w-full justify-center"> 
+      <div className="flex w-full justify-center mx-5"> 
       {middleState}
       </div>
       <div className="flex justify-end min-w-fit">

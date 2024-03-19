@@ -10,12 +10,9 @@ import {
 export function ProjectCard() {
 
   return (
-    <>
-      <Card className="bg-content1-light dark:bg-content1-dark">
-        This is a Card
+    <Card className="bg-content1-light dark:bg-content1-dark h-cardH w-cardW">
+      This is a Card
+    </Card>
 
-
-      </Card>
-    </>
   )
 }
