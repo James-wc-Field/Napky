@@ -245,11 +245,13 @@ function CanvasElementWrapper({
       setSelectRef(ref);
     }}
     >
-      <div
+      //Adding this div fixes the location of the resize handle but adds a bug with the parent div that gets the size of the element
+
+      {/* <div
         style={{
           position: 'relative',
-          display: 'inline-block', // Ensure the div only takes the necessary space
-        }}>
+          display: 'inline-block',
+        }}> */}
 
         <div onMouseDown={(e) => {
           if (e.ctrlKey) {
@@ -282,7 +284,7 @@ function CanvasElementWrapper({
             cursor: 'nwse-resize'
           }}
         ></div>
-      </div>
+      {/* </div> */}
     </div>
   );
 }
