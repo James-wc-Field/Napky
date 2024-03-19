@@ -65,7 +65,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
         removeElement(element.id);
       });
       removeSelectedElements();
-    };
+    }
   }
   const canvasViewRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -129,6 +129,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
         }
       }}
         onEnd={(value) => {
+          console.log(value)
           changeSelectedElements(value as ProjectElementInstance[])
         }}>
         <div
@@ -180,7 +181,7 @@ function CanvasElementWrapper({
       isCanvasElement: true,
     },
   });
-  const {updateElement, zoomLevel} = useProject()
+  const {updateElement, zoomLevel, changeSelectedElements,addSelectedElement} = useProject()
   const [isResizing, setIsResizing] = useState(false)
   type Position = {
     x: number | null;
@@ -244,8 +245,17 @@ function CanvasElementWrapper({
       setSelectRef(ref);
     }}
     >
+      <div onMouseDown={(e)=>{
+        if (e.ctrlKey){
+          addSelectedElement(element)
+        }else{
+          // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
+          // changeSelectedElements([element])
+        }
+        }}>
       <div {...listeners} {...attributes}>
         <CanvasElement elementInstance={element}/>
+      </div>
       </div>
       <div
         ref={resizeHandle}

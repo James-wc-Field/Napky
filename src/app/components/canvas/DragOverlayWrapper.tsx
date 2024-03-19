@@ -57,6 +57,7 @@ export default function DragOverlayWrapper() {
     const element = elements.find((element) => element.id === elementId);
     console.log(element)
     console.log(isSelected)
+    console.log(selectedElements)
     if (!element) return <div>Dragged element not found</div>;
     if (isSelected){
       node = <>

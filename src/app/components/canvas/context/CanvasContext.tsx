@@ -108,6 +108,12 @@ type CanvasContextType = {
   };
 
   /**
+   * 
+   * @param element Element to add to the selected elements
+   * @returns 
+   */
+  addSelectedElement: (element: ProjectElementInstance) => void;
+  /**
    * Updates the canvas view rect
    * @param rect Values to update the canvas view rect to
    * @returns
@@ -177,6 +183,11 @@ export default function CanvasContextProvider({
   const changeSelectedElements = (elements: ProjectElementInstance[]) => {
     setSelectedElements(() => [...elements]);
   };
+
+
+  const addSelectedElement = (element: ProjectElementInstance) => {
+    setSelectedElements((prev) => [...prev, element]);
+  }
 
   const removeSelectedElements = () => {
     setSelectedElements(() => []);
@@ -283,7 +294,8 @@ export default function CanvasContextProvider({
         loadElements,
         updateProjectName,
         projectName,
-        removeSelectedElements
+        removeSelectedElements,
+        addSelectedElement,
       }}
     >
       {children}
