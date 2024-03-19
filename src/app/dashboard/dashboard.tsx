@@ -30,7 +30,7 @@ export default function DashboardPage(props: props) {
     const { projects } = props;
     const router = useRouter();
     return (
-      <div className="flex flex-col h-screen">
+      <div className="flex flex-col h-full">
         <div
           className="container max-w-screen-2xl p-3 flex flex-row gap-3 max-h-base" /* <--- TODO: Fix this magic number at some point */>
           <Card className="flex basis-1/4 flex-col p-2">

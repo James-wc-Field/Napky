@@ -25,9 +25,9 @@ export default function RootLayout({
         
         <Providers>
         <ConfigureAmplify/>
-          <div className="relative flex min-h-screen flex-col">
-            <NavigationBar></NavigationBar>
-            <main className="flex-1">{children}</main>
+          <div className="h-screen overscroll-none">
+            <NavigationBar/>
+            <main>{children}</main>
             {/* Site Footer */}
           </div>
         </Providers>

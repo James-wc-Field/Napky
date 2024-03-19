@@ -19,8 +19,10 @@ const config = {
     },
     extend: {
       spacing: {
-        nav: "10vh",
-        base: "90vh"
+        nav: "60px",
+        base: "90vh",
+        cardW: "200px",
+        cardH: "400px"
       },
       colors: {
         border: "hsl(var(--border))",

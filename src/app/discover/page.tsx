@@ -6,8 +6,8 @@ import { ProjectCard } from '@components/cards/ProjectCardSample'
 export default function Page() {
 
   return (
-    <>
-      <ProjectCard></ProjectCard>
-    </>
+    <div className='flex w-full h-full justify-center'>
+      <ProjectCard/>
+    </div>
   )
   }
