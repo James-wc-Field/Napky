@@ -53,7 +53,7 @@ function CanvasComponent({
       width={element.size.width}
       height={element.size.height}
       alt={alt}
-      className="rounded-md"
+      className="rounded-md select-none"
     />
   );
 }
