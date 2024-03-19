@@ -181,13 +181,13 @@ function CanvasElementWrapper({
       isCanvasElement: true,
     },
   });
-  const {updateElement, zoomLevel, changeSelectedElements,addSelectedElement} = useProject()
+  const { updateElement, zoomLevel, changeSelectedElements, addSelectedElement } = useProject()
   const [isResizing, setIsResizing] = useState(false)
   type Position = {
     x: number | null;
     y: number | null;
   }
-  const [startPos, setStartPos] = useState<Position>({ x: null, y: null})
+  const [startPos, setStartPos] = useState<Position>({ x: null, y: null })
   const { setNodeRef: setSelectRef, isSelected } = useSelectable({ value: element });
   const style: React.CSSProperties = {
     position: "absolute",
@@ -210,13 +210,13 @@ function CanvasElementWrapper({
       if (!isResizing) return
       const newWidth = element.size.width + e.clientX - startPos.x!
       const newHeight = element.size.height + e.clientY - startPos.y!
-      updateElement(element.id,  {
+      updateElement(element.id, {
         ...element,
         size: {
           width: newWidth,
           height: newHeight
         }
-    })
+      })
     },
     [isResizing, startPos]
   )
@@ -245,37 +245,44 @@ function CanvasElementWrapper({
       setSelectRef(ref);
     }}
     >
-      <div onMouseDown={(e)=>{
-        if (e.ctrlKey){
-          addSelectedElement(element)
-        }else{
-          // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
-          // changeSelectedElements([element])
-        }
-        }}>
-      <div {...listeners} {...attributes}>
-        <CanvasElement elementInstance={element}/>
-      </div>
-      </div>
       <div
-        ref={resizeHandle}
-        onMouseDown={(e) => {
-          console.log('mousedown')
-          console.log(resizeHandle.current)
-          e.preventDefault()
-          setIsResizing(true)
-          setStartPos({ x: e.clientX, y: e.clientY })
-        }}
         style={{
           position: 'relative',
-          bottom: 0,
-          right: 0,
-          width: '10px',
-          height: '10px',
-          backgroundColor: 'grey',
-          cursor: 'nwse-resize'
-        }}
-      ></div>
+          display: 'inline-block', // Ensure the div only takes the necessary space
+        }}>
+
+        <div onMouseDown={(e) => {
+          if (e.ctrlKey) {
+            addSelectedElement(element)
+          } else {
+            // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
+            // changeSelectedElements([element])
+          }
+        }}>
+          <div {...listeners} {...attributes}>
+            <CanvasElement elementInstance={element} />
+          </div>
+        </div>
+        <div
+          ref={resizeHandle}
+          onMouseDown={(e) => {
+            console.log('mousedown')
+            console.log(resizeHandle.current)
+            e.preventDefault()
+            setIsResizing(true)
+            setStartPos({ x: e.clientX, y: e.clientY })
+          }}
+          style={{
+            position: 'absolute',
+            bottom: -10,
+            right: -10,
+            width: '10px',
+            height: '10px',
+            backgroundColor: 'grey',
+            cursor: 'nwse-resize'
+          }}
+        ></div>
+      </div>
     </div>
   );
 }
