@@ -245,7 +245,7 @@ function CanvasElementWrapper({
       setSelectRef(ref);
     }}
     >
-      //Adding this div fixes the location of the resize handle but adds a bug with the parent div that gets the size of the element
+      {/* Adding this div fixes the location of the resize handle but adds a bug with the parent div that gets the size of the element */}
 
       {/* <div
         style={{
