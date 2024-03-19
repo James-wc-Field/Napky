@@ -123,8 +123,8 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
   return (
     <>
       <Selectable ref={selectableRef} value={selectedElements} onStart={(e) => {
-        console.log((e.target as HTMLElement).id)
-        if ((e.target as HTMLElement).id !== "canvas-viewport") {
+        console.log(e.target)
+        if ((e.target as HTMLElement).id !== "canvas-pane-droppable" && (e.target as HTMLElement).id !== "canvas-viewport") {
           selectableRef.current?.cancel();
         }
       }}
@@ -162,7 +162,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
       </Selectable>
       <CanvasToolbar />
       <CanvasControls />
-      {/* <MiniMap /> */}
+      <MiniMap />
       <CanvasBackground />
     </>
   );
