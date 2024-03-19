@@ -9,7 +9,7 @@ import { ProjectElementInstance } from "@canvas/types/ProjectElements";
 
 export default function BuildArea() {
   // This stops the scrolling ability
-  document.body.style.overflow = "hidden";
+  // document.body.style.overflow = "hidden";
 
   const {
     elements,
