@@ -1,13 +1,18 @@
 import React from "react";
-import simulatedDatabase from "../DBSimulation";
-import ProjectBuilder from "@/app/components/ProjectBuilder";
+import ProjectBuilder from "@canvas/ProjectBuilder";
+import { Suspense } from "react";
+import { Project } from "@src/API";
+import {saveProject, getProjectData} from './api';
+async function BuilderPage({ params }: { params: { projectID: string } }) {
+  const projectID = params.projectID;
+  const project = await getProjectData(projectID);
+  if (!project) return <p>Project not found</p>;
 
-function BuilderPage() {
-  const project = simulatedDatabase[0];
-  if (!project) {
-    throw new Error("form not found");
-  }
-  return <ProjectBuilder project={project}/>
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <ProjectBuilder project={project as Project} />
+    </Suspense>
+  )
 }
 
 export default BuilderPage;
