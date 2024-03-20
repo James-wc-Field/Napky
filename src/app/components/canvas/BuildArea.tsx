@@ -4,14 +4,9 @@ import { useDndMonitor } from "@dnd-kit/core";
 import { ElementsType, ProjectElements } from "@canvas/types/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
 import useProject from "@canvas/hooks/useProject";
-import Selectable,{SelectableRef, useSelectable} from 'react-selectable-box';
-import { useRef } from "react";
 import { ProjectElementInstance } from "@canvas/types/ProjectElements";
-
-
+import { useExternalDrop } from "@canvas/hooks/useExternalDrop";
 export default function BuildArea() {
-  // This stops the scrolling ability
-  document.body.style.overflow = "hidden";
 
   const {
     elements,
@@ -21,22 +16,15 @@ export default function BuildArea() {
     scrollTop,
     zoomLevel,
     selectedElements,
-    removeSelectedElements,
     changeSelectedElements
   } = useProject();
-  const selectableRef = useRef<SelectableRef>(null);
-  useDndMonitor({onDragStart: (event) => {
-    const elementId = event.active.data.current?.elementId;
-    console.log(elementId)
-    console.log(!selectedElements.find((element) => element.id == elementId))
-    if (!selectedElements.find((element) => element.id == elementId)){
-      removeSelectedElements()
-      // const dragged = elements.find((element) => element.id == elementId);
-      // console.log(dragged)
-      // updateElement(elementId, dragged!);
-      // selectableRef.current?.cancel();
-
-    }
+  useDndMonitor({
+    onDragStart: (event) => {
+      const elementId = event.active.data.current?.elementId;
+      if (!selectedElements.find((element) => element.id == elementId)) {
+        const selected = [elements.find((element) => element.id == elementId)]
+        changeSelectedElements(selected as ProjectElementInstance[])
+      }
     },
     onDragEnd: (event) => {
       const { active, over, delta } = event;
@@ -79,7 +67,6 @@ export default function BuildArea() {
         const wasDraggedSelected = selectedElements.includes(dragged!)
         if (!dragged) return;
         if (!wasDraggedSelected) {
-          removeSelectedElements()
           updateElement(dragged.id, {
             ...dragged,
             position: {
@@ -279,67 +266,9 @@ export default function BuildArea() {
     },
   });
 
-  // Handler for external file drop
-  function externalDropHandler(e: DragEvent<HTMLDivElement>) {
-    e.preventDefault();
-    if (!e.dataTransfer.items) return;
 
-    const canvasRect = document
-      .getElementById("canvas-pane-droppable")
-      ?.getBoundingClientRect() as DOMRect;
-    const top = canvasRect.top || 0;
-    const left = canvasRect.left || 0;
-    for (const file of Array.from(e.dataTransfer.files)) {
-      console.log("FILE:", file);
-
-      const reader = new FileReader();
-      const xPos = e.clientX - left;
-      const yPos = e.clientY - top;
-      if (
-        yPos < 0 ||
-        xPos < 0 ||
-        yPos > canvasRect.height ||
-        xPos > canvasRect.width
-      )
-        continue;
-
-      reader.onload = (event) => {
-        const src = event.target?.result as string;
-        const type = "ImageBlock";
-        let newElement = ProjectElements[type as ElementsType].construct(
-          idGenerator(),
-          "root"
-        );
-        console.log("NEW ELEMENT:", newElement);
-
-        newElement = {
-          ...newElement,
-          extraAttributes: {
-            ...newElement.extraAttributes,
-            src: src,
-          },
-        };
-
-        addElement(
-          newElement,
-          (xPos - scrollLeft) / zoomLevel,
-          (yPos - scrollTop) / zoomLevel
-        );
-      };
-
-      reader.readAsDataURL(file);
-    }
-  }
-
+const { externalDropHandler } = useExternalDrop();
   return (
-    <Selectable ref={selectableRef} value={selectedElements} onStart={(e) => {
-      if ((e.target as HTMLElement).id !== "canvas-viewport") {
-        selectableRef.current?.cancel();
-      }
-    }}
-    onEnd={(value)=> {
-      changeSelectedElements(value as ProjectElementInstance[])
-    }}>
     <div
       id="canvas-wrapper"
       onDrop={(e) => externalDropHandler(e)}
@@ -348,6 +277,5 @@ export default function BuildArea() {
     >
       <Canvas elements={elements} />
     </div>
-    </Selectable>
   );
 }
