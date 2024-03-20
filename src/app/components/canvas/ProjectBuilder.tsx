@@ -9,7 +9,7 @@ import {
   PointerSensor,
 } from "@dnd-kit/core";
 
-import { Project } from "../../../API";
+import { Project } from "@src/API";
 import { DocumentCheckIcon } from "@heroicons/react/24/solid";
 import useProject from "./hooks/useProject";
 import { useEffect } from "react";
