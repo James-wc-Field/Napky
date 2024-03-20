@@ -16,8 +16,10 @@ export default function DragOverlayWrapper() {
   const { elements, zoomLevel, selectedElements, removeSelectedElements} = useProject();
   const [draggedItem, setDraggedItem] = useState<Active | null>(null);
 
+
   useDndMonitor({
     onDragStart: (event: DragStartEvent) => {
+      console.log("Drag start", event);
       setDraggedItem(event.active);
     },
     onDragCancel: (event: DragCancelEvent) => {
@@ -53,7 +55,9 @@ export default function DragOverlayWrapper() {
     const elementId = draggedItem.data?.current?.elementId;
     const isSelected = selectedElements.find((element) => element.id === elementId) ? true : false;
     const element = elements.find((element) => element.id === elementId);
-
+    console.log(element)
+    console.log(isSelected)
+    console.log(selectedElements)
     if (!element) return <div>Dragged element not found</div>;
     if (isSelected){
       node = <>
@@ -63,6 +67,7 @@ export default function DragOverlayWrapper() {
         return <CanvasElementComponent key={element.id} elementInstance={element} />;
       })}</>;
     }else{
+      console.log("HERE")
       const CanvasElementComponent =
         ProjectElements[element.type as ElementsType].canvasComponent;
         console.log(element)
