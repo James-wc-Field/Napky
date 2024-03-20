@@ -1,67 +1,58 @@
 "use client";
-import { Image } from "@nextui-org/image";
-import { Button } from "@nextui-org/button";
+
+import Image from "next/image";
+import { Button } from "@ui/button";
 import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-} from "@nextui-org/modal";
-import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
-import Link from "next/link";
-function Page(projectID: string) {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+} from "@ui/dialog";
+import { Card, CardHeader, CardContent } from "@ui/card";
+
+export default function Page(projectID: string) {
   // database call to get project data
   // loading dummy data for now
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  return (
-    <>
-      <Card shadow="sm" key={projectID} onPress={onOpen}>
-        <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-          <p className="text-tiny uppercase font-bold">Daily Mix</p>
-          <span className="text-default-500">12 Tracks</span>
-          <h4 className="font-bold text-large">Project: {projectID}</h4>
-        </CardHeader>
-        <CardBody className="overflow-visible py-2">
-          <Image
-            width={300}
-            alt="Project Image"
-            src="https://www.creativethinkingtrd.com/images/project-managemen.png"
-          />
-          <Button onPress={onOpen}>Open Modal</Button>
-        </CardBody>
-      </Card>
 
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                Modal Title
-              </ModalHeader>
-              <ModalBody>
-                <Image
-                  width={300}
-                  alt="Project Image"
-                  src="https://www.creativethinkingtrd.com/images/project-managemen.png"
-                />
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  <Link href="../1" color="primary">
-                    Primary
-                  </Link>
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </>
+  return (
+    <Card key={projectID}>
+      <CardHeader className="py-2 flex-col items-start">
+        <h1 className="text-xl font-bold">Project: {projectID}</h1>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-2">
+        <Image
+          width={300}
+          height={200}
+          alt="Project Image"
+          src="/images/placeholder.jpg"
+          className="rounded-md"
+        />
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>Open Dialog</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Project {projectID}</DialogTitle>
+            </DialogHeader>
+            <Image
+              width={300}
+              height={200}
+              alt="Project Image"
+              src="/images/placeholder.jpg"
+              className="rounded-md"
+            />
+            <DialogDescription>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio
+              quisquam, voluptatibus, voluptatum veritatis doloribus reiciendis
+              aperiam ipsam accusantium eum aliquam nesciunt aspernatur expedita
+              sequi atque voluptatem a, autem debitis dolor?
+            </DialogDescription>
+          </DialogContent>
+        </Dialog>
+      </CardContent>
+    </Card>
   );
 }
-export default Page;
