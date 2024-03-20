@@ -14,7 +14,7 @@ import { ProjectElementInstance } from "@canvas/types/ProjectElements";
  * @param elements a list of elements from a project to save
  */
 export async function saveProject(projectId: string, name: string, elements: ProjectElementInstance[]){
-    Amplify.configure(config);
+    // Amplify.configure(config, { ssr: true });
     const client = generateClient();
     await client.graphql({
       query: updateProject,
@@ -35,7 +35,7 @@ export async function saveProject(projectId: string, name: string, elements: Pro
  * @param projectID the id of the project to get
  */
 export async function getProjectData(projectID: string){
-    Amplify.configure(config);
+    // fAmplify.configure(config, { ssr: true });
     // const {userId} = await getCurrentUser();
     const client = generateClient();
     return (await client.graphql({
