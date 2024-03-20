@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-amplify/adapter-nextjs": "^1.0.19",
     "@aws-amplify/ui-react": "^6.1.5",
     "@dnd-kit/core": "^6.1.0",
     "@dnd-kit/modifiers": "^7.0.0",
@@ -29,6 +30,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "framer-motion": "^10.16.14",
+    "input-otp": "^1.0.1",
     "lucide-react": "^0.344.0",
     "next": "^14.0.3",
     "next-themes": "^0.2.1",
