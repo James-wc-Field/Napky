@@ -23,6 +23,7 @@ import { EyeSlashIcon } from "@heroicons/react/16/solid";
 
 import { useToast } from "@ui/use-toast";
 import { UseFormReturn, useForm } from "react-hook-form";
+import { handleSignIn, handleSignUp} from "@/(accounts)/login/endpoints";
 
 
 export default function Page() {
@@ -71,23 +72,22 @@ function LoginForm() {
     },
   });
 
-  // TODO: Send data to server
-  const { toast } = useToast();
-  function onSubmit(data: LoginFormData) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  }
+  // // TODO: Send data to server
+  // const { toast } = useToast();
+  // function onSubmit(data: LoginFormData) {
+  //   toast({
+  //     title: "You submitted the following values:",
+  //     description: (
+  //       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+  //         <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+  //       </pre>
+  //     ),
+  //   });
+  // }
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
+      <form action={handleSignIn}
         className="flex flex-col gap-3"
       >
         <EmailField form={form} />
@@ -116,23 +116,23 @@ function SignUpForm() {
     },
   });
 
-  // TODO: Send data to server
-  const { toast } = useToast();
-  function onSubmit(data: SignUpFormData) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  }
+  // // TODO: Send data to server
+  // const { toast } = useToast();
+  // function onSubmit(data: SignUpFormData) {
+  //   toast({
+  //     title: "You submitted the following values:",
+  //     description: (
+  //       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+  //         <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+  //       </pre>
+  //     ),
+  //   });
+  // }
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        action={handleSignUp}
         className="flex flex-col gap-3"
       >
         <EmailField form={form} />

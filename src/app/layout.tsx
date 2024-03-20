@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={cn("min-h-screen", inter.className)}>
         <Providers>
-          <ConfigureAmplify />
+          {/* <ConfigureAmplify /> */}
           <div className="relative flex min-h-screen flex-col">
             <NavigationBar></NavigationBar>
             <main className="flex-1">{children}</main>
