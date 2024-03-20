@@ -2,11 +2,10 @@ import { Amplify } from 'aws-amplify';
 import { signUp } from 'aws-amplify/auth';
 import { signIn } from 'aws-amplify/auth';
 import config from "@/../amplifyconfiguration.json";
-import { runWithAmplifyServerContext } from '@/amplifyServerUtils';
-import {getCurrentUser} from 'aws-amplify/auth/server';
-import {cookies} from 'next/headers'
+// import { runWithAmplifyServerContext } from '@/amplifyServerUtils';
+// import {getCurrentUser} from 'aws-amplify/auth/server';
+// import {cookies} from 'next/headers'
 export async function handleSignIn(formData: FormData) {
-  // Amplify.configure(config, { ssr: true });
     console.log('handleSignIn')
     console.log(formData)
   try {
@@ -36,16 +35,8 @@ export async function handleSignIn(formData: FormData) {
   }
 }
 
-
-type SignUpParameters = {
-  username: string;
-  password: string;
-  email: string;
-  phone_number: string;
-};
-
 export async function handleSignUp(formData: FormData) {
-  // Amplify.configure(config, { ssr: true });
+  Amplify.configure(config, { ssr: true });
   try {
     console.log('handleSignUp')
     const { isSignUpComplete, userId, nextStep } = await signUp({
