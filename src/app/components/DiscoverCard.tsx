@@ -1,4 +1,5 @@
 "use client";
+
 import Image from "next/image";
 import { Button } from "@ui/button";
 import {
@@ -10,8 +11,6 @@ import {
   DialogDescription,
 } from "@ui/dialog";
 import { Card, CardHeader, CardContent } from "@ui/card";
-import { Label } from "@ui/label";
-import { Input } from "@ui/input";
 
 export default function Page(projectID: string) {
   // database call to get project data

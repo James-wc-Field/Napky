@@ -1,15 +1,9 @@
 import { Suspense } from "react";
 import DashboardPage from "./dashboard";
-import { Project } from "../../API";
 import { currentAuthenticatedUser, getAllProjects } from "./api";
 import { Button } from "@ui/button";
 import Link from "next/link";
-import { Amplify } from 'aws-amplify';
-import config from '@/../amplifyconfiguration.json';
-import { cookies } from 'next/headers';
-import { getCurrentUser } from "aws-amplify/auth/server";
-import { runWithAmplifyServerContext } from "@/amplifyServerUtils";
-import { get } from "http";
+import { Project } from "@src/API";
 
 // async function getUser() {
 //   try {
