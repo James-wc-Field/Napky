@@ -1,12 +1,8 @@
 'use server'
-import { generateClient } from 'aws-amplify/api';
 import { getProject } from "../../../graphql/queries";
-import { Suspense } from "react";
-import config from '../../../amplifyconfiguration.json'
-import { Amplify } from 'aws-amplify';
-import { getCurrentUser } from "aws-amplify/auth";
-import { createProject, updateProject } from "../../../graphql/mutations";
+import { updateProject } from "../../../graphql/mutations";
 import { ProjectElementInstance } from "@canvas/types/ProjectElements";
+import { cookieClient } from '@/amplifyServerUtils';
 
 
 /**
@@ -14,9 +10,7 @@ import { ProjectElementInstance } from "@canvas/types/ProjectElements";
  * @param elements a list of elements from a project to save
  */
 export async function saveProject(projectId: string, name: string, elements: ProjectElementInstance[]){
-    Amplify.configure(config);
-    const client = generateClient();
-    await client.graphql({
+    await cookieClient.graphql({
       query: updateProject,
       variables: {
         input: {
@@ -35,10 +29,7 @@ export async function saveProject(projectId: string, name: string, elements: Pro
  * @param projectID the id of the project to get
  */
 export async function getProjectData(projectID: string){
-    Amplify.configure(config);
-    // const {userId} = await getCurrentUser();
-    const client = generateClient();
-    return (await client.graphql({
+    return (await cookieClient.graphql({
       query: getProject,
       variables: { id: projectID }
     })).data.getProject;

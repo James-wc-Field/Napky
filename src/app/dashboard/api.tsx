@@ -3,8 +3,12 @@
 import { cookieBasedClient } from "@/lib/amplifyServerUtils";
 import { listProjects } from "../../graphql/queries";
 import { createProject } from "../../graphql/mutations";
-import { getCurrentUser } from "aws-amplify/auth";
-
+import { getCurrentUser } from "aws-amplify/auth/server";
+import { runWithAmplifyServerContext } from '@/lib/amplifyServerUtils';
+import config from '@/../amplifyconfiguration.json';
+import { cookies } from 'next/headers';
+import { generateServerClientUsingCookies } from '@aws-amplify/adapter-nextjs/api';
+// import { cookieClient } from "@/amplifyServerUtils";
 /**
  * Get all projects
  * @returns an array of all projects
@@ -39,14 +43,9 @@ export async function createNewProject() {
 }
 
 export async function currentAuthenticatedUser() {
-  try {
-    const { username, userId, signInDetails } = await getCurrentUser();
-    console.log(`The username: ${username}`);
-    console.log(`The userId: ${userId}`);
-    console.log(`The signInDetails: ${signInDetails}`);
-    return { username, userId, signInDetails };
-  } catch (err) {
-    console.log(err);
-    return { username: undefined, userId: undefined, signInDetails: undefined };
-  }
+  const user = await runWithAmplifyServerContext({
+    nextServerContext: { cookies },
+    operation: (contextSpec) => getCurrentUser(contextSpec)
+  });
+  return user;
 }

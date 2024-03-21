@@ -50,7 +50,7 @@ export default function ProjectBuilder({ project }: { project: Project }) {
 
   return (
       <DndContext id={id} sensors={sensors} collisionDetection={pointerWithin}>
-        <main className="flex flex-col w-full h-full max-h-screen">
+        <main className="flex flex-col w-full h-full max-h-90vh">
           <div className="flex justify-between border-b-1 border-slate-500 p-2 gap-2 items-center">
             <h2 className="truncate font-medium">
               <span className="mr-2">
@@ -75,6 +75,5 @@ export default function ProjectBuilder({ project }: { project: Project }) {
         </main>
         <DragOverlayWrapper />
       </DndContext>
-    // </body>
   );
 }
