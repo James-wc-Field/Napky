@@ -20,5 +20,23 @@
         "napkyff72303c": {}
       }
     }
+  },
+  "amplify": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-napky-amplify-230427-authRole",
+      "UnauthRoleArn": "arn:aws:iam::533267380325:role/amplify-napky-amplify-230427-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::533267380325:role/amplify-napky-amplify-230427-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-napky-amplify-230427-deployment",
+      "UnauthRoleName": "amplify-napky-amplify-230427-unauthRole",
+      "StackName": "amplify-napky-amplify-230427",
+      "StackId": "arn:aws:cloudformation:us-east-2:533267380325:stack/amplify-napky-amplify-230427/54592890-e677-11ee-8732-0a28988a02eb",
+      "AmplifyAppId": "d1f2rx89u9ycx"
+    },
+    "categories": {
+      "auth": {
+        "napkyb8f78fcb": {}
+      }
+    }
   }
 }
