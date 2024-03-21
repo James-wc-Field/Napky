@@ -8,6 +8,8 @@ import {
 } from "@ui/card"
 import { MissingImage } from "./MissingImage"
 import { Project } from '../../../API';
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 interface ProjectsProps {
   project: Project;
@@ -33,6 +35,9 @@ export function ProjectCard(props: ProjectsProps) {
         {project? <p>{project.description}</p>: <p>No description for this project</p>}
       </div>
     </CardContent>
+    <Button className="text-2xl h-fit m-2 py-1 rounded-full" asChild>
+      <Link href={`../project/${project.id}`}>View</Link>
+    </Button>
   </Card>
   )
 }

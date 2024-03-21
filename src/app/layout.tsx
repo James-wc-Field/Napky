@@ -25,7 +25,7 @@ export default function RootLayout({
         
         <Providers>
         <ConfigureAmplify/>
-          <div className="h-screen overscroll-none">
+          <div className="h-screen overflow-hidden">
             <NavigationBar/>
             <main>{children}</main>
             {/* Site Footer */}
