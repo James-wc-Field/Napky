@@ -1,4 +1,5 @@
-'use client'
+"use client";
+
 import { Card, CardHeader, CardFooter, CardContent, CardTitle } from "@ui/card";
 import { Button } from "@ui/button";
 import {
@@ -13,13 +14,11 @@ import {
 import { Input } from "@ui/input";
 
 import Link from "next/link";
-import { ThemeToggle } from "@components/ThemeToggle";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getAllProjects } from './api';
 import { Suspense } from 'react';
-import { Project } from '../../API';
-import { createNewProject } from './api';
+import { Project } from "@src/API";
+import { createNewProject } from "./api";
 import { useRouter } from "next/navigation";
 
 type props = {
@@ -34,7 +33,7 @@ export default function DashboardPage(props: props) {
         <div
           className="container max-w-screen-2xl p-3 flex flex-row gap-3 h-[calc(100%-58px)]" /* <--- TODO: Fix this magic number at some point */>
           <Card className="flex basis-1/4 flex-col p-2">
-            <Button size="lg" asChild className="w-full" onClick={async ()=> router.push(`../project/${await createNewProject()}`)}>
+            <Button size="lg" className="w-full" onClick={async ()=> router.push(`../project/${await createNewProject()}`)}>
               Create Project
             </Button>
             <Separator className="my-4" />

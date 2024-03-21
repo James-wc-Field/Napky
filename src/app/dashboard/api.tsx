@@ -1,20 +1,21 @@
-'use server'
-import { generateClient } from "aws-amplify/api/server";
+"use server";
+
+import { cookieBasedClient } from "@/lib/amplifyServerUtils";
 import { listProjects } from "../../graphql/queries";
 import { createProject } from "../../graphql/mutations";
 import { getCurrentUser } from "aws-amplify/auth/server";
-import { runWithAmplifyServerContext } from '@/amplifyServerUtils';
+import { runWithAmplifyServerContext } from '@/lib/amplifyServerUtils';
 import config from '@/../amplifyconfiguration.json';
 import { cookies } from 'next/headers';
 import { generateServerClientUsingCookies } from '@aws-amplify/adapter-nextjs/api';
-import { cookieClient } from "@/amplifyServerUtils";
+// import { cookieClient } from "@/amplifyServerUtils";
 /**
  * Get all projects
  * @returns an array of all projects
  */
 export async function getAllProjects() {
   return (
-    await cookieClient.graphql({
+    await cookieBasedClient.graphql({
       query: listProjects,
     })
   ).data.listProjects.items;
@@ -26,7 +27,7 @@ export async function getAllProjects() {
  */
 export async function createNewProject() {
   const project = (
-    await cookieClient.graphql({
+    await cookieBasedClient.graphql({
       query: createProject,
       variables: {
         input: {
