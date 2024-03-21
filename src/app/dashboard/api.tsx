@@ -8,15 +8,25 @@ import { runWithAmplifyServerContext } from '@/lib/amplifyServerUtils';
 import config from '@/../amplifyconfiguration.json';
 import { cookies } from 'next/headers';
 import { generateServerClientUsingCookies } from '@aws-amplify/adapter-nextjs/api';
-// import { cookieClient } from "@/amplifyServerUtils";
+
+
+
 /**
- * Get all projects
- * @returns an array of all projects
+ * Get all projects created by the user
+ * @returns an array of all projects created by the user
  */
-export async function getAllProjects() {
+export async function getAllUserProjects() {
+  const user = await currentAuthenticatedUser();
   return (
     await cookieBasedClient.graphql({
       query: listProjects,
+      variables: {
+        limit: 1000,
+        filter: {
+          userId: { eq: user.userId },
+        },
+      },
+
     })
   ).data.listProjects.items;
 }
@@ -26,14 +36,15 @@ export async function getAllProjects() {
  * @returns the id of the new project
  */
 export async function createNewProject() {
+  const user = await currentAuthenticatedUser();
   const project = (
     await cookieBasedClient.graphql({
       query: createProject,
       variables: {
         input: {
-          userId: "user",
+          userId: user.userId,
           name: "untitled",
-          description: "description",
+          description: "",
           content: "",
         },
       },
@@ -42,6 +53,10 @@ export async function createNewProject() {
   return project.id;
 }
 
+/**
+ * Get the current authenticated user
+ * @returns the current authenticated user
+ */
 export async function currentAuthenticatedUser() {
   const user = await runWithAmplifyServerContext({
     nextServerContext: { cookies },
