@@ -10,7 +10,8 @@ import {
 export function ProjectCardDetails() {
 
   return (
-    <p className="bg-content1-light dark:bg-content1-dark h-cardH w-cardW">
-    </p>
+    <Card className="bg-content1-light dark:bg-content1-dark h-cardH w-cardW">
+      Project Details
+    </Card>
   )
 }
