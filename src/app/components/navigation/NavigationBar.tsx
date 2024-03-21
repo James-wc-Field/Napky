@@ -25,7 +25,7 @@ export function NavigationBar () {
         setEndState(
           <Button variant={"ghost"} className="text-lg " asChild>
           <Link href={"/dashboard"}>
-          Discover
+          Dashboard
           </Link> 
         </Button>);
     }
