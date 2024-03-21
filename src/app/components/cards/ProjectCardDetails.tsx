@@ -10,6 +10,7 @@ import { MissingImage } from "./MissingImage"
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
 import { Project } from '../../../API';
+import Link from "next/link";
 
 interface ProjectsProps {
   project: Project;
@@ -31,7 +32,9 @@ export function ProjectCardDetails(props: ProjectsProps) {
           <p>Date Created: {project.createdAt}</p>
           <p>Date Modified: {project.updatedAt}</p>
           <div className="flex h-full items-end pb-3">
-            <Button className="text-4xl h-fit w-full py-3 rounded-full">Open Project</Button>
+            <Button className="text-4xl h-fit w-full py-3 rounded-full" asChild>
+              <Link href={`../project/${project.id}`}>View</Link>
+              </Button>
           </div>
         </div>
         <div className="w-full h-full p-2">
