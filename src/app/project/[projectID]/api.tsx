@@ -2,7 +2,7 @@
 import { getProject } from "../../../graphql/queries";
 import { updateProject } from "../../../graphql/mutations";
 import { ProjectElementInstance } from "@canvas/types/ProjectElements";
-import { cookieClient } from '@/amplifyServerUtils';
+import { cookieBasedClient } from '@/lib/amplifyServerUtils';
 
 
 /**
@@ -10,7 +10,7 @@ import { cookieClient } from '@/amplifyServerUtils';
  * @param elements a list of elements from a project to save
  */
 export async function saveProject(projectId: string, name: string, elements: ProjectElementInstance[]){
-    await cookieClient.graphql({
+    await cookieBasedClient.graphql({
       query: updateProject,
       variables: {
         input: {
@@ -29,7 +29,7 @@ export async function saveProject(projectId: string, name: string, elements: Pro
  * @param projectID the id of the project to get
  */
 export async function getProjectData(projectID: string){
-    return (await cookieClient.graphql({
+    return (await cookieBasedClient.graphql({
       query: getProject,
       variables: { id: projectID }
     })).data.getProject;
