@@ -61,7 +61,7 @@ export function NavigationBar () {
           <a className="mx-4" href="#">Account</a> : 
           <a className="mx-4" href="#">Sign In</a>}
       </div>
-      <ThemeToggle></ThemeToggle>
+      <ThemeToggle/>
     </nav>
     </>
   );
