@@ -7,25 +7,30 @@ import {
   CardTitle,
 } from "@ui/card"
 import { MissingImage } from "./MissingImage"
+import { Project } from '../../../API';
 
-export function ProjectCard() {
+interface ProjectsProps {
+  project: Project;
+}
+
+export function ProjectCard(props: ProjectsProps) {
   const image = "";
-  const description = "";
+  const { project } = props;
   
 
   return (
     <Card className="bg-card dark:bg-card h-fit w-cardSW border-none"> 
     {/* <>shadow-2xl shadow-secondary</> */}
     <CardHeader className="p-2">
-      <CardTitle className="">Project Name</CardTitle>
-      <p>UserId</p>
+      <CardTitle className="">{project.name}</CardTitle>
+      <p>{project.userId}</p>
     </CardHeader>
     <CardContent className="p-0">
       <div className="container px-0">
         {image? <img src={image} className=""/> : <MissingImage/>}
       </div>
       <div className="max-h-sampleDesc overflow-clip m-2">
-        {description? <p>{description}</p>: <p>No description for this project</p>}
+        {project? <p>{project.description}</p>: <p>No description for this project</p>}
       </div>
     </CardContent>
   </Card>

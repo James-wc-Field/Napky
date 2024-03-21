@@ -76,7 +76,8 @@ const config = {
         hover: {
           DEFAULT: "hsl(var(--hover))",
           foreground: "hsl(var(--hover-foreground))"
-        }
+        },
+        content: "hsl(var(--content))"
       },
       borderRadius: {
         lg: "var(--radius)",
