@@ -4,6 +4,8 @@ import { usePathname, useRouter } from 'next/navigation'
 import { NavDiscover } from "./NavDiscover";
 import { NavDashboard } from "./NavDashboard";
 import { ThemeToggle } from "../ThemeToggle";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 export function NavigationBar () {
   // Needs Implemented
@@ -20,18 +22,36 @@ export function NavigationBar () {
 
     if (pathname === "/discover") {
         setMiddleState(NavDiscover());
-        setEndState(<a className="mx-4" href="/dashboard">Dashboard</a>);
+        setEndState(
+          <Button variant={"ghost"} className="text-lg " asChild>
+          <Link href={"/dashboard"}>
+          Discover
+          </Link> 
+        </Button>);
     }
     else if (pathname === "/dashboard") {
         setMiddleState(NavDashboard());
-        setEndState(<a className="mx-4" href="/discover">Discover</a>);
+        setEndState(
+        <Button variant={"ghost"} className="text-lg " asChild>
+          <Link href={"/discover"}>
+            Discover
+          </Link> 
+        </Button>);
     }
     else if (pathname.startsWith("/project/")) {
         setMiddleState(<>{project}</>);
         setEndState(
           <>
-          <a className="mx-4" href="/discover">Discover</a>
-          <a className="mx-4" href="/dashboard">Dashboard</a>
+          <Button variant={"ghost"} className="text-lg " asChild>
+            <Link href={"/discover"}>
+            Discover
+            </Link> 
+          </Button>
+          <Button variant={"ghost"} className="text-lg " asChild>
+            <Link href={"/dashboard"}>
+            Discover
+            </Link> 
+          </Button>
           </>);
         }
       },[pathname])
@@ -58,8 +78,16 @@ export function NavigationBar () {
       <div className="flex justify-end min-w-fit">
         {endState}
         {user? 
-          <a className="mx-4" href="#">Account</a> : 
-          <a className="mx-4" href="#">Sign In</a>}
+          <Button variant={"ghost"} className="text-lg " asChild>
+          <Link href={"#"}>
+          Account
+          </Link> 
+        </Button> : 
+          <Button variant={"ghost"} className="text-lg " asChild>
+          <Link href={"#"}>
+          SignIn
+          </Link> 
+        </Button>}
       </div>
       <ThemeToggle/>
     </nav>

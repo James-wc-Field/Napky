@@ -5,6 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Suspense } from 'react';
 import { Dialog } from '@/components/ui/dialog';
 import { DialogContent, DialogTrigger } from '@radix-ui/react-dialog';
+import { Button } from '@/components/ui/button';
 
 type props = {
   projects: Project[];
