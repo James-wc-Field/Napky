@@ -14,16 +14,22 @@ const config = {
       center: true,
       padding: "2rem",
       screens: {
-        "2xl": "1400px",
+        '2xl': "1400px",
+        desktop: "1280px",
+        laptop: "1024px",
+        tablet: "640px"
       },
     },
     extend: {
       spacing: {
         nav: "60px",
         base: "90vh",
-        cardW: "200px",
-        cardH: "400px",
-        sampleD: "100px",
+        cardSW: "200px",
+        cardSH: "400px",
+        cardDH: "800px",
+        cardDW: "1200px",
+        sampleDesc: "100px",
+        fullDesc: ""
       },
       colors: {
         border: "hsl(var(--border))",
@@ -63,6 +69,14 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        button:  {
+          DEFAULT: "hsl(var(--button))",
+          foreground: "hsl(var(--button-foreground))",
+        },
+        hover: {
+          DEFAULT: "hsl(var(--hover))",
+          foreground: "hsl(var(--hover-foreground))"
+        }
       },
       borderRadius: {
         lg: "var(--radius)",
