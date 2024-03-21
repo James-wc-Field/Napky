@@ -22,7 +22,8 @@ const config = {
         nav: "60px",
         base: "90vh",
         cardW: "200px",
-        cardH: "400px"
+        cardH: "400px",
+        sampleD: "100px",
       },
       colors: {
         border: "hsl(var(--border))",
