@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import ConfigureAmplify from "./components/configAmplify";
+import ConfigureAmplifyClientSide from "./components/ConfigureAmplifyClientSIde";
 import { cn } from "@/lib/utils";
-import  { NavigationBar } from "@/components/navigation/NavigationBar";
+import { NavigationBar } from "@/components/navigation/NavigationBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,9 +22,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("min-h-screen", inter.className)}>
-        
         <Providers>
-        <ConfigureAmplify/>
+        <ConfigureAmplifyClientSide/>
           <div className="h-screen overflow-hidden">
             <NavigationBar/>
             <main>{children}</main>

@@ -1,14 +1,13 @@
-import { DragEvent } from "react";
+import { DragEvent, use } from "react";
 import Canvas from "@canvas/Canvas";
 import { useDndMonitor } from "@dnd-kit/core";
 import { ElementsType, ProjectElements } from "@canvas/types/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
 import useProject from "@canvas/hooks/useProject";
-
+import { ProjectElementInstance } from "@canvas/types/ProjectElements";
+import { useExternalDrop } from "@canvas/hooks/useExternalDrop";
 export default function BuildArea() {
-  // This stops the scrolling ability
-  document.body.style.overflow = "hidden";
-  
+
   const {
     elements,
     addElement,
@@ -16,8 +15,17 @@ export default function BuildArea() {
     scrollLeft,
     scrollTop,
     zoomLevel,
+    selectedElements,
+    changeSelectedElements
   } = useProject();
   useDndMonitor({
+    onDragStart: (event) => {
+      const elementId = event.active.data.current?.elementId;
+      if (!selectedElements.find((element) => element.id == elementId)) {
+        const selected = [elements.find((element) => element.id == elementId)]
+        changeSelectedElements(selected as ProjectElementInstance[])
+      }
+    },
     onDragEnd: (event) => {
       const { active, over, delta } = event;
       if (!active || !over) return;
@@ -56,20 +64,35 @@ export default function BuildArea() {
       if (isCanvasElement && isCanvasDropArea) {
         const elementId = active.data?.current?.elementId;
         const dragged = elements.find((element) => element.id == elementId);
-
+        const wasDraggedSelected = selectedElements.includes(dragged!)
         if (!dragged) return;
+        if (!wasDraggedSelected) {
+          updateElement(dragged.id, {
+            ...dragged,
+            position: {
+              x: dragged.position.x + delta.x / zoomLevel,
+              y: dragged.position.y + delta.y / zoomLevel,
+            },
+            extraAttributes: {
+              ...dragged.extraAttributes,
+            },
+          });
+        } else {
+          selectedElements.forEach((element) => {
+            updateElement(element.id, {
+              ...element,
+              position: {
+                x: element.position.x + delta.x / zoomLevel,
+                y: element.position.y + delta.y / zoomLevel,
+              },
+              extraAttributes: {
+                ...element.extraAttributes,
+              },
+            });
+          }
+          );
 
-        updateElement(dragged.id, {
-          ...dragged,
-          position: {
-            x: dragged.position.x + delta.x / zoomLevel,
-            y: dragged.position.y + delta.y / zoomLevel,
-          },
-          extraAttributes: {
-            ...dragged.extraAttributes,
-          },
-        });
-
+        }
         console.log("DRAGGED:", dragged);
       }
 
@@ -243,58 +266,8 @@ export default function BuildArea() {
     },
   });
 
-  // Handler for external file drop
-  function externalDropHandler(e: DragEvent<HTMLDivElement>) {
-    e.preventDefault();
-    if (!e.dataTransfer.items) return;
 
-    const canvasRect = document
-      .getElementById("canvas-pane-droppable")
-      ?.getBoundingClientRect() as DOMRect;
-    const top = canvasRect.top || 0;
-    const left = canvasRect.left || 0;
-    for (const file of Array.from(e.dataTransfer.files)) {
-      console.log("FILE:", file);
-
-      const reader = new FileReader();
-      const xPos = e.clientX - left;
-      const yPos = e.clientY - top;
-      if (
-        yPos < 0 ||
-        xPos < 0 ||
-        yPos > canvasRect.height ||
-        xPos > canvasRect.width
-      )
-        continue;
-
-      reader.onload = (event) => {
-        const src = event.target?.result as string;
-        const type = "ImageBlock";
-        let newElement = ProjectElements[type as ElementsType].construct(
-          idGenerator(),
-          "root"
-        );
-        console.log("NEW ELEMENT:", newElement);
-
-        newElement = {
-          ...newElement,
-          extraAttributes: {
-            ...newElement.extraAttributes,
-            src: src,
-          },
-        };
-
-        addElement(
-          newElement,
-          (xPos - scrollLeft) / zoomLevel,
-          (yPos - scrollTop) / zoomLevel
-        );
-      };
-
-      reader.readAsDataURL(file);
-    }
-  }
-
+const { externalDropHandler } = useExternalDrop();
   return (
     <div
       id="canvas-wrapper"
