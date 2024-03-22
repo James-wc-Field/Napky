@@ -9,7 +9,7 @@ export function NavDashboard() {
     <Input
       placeholder="Search projects..."
       type="search"
-      className="px-3"
+      className="px-5"
     />
   )
 }

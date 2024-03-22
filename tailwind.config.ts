@@ -1,26 +1,38 @@
-import type { Config } from "tailwindcss";
+import type { Config } from "tailwindcss"
 
-const config: Config = {
-  content: ["./src/**/*.{ts,tsx,js,jsx}"],
-  prefix: "",
+const config = {
   darkMode: ["class"],
+  content: [
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
+	],
+  prefix: "",
   theme: {
     container: {
       center: true,
       padding: "2rem",
       screens: {
-        "2xl": "1400px",
+        '2xl': "1400px",
+        desktop: "1280px",
+        laptop: "1024px",
+        tablet: "640px"
       },
     },
     extend: {
-      maxHeight: {
-        // this value compensates for the Navigation bar on top
-        base: "89vh",
+      spacing: {
+        nav: "60px",
+        base: "90vh",
+        cardSW: "200px",
+        cardSH: "400px",
+        cardDH: "800px",
+        cardDW: "1200px",
+        sampleDesc: "100px",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
         border: "hsl(var(--border))",
@@ -29,8 +41,8 @@ const config: Config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         navbar: {
-          DEFAULT: "hsl(var(--nav-bar)) ",
-          foreground: "hsl(var(--nav-bar-foreground))",
+          DEFAULT: "hsl(var(--nav-bar))",
+          foreground: "hsl(var(--foreground))"
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -60,6 +72,15 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        button:  {
+          DEFAULT: "hsl(var(--button))",
+          foreground: "hsl(var(--button-foreground))",
+        },
+        hover: {
+          DEFAULT: "hsl(var(--hover))",
+          foreground: "hsl(var(--hover-foreground))"
+        },
+        content: "hsl(var(--content))"
       },
       borderRadius: {
         lg: "var(--radius)",
