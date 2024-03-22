@@ -4,7 +4,9 @@ import { usePathname, useRouter } from 'next/navigation'
 import { NavDiscover } from "./NavDiscover";
 import { NavDashboard } from "./NavDashboard";
 import { ThemeToggle } from "../ThemeToggle";
-import Image from 'next/image'
+import { Button } from "../ui/button";
+import Link from "next/link";
+import Image from 'next/image';
 
 export function NavigationBar () {
   // Needs Implemented
@@ -21,25 +23,43 @@ export function NavigationBar () {
 
     if (pathname === "/discover") {
         setMiddleState(NavDiscover());
-        setEndState(<a className="mx-4" href="/dashboard">Dashboard</a>);
+        setEndState(
+          <Button variant={"ghost"} className="text-lg " asChild>
+          <Link href={"/dashboard"}>
+          Dashboard
+          </Link> 
+        </Button>);
     }
     else if (pathname === "/dashboard") {
         setMiddleState(NavDashboard());
-        setEndState(<a className="mx-4" href="/discover">Discover</a>);
+        setEndState(
+        <Button variant={"ghost"} className="text-lg " asChild>
+          <Link href={"/discover"}>
+            Discover
+          </Link> 
+        </Button>);
     }
     else if (pathname.startsWith("/project/")) {
         setMiddleState(<>{project}</>);
         setEndState(
           <>
-          <a className="mx-4" href="/discover">Discover</a>
-          <a className="mx-4" href="/dashboard">Dashboard</a>
+          <Button variant={"ghost"} className="text-lg " asChild>
+            <Link href={"/discover"}>
+            Discover
+            </Link> 
+          </Button>
+          <Button variant={"ghost"} className="text-lg " asChild>
+            <Link href={"/dashboard"}>
+            Discover
+            </Link> 
+          </Button>
           </>);
         }
       },[pathname, project]);
 
   return (
     <>
-    <nav className="bg-navbar text-navbar-foreground flex p-2 items-center font-main px-10">
+    <nav className="bg-navbar text-navbar-foreground flex p-2 items-center font-main px-10 h-nav">
       <a href="/discover" className="flex justify-center items-center ml-2 min-w-fit">
         <Image
         // Need absolute path to icon
@@ -53,16 +73,24 @@ export function NavigationBar () {
           KorkBored
         </p>
       </a>
-      <div className="flex w-full justify-center"> 
+      <div className="flex w-full justify-center mx-5"> 
       {middleState}
       </div>
       <div className="flex justify-end min-w-fit">
         {endState}
         {user? 
-          <a className="mx-4" href="#">Account</a> : 
-          <a className="mx-4" href="/sign-in">Sign in</a>}
+          <Button variant={"ghost"} className="text-lg " asChild>
+          <Link href={"#"}>
+          Account
+          </Link> 
+        </Button> : 
+          <Button variant={"ghost"} className="text-lg " asChild>
+          <Link href={"#"}>
+          SignIn
+          </Link> 
+        </Button>}
       </div>
-      <ThemeToggle></ThemeToggle>
+      <ThemeToggle/>
     </nav>
     </>
   );

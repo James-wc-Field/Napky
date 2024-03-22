@@ -20,6 +20,7 @@ import { Suspense } from 'react';
 import { Project } from "@src/API";
 import { createNewProject } from "./api";
 import { useRouter } from "next/navigation";
+import { ProjectCard } from "@/components/cards/ProjectCardSample";
 
 type props = {
     projects: Project[];
@@ -29,9 +30,9 @@ export default function DashboardPage(props: props) {
     const { projects } = props;
     const router = useRouter();
     return (
-      <div className="flex flex-col h-screen">
+      <div className="flex flex-col h-full">
         <div
-          className="container max-w-screen-2xl p-3 flex flex-row gap-3 h-[calc(100%-58px)]" /* <--- TODO: Fix this magic number at some point */>
+          className="container max-w-screen-2xl p-3 flex flex-row gap-3 max-h-base" /* <--- TODO: Fix this magic number at some point */>
           <Card className="flex basis-1/4 flex-col p-2">
             <Button size="lg" className="w-full" onClick={async ()=> router.push(`../project/${await createNewProject()}`)}>
               Create Project
@@ -41,7 +42,7 @@ export default function DashboardPage(props: props) {
             <nav className="flex flex-col gap-2">
             </nav>
           </Card>
-          <Card className="flex flex-col basis-3/4 gap-2 lg:basis-5/6">
+          <Card className="flex flex-col basis-3/4 gap-2 lg:basis-5/6  bg-background">
             <div className="flex flex-row items-center gap-2 p-2">
               <Input
                 type="search"
@@ -70,7 +71,7 @@ export default function DashboardPage(props: props) {
             </div>
             <ScrollArea className="p-2 max-h-full">
               <Suspense fallback={<p>Loading...</p>}>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div className="flex flex-wrap gap-4">
                   {projects.map((project) => (
                     <ProjectCard key={project.id} project={project} />
                   ))}
@@ -80,25 +81,5 @@ export default function DashboardPage(props: props) {
           </Card>
         </div>
       </div>
-    );
-  }
-  
-  interface ProjectsProps {
-    project: Project;
-  }
-  function ProjectCard(props: ProjectsProps) {
-    const { project } = props;
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>{project.name}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>{project.description}</p>
-        </CardContent>
-        <CardFooter>
-          <Link href={`../project/${project.id}`}>View</Link>
-        </CardFooter>
-      </Card>
     );
   }
