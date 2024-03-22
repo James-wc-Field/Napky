@@ -1,38 +1,51 @@
-import { Amplify } from 'aws-amplify';
-import { generateClient } from 'aws-amplify/api';
-import config from '../../amplifyconfiguration.json';
-import { listProjects } from '../../graphql/queries';
-import { createProject } from '../../graphql/mutations';
+"use server";
 
+import { cookieBasedClient } from "@/lib/amplifyServerUtils";
+import { listProjects } from "../../graphql/queries";
+import { createProject } from "../../graphql/mutations";
+import { getCurrentUser } from "aws-amplify/auth/server";
+import { runWithAmplifyServerContext } from '@/lib/amplifyServerUtils';
+import config from '@/../amplifyconfiguration.json';
+import { cookies } from 'next/headers';
+import { generateServerClientUsingCookies } from '@aws-amplify/adapter-nextjs/api';
+// import { cookieClient } from "@/amplifyServerUtils";
 /**
  * Get all projects
  * @returns an array of all projects
  */
 export async function getAllProjects() {
-    Amplify.configure(config);
-    const client = generateClient();
-    return (await client.graphql({
-        query: listProjects
-    })).data.listProjects.items;
+  return (
+    await cookieBasedClient.graphql({
+      query: listProjects,
+    })
+  ).data.listProjects.items;
 }
 
 /**
  * Create a new project
  * @returns the id of the new project
  */
-export async function createNewProject(){
-    Amplify.configure(config);
-    const client = generateClient();
-    const project = (await client.graphql({
+export async function createNewProject() {
+  const project = (
+    await cookieBasedClient.graphql({
       query: createProject,
       variables: {
         input: {
           userId: "user",
           name: "untitled",
           description: "description",
-          content: ""
-        }
-      }
-    })).data.createProject;
-    return project.id;
-  }
+          content: "",
+        },
+      },
+    })
+  ).data.createProject;
+  return project.id;
+}
+
+export async function currentAuthenticatedUser() {
+  const user = await runWithAmplifyServerContext({
+    nextServerContext: { cookies },
+    operation: (contextSpec) => getCurrentUser(contextSpec)
+  });
+  return user;
+}
