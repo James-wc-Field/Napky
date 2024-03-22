@@ -15,15 +15,13 @@ export default function DiscoverPage(props: props) {
   const { projects } = props;
   // stuff
     return (
-      <div className='h-screen'>
+      <div className='h-base'>
       <ScrollArea className='h-full'>
         <p>Title Here? Welcome Banner?</p>
         <Suspense fallback={<p>Loading...</p>}>
           <div className="flex flex-wrap gap-7 p-10">
             {projects.map((project) => (
-              <>
-                <ProjectCard key={project.id} project={project}/>
-              </>
+              <ProjectCard key={project.id} project={project}/>
               ))}
           </div>
         </Suspense>        
