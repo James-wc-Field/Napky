@@ -21,7 +21,7 @@ export function NavigationBar () {
 
   useEffect(() => {
     const getUser = currentAuthenticatedUser().then((result) => {
-      console.log(result.username);
+      setUser(result.username);
     }).catch((err) => {
       console.log(err);
     })
