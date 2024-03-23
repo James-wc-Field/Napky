@@ -12,7 +12,7 @@ import { AuthUser } from "aws-amplify/auth";
 
 export function NavigationBar () {
   // Needs Implemented
-  const [ user, setUser ] = useState("");
+  const [user, setUser] = useState("");
   const [project, setProject] = useState(null);
   
 
