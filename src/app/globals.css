@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 @layer base {
+/* 20, 85%, 67% new secondary color*/
+
   :root {
     /* done */
     --background: 151.3, 74.19%, 93.92%;
@@ -32,6 +34,7 @@
     --border: 150, 38.89%, 7.06%;
 
     --content: 360, 100%, 100%;
+    --input: 151.3, 74.19%, 93.92%;
     /* done */
 
     --muted: 0 0% 96.1%;
@@ -43,7 +46,6 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --input: 152.22, 50.94% 89.8%;
     --ring: 0 0% 3.9%;
 
     --radius: 0.5rem;
@@ -78,6 +80,7 @@
     --content: 0, 0%, 0%;
 
     --border: 151.3, 74.19%, 93.92%;
+    --input: 150, 38.89%, 7.06%;
     /* done  */
 
     --muted: 0 0% 14.9%;
@@ -89,7 +92,6 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --input: 152.22, 50.94% 14.9%;
     --ring: 0 0% 83.1%;
   }
 }

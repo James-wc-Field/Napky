@@ -7,31 +7,38 @@ import { ThemeToggle } from "../ThemeToggle";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import Image from 'next/image';
+import { currentAuthenticatedUser } from "@/dashboard/api";
 
 export function NavigationBar () {
   // Needs Implemented
-  const [user, setUser] = useState("");
-  const [project, setProject] = useState("");
+  const [user, setUser] = useState(null);
+  const [project, setProject] = useState(null);
+  
 
   const [middleState, setMiddleState] = useState(<></>);
   const [endState, setEndState] = useState<ReactElement>(<></>);
   const pathname = usePathname()
 
   useEffect(() => {
-    // getUser()
+    const getUser = currentAuthenticatedUser().then((result) => {
+      console.log(result);
+    }).catch((err) => {
+      console.log(err);
+    })
+    // setUser();
     // getProject()
 
     if (pathname === "/discover") {
-        setMiddleState(NavDiscover());
+        setMiddleState(<></>);
         setEndState(
           <Button variant={"ghost"} className="text-lg " asChild>
-          <Link href={"/dashboard"}>
+          <Link href={user? "/dashboard" : "/sign-in"}>
           Dashboard
           </Link> 
         </Button>);
     }
     else if (pathname === "/dashboard") {
-        setMiddleState(NavDashboard());
+        setMiddleState(<></>);
         setEndState(
         <Button variant={"ghost"} className="text-lg " asChild>
           <Link href={"/discover"}>
@@ -49,13 +56,30 @@ export function NavigationBar () {
             </Link> 
           </Button>
           <Button variant={"ghost"} className="text-lg " asChild>
-            <Link href={"/dashboard"}>
-            Discover
+            <Link href={user? "/dashboard" : "/sign-in"}>
+            Dashboard
             </Link> 
           </Button>
           </>);
         }
-      },[pathname, project]);
+      else {
+        setMiddleState(<></>);
+        setEndState(
+          <>
+          <Button variant={"ghost"} className="text-lg " asChild>
+            <Link href={"/discover"}>
+            Discover
+            </Link> 
+          </Button>
+          <Button variant={"ghost"} className="text-lg " asChild>
+            <Link href={user? "/dashboard" : "/sign-in"}>
+            Dashboard
+            </Link> 
+          </Button>
+          </>
+        )
+      }
+      },[pathname]);
 
   return (
     <>
@@ -85,7 +109,7 @@ export function NavigationBar () {
           </Link> 
         </Button> : 
           <Button variant={"ghost"} className="text-lg " asChild>
-          <Link href={"#"}>
+          <Link href={"/sign-in"}>
           SignIn
           </Link> 
         </Button>}
