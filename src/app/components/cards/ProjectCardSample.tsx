@@ -21,7 +21,7 @@ export function ProjectCard(props: ProjectsProps) {
   
 
   return (
-    <Card className="bg-card dark:bg-card h-fit w-cardSW border-none"> 
+    <Card className="bg-card h-fit w-cardSW border-none"> 
     {/* <>shadow-2xl shadow-secondary</> */}
     <CardHeader className="p-2">
       <CardTitle className="">{project.name}</CardTitle>
