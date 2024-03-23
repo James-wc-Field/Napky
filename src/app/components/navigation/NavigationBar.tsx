@@ -21,6 +21,7 @@ export function NavigationBar () {
   const pathname = usePathname()
 
   useEffect(() => {
+    //This is clunky, need solution to only run when user signs in
     const getUser = currentAuthenticatedUser().then((result) => {
       setUser(result.username);
     }).catch((err) => {

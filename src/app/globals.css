@@ -93,6 +93,7 @@
     --ring: 0 0% 83.1%;
   }
 
+  /* add new theme name to providers.tsx for theme to be accessible*/
   .test {
     /* done  */
     --background: 20, 85%, 97%;
