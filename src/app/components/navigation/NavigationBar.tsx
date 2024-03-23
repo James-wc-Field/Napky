@@ -11,7 +11,7 @@ import { currentAuthenticatedUser } from "@/dashboard/api";
 
 export function NavigationBar () {
   // Needs Implemented
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState("");
   const [project, setProject] = useState(null);
   
 
@@ -21,7 +21,7 @@ export function NavigationBar () {
 
   useEffect(() => {
     const getUser = currentAuthenticatedUser().then((result) => {
-      console.log(result);
+      console.log(result.username);
     }).catch((err) => {
       console.log(err);
     })
