@@ -39,6 +39,7 @@ next-env.d.ts
 # Workspaces
 .vscode
 
+amplify
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*
