@@ -1,4 +1,8 @@
-export async function LinkPreview(metaTags: Promise<{ [property: string]: string }>) {
+import useProject from "./hooks/useProject";
+import { ProjectElementInstance } from "./types/ProjectElements";
+const {updateElement} = useProject()
+export async function LinkPreview(elementId: string, element:ProjectElementInstance) {
+
     let imageExists;
     let tags = await metaTags;
 

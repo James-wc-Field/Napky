@@ -65,6 +65,14 @@ type CanvasContextType = {
    */
   updateElement: (id: string, element: ProjectElementInstance) => void;
 
+
+  /**
+   * 
+   * @param id 
+   * @returns Project element instance that matches the id
+   */
+  getElement: (id: string) => ProjectElementInstance;
+
   scrollLeft: number;
   /**
    * Updates the scroll left of the canvas (X-axis displacement)
@@ -183,6 +191,10 @@ export default function CanvasContextProvider({
   const changeSelectedElements = (elements: ProjectElementInstance[]) => {
     setSelectedElements(() => [...elements]);
   };
+
+  const getElement = (id: string)=> {
+    return elements.find((el)=>{el.id === id})
+  }
 
 
   const addSelectedElement = (element: ProjectElementInstance) => {

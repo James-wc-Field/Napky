@@ -45,7 +45,7 @@ export const LinkBlockProjectElement: ProjectElement = {
   toolbarPropertiesComponent: () => <div>Properties Component</div>,
 };
 
-export type CustomInstance = ProjectElementInstance & {
+type CustomInstance = ProjectElementInstance & {
   extraAttributes: typeof extraAttributes;
 };
 
