@@ -68,10 +68,10 @@ type CanvasContextType = {
 
   /**
    * 
-   * @param id 
+   * @param id ID of the element to return
    * @returns Project element instance that matches the id
    */
-  getElement: (id: string) => ProjectElementInstance;
+  getElement: (id: string) => ProjectElementInstance | undefined;
 
   scrollLeft: number;
   /**
@@ -290,6 +290,7 @@ export default function CanvasContextProvider({
       value={{
         elements,
         addElement,
+        getElement,
         removeElement,
         updateElement,
         selectedElements,

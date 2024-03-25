@@ -12,7 +12,6 @@ import useProject from "@canvas/hooks/useProject";
 import Image from "next/image";
 import { Suspense, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton"
-import { LinkPreview } from "../LinkPreview";
 
 const type: ElementsType = "LinkBlock";
 type metaTagsType = {
@@ -22,7 +21,7 @@ const extraAttributes = {
   label: "Link Block",
   text: "",
   placeHolder: "Enter link URL...",
-  metaTags: Promise<{ [property: string]: string }>
+  metaTags: {} as { [property: string]: string }
 };
 
 export const LinkBlockProjectElement: ProjectElement = {
@@ -49,6 +48,7 @@ type CustomInstance = ProjectElementInstance & {
   extraAttributes: typeof extraAttributes;
 };
 
+
 function CanvasComponent({
   elementInstance,
 }: {
@@ -56,7 +56,7 @@ function CanvasComponent({
 }) {
   const { updateElement } = useProject();
   const element = elementInstance as CustomInstance;
-  const { placeHolder, text} = element.extraAttributes;
+  const { placeHolder, text } = element.extraAttributes;
   const style = {
     maxWidth: element.size.width,
   };
@@ -71,21 +71,17 @@ function CanvasComponent({
   }
   return (
     <Card style={style} className="p-2 flex flex-row gap-1 items-center">
-      <LinkIcon className="text-zinc-500 h-6 w-6" />
-      <Input
-        placeholder={placeHolder}
-        onChange={handleOnTextChange}
-        value={text}
-      />
-      <Suspense fallback={<div className="flex flex-col space-y-3">
-        <Skeleton className="h-[125px] w-[250px] rounded-xl" />
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-[250px]" />
-          <Skeleton className="h-4 w-[200px]" />
-        </div>
-      </div>}>
-        <LinkPreview {element.id} {element}/>
-      </Suspense>
+      <div>
+
+        <LinkIcon className="text-zinc-500 h-6 w-6" />
+        <Input
+          placeholder={placeHolder}
+          onChange={handleOnTextChange}
+          value={text}
+        />
+      </div>
+      <h3>{element.extraAttributes?.metaTags["og:title"] || ""}</h3>
+      <p>{element.extraAttributes?.metaTags["og:description"] || ""}</p>
     </Card>
   );
 }

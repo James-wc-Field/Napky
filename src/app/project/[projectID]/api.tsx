@@ -10,13 +10,7 @@ import { convert } from 'html-to-text';
 import OpenAI from 'openai'
 
 export async function getOpenGraphTags(url: string){
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.goto(url, { waitUntil: 'domcontentloaded'});
-  const html = parse(await page.content());
-  await browser.close()
-  console.log(html.querySelectorAll('meta'))
-
+  const html = parse(await (await fetch(url)).text());
   const attributes= html.querySelectorAll('meta').reduce<{ [property: string]: string }>((accumulator,element) => {
       if (element.getAttribute('property')?.startsWith('og') && element.hasAttribute('content')){
           accumulator[element.getAttribute('property')!] = element.getAttribute('content')!;

@@ -2,6 +2,7 @@ import useProject from './useProject'
 import { ElementsType, ProjectElements } from "@canvas/types/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
 import {getOpenGraphTags} from '@/project/[projectID]/api'
+
 export function useExternalDrop() {
     const { addElement, scrollLeft, scrollTop, zoomLevel } = useProject();
     /**
@@ -10,7 +11,7 @@ export function useExternalDrop() {
      * @param e Dragevent
      * @returns 
      */
-    function externalDropHandler(e: React.DragEvent<HTMLDivElement>) {
+    async function externalDropHandler(e: React.DragEvent<HTMLDivElement>) {
         e.preventDefault();
         if (!e.dataTransfer?.items) return;
         const canvasRect = document
@@ -54,14 +55,14 @@ export function useExternalDrop() {
                         newElement,
                         (xPos - scrollLeft) / zoomLevel,
                         (yPos - scrollTop) / zoomLevel
-                    );
-                };
-
-                reader.readAsDataURL(file);
+                        );
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
             }
-        }
-        else if (isValidUrl(e.dataTransfer.getData("text/plain"))) {
-            const xPos = e.clientX - left;
+            else if (isValidUrl(e.dataTransfer.getData("text/plain"))) {
+                const xPos = e.clientX - left;
             const yPos = e.clientY - top;
             if (
                 yPos < 0 ||
@@ -70,6 +71,7 @@ export function useExternalDrop() {
                 xPos > canvasRect.width
             ) return;
             const type = "LinkBlock";
+            const tags = await getOpenGraphTags(e.dataTransfer.getData("text/plain"))
             let newElement = ProjectElements[type as ElementsType].construct(
                 idGenerator(),
                 "root"
@@ -80,7 +82,7 @@ export function useExternalDrop() {
                 extraAttributes: {
                     ...newElement.extraAttributes,
                     text: e.dataTransfer.getData("text/plain"),
-                    metaTags: getOpenGraphTags(e.dataTransfer.getData("text/plain"))
+                    metaTags: tags
                 },
             };
             addElement(
