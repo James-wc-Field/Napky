@@ -6,6 +6,10 @@ import { ProjectElementInstance } from "@canvas/types/ProjectElements";
 type CanvasContextType = {
   elements: ProjectElementInstance[];
 
+
+  key: string;
+
+  updateKey: (key: string) => void
   /**
    * Adds an element to the canvas at a specific position
    * @param element Element to add to the canvas
@@ -144,6 +148,7 @@ export default function CanvasContextProvider({
   children: ReactNode;
 }) {
   const [elements, setElements] = useState<ProjectElementInstance[]>([]);
+  const [key, setKey] = useState<string>("");
   const [selectedElements, setSelectedElements] = useState<ProjectElementInstance[]>([]);
   const [projectName, setProjectName] = useState("Untitled");
   const [scrollLeft, setScrollLeft] = useState(0);
@@ -205,7 +210,9 @@ export default function CanvasContextProvider({
     setSelectedElements(() => []);
   }
 
-
+  const updateKey =(key:string) => {
+    setKey(() => key)
+  }
   const loadElements = (newElements: ProjectElementInstance[]) => {
     setElements(() => [...newElements]);
   };
@@ -309,6 +316,8 @@ export default function CanvasContextProvider({
         projectName,
         removeSelectedElements,
         addSelectedElement,
+        key,
+        updateKey
       }}
     >
       {children}

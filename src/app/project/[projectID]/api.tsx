@@ -65,10 +65,8 @@ async function getURLDom(url: string) {
 
 
 export async function generateSummary(url: string, apiKey: string) {
+  console.log(url)
   const html = parse(await getURLDom(url));
-  // const html = convert(await getURLDom(url))
-  // fs.writeFileSync('total.html', html.toString());
-
   let elements = html.querySelectorAll('p');
   let element = html.querySelector('h1')
   let totalLength = 0;
