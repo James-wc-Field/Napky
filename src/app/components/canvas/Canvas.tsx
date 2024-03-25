@@ -8,6 +8,8 @@ import CanvasBackground from "@canvas/CanvasBackground";
 import CanvasToolbar from "@canvas/CanvasToolbar";
 import Selectable, { SelectableRef, useSelectable } from 'react-selectable-box';
 import { useCallback } from "react";
+
+
 export default function Canvas({
   elements,
 }: {
@@ -160,6 +162,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
           </div>
         </div>
       </Selectable>
+
       <CanvasToolbar />
       <CanvasControls />
       <MiniMap />
@@ -253,37 +256,37 @@ function CanvasElementWrapper({
           display: 'inline-block',
         }}> */}
 
-        <div onMouseDown={(e) => {
-          if (e.ctrlKey) {
-            addSelectedElement(element)
-          } else {
-            // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
-            // changeSelectedElements([element])
-          }
-        }}>
-          <div {...listeners} {...attributes}>
-            <CanvasElement elementInstance={element} />
-          </div>
+      <div onMouseDown={(e) => {
+        if (e.ctrlKey) {
+          addSelectedElement(element)
+        } else {
+          // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
+          // changeSelectedElements([element])
+        }
+      }}>
+        <div {...listeners} {...attributes}>
+          <CanvasElement elementInstance={element} />
         </div>
-        <div
-          ref={resizeHandle}
-          onMouseDown={(e) => {
-            console.log('mousedown')
-            console.log(resizeHandle.current)
-            e.preventDefault()
-            setIsResizing(true)
-            setStartPos({ x: e.clientX, y: e.clientY })
-          }}
-          style={{
-            position: 'absolute',
-            bottom: -10,
-            right: -10,
-            width: '10px',
-            height: '10px',
-            backgroundColor: 'grey',
-            cursor: 'nwse-resize'
-          }}
-        ></div>
+      </div>
+      <div
+        ref={resizeHandle}
+        onMouseDown={(e) => {
+          console.log('mousedown')
+          console.log(resizeHandle.current)
+          e.preventDefault()
+          setIsResizing(true)
+          setStartPos({ x: e.clientX, y: e.clientY })
+        }}
+        style={{
+          position: 'absolute',
+          bottom: -10,
+          right: -10,
+          width: '10px',
+          height: '10px',
+          backgroundColor: 'grey',
+          cursor: 'nwse-resize'
+        }}
+      ></div>
       {/* </div> */}
     </div>
   );
