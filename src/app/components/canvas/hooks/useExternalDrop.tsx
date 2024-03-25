@@ -1,8 +1,9 @@
 import useProject from './useProject'
 import { ElementsType, ProjectElements } from "@canvas/types/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
+import {getOpenGraphTags} from '@/project/[projectID]/api'
 export function useExternalDrop() {
-    const { addElement, scrollLeft, scrollTop,zoomLevel} = useProject();
+    const { addElement, scrollLeft, scrollTop, zoomLevel } = useProject();
     /**
      * External drop handler
      * Handler for external file drop
@@ -40,7 +41,7 @@ export function useExternalDrop() {
                         "root"
                     );
                     console.log("NEW ELEMENT:", newElement);
-
+                    console.log(src)
                     newElement = {
                         ...newElement,
                         extraAttributes: {
@@ -59,9 +60,35 @@ export function useExternalDrop() {
                 reader.readAsDataURL(file);
             }
         }
-        // if the dropped item is a url, create an url block
-        // else if (e.dataTransfer.getData("text/plain")) is a valid url
-        // if the dropped item is text, create a text block
+        else if (isValidUrl(e.dataTransfer.getData("text/plain"))) {
+            const xPos = e.clientX - left;
+            const yPos = e.clientY - top;
+            if (
+                yPos < 0 ||
+                xPos < 0 ||
+                yPos > canvasRect.height ||
+                xPos > canvasRect.width
+            ) return;
+            const type = "LinkBlock";
+            let newElement = ProjectElements[type as ElementsType].construct(
+                idGenerator(),
+                "root"
+            );
+            console.log("NEW ELEMENT:", newElement);
+            newElement = {
+                ...newElement,
+                extraAttributes: {
+                    ...newElement.extraAttributes,
+                    text: e.dataTransfer.getData("text/plain"),
+                    metaTags: getOpenGraphTags(e.dataTransfer.getData("text/plain"))
+                },
+            };
+            addElement(
+                newElement,
+                (xPos - scrollLeft) / zoomLevel,
+                (yPos - scrollTop) / zoomLevel
+            );
+        }
         else if (e.dataTransfer.getData("text/plain")) {
             const xPos = e.clientX - left;
             const yPos = e.clientY - top;
@@ -93,4 +120,19 @@ export function useExternalDrop() {
     }
     return { externalDropHandler }
 
+}
+
+
+function isValidUrl(str: string) {
+    let url;
+    if(!str.startsWith('http')){
+        str = "https://" + str
+    }
+    try {
+        url = new URL(str);
+    } catch (_) {
+        return false;
+    }
+
+    return url.protocol === "http:" || url.protocol === "https:";
 }
