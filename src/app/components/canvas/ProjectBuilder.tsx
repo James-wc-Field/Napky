@@ -25,12 +25,10 @@ import {
 } from "@/components/ui/popover"
 import { Input } from "@/components/ui/input";
 import { Button} from "@/components/ui/button";
-import { useState } from "react";
 
 
 export default function ProjectBuilder({ project }: { project: Project }) {
-  const { loadElements } = useProject();
-  const [key, setKey] = useState<string>();
+  const { loadElements, updateKey} = useProject();
   useEffect(() => {
     if (project) {
       loadElements(JSON.parse(project.content || "[]"));
@@ -93,7 +91,7 @@ export default function ProjectBuilder({ project }: { project: Project }) {
           </div>
           <div className="grid gap-2">
             <div className="grid grid-cols-3 items-center gap-4">
-              <Input onChange={(e)=> setKey(e.target.value)}
+              <Input onChange={(e)=> updateKey(e.target.value)}
                 id="width"
                 defaultValue=""
                 className="col-span-3 h-8"

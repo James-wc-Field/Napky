@@ -1,10 +1,10 @@
 import useProject from './useProject'
 import { ElementsType, ProjectElements } from "@canvas/types/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
-import {getOpenGraphTags} from '@/project/[projectID]/api'
+import { generateSummary, getOpenGraphTags } from '@/project/[projectID]/api'
 
 export function useExternalDrop() {
-    const { addElement, scrollLeft, scrollTop, zoomLevel } = useProject();
+    const { addElement, scrollLeft, scrollTop, zoomLevel, key } = useProject();
     /**
      * External drop handler
      * Handler for external file drop
@@ -55,14 +55,15 @@ export function useExternalDrop() {
                         newElement,
                         (xPos - scrollLeft) / zoomLevel,
                         (yPos - scrollTop) / zoomLevel
-                        );
-                    };
-                    
-                    reader.readAsDataURL(file);
-                }
+                    );
+                };
+
+                reader.readAsDataURL(file);
             }
-            else if (isValidUrl(e.dataTransfer.getData("text/plain"))) {
-                const xPos = e.clientX - left;
+        }
+        else if (isValidUrl(confirmUrl(e.dataTransfer.getData("text/plain")))) {
+            const url = confirmUrl(e.dataTransfer.getData("text/plain"))
+            const xPos = e.clientX - left;
             const yPos = e.clientY - top;
             if (
                 yPos < 0 ||
@@ -72,6 +73,7 @@ export function useExternalDrop() {
             ) return;
             const type = "LinkBlock";
             const tags = await getOpenGraphTags(e.dataTransfer.getData("text/plain"))
+            let summary = await generateSummary(url, key)
             let newElement = ProjectElements[type as ElementsType].construct(
                 idGenerator(),
                 "root"
@@ -82,7 +84,8 @@ export function useExternalDrop() {
                 extraAttributes: {
                     ...newElement.extraAttributes,
                     text: e.dataTransfer.getData("text/plain"),
-                    metaTags: tags
+                    metaTags: tags,
+                    summary: summary
                 },
             };
             addElement(
@@ -125,11 +128,14 @@ export function useExternalDrop() {
 }
 
 
-function isValidUrl(str: string) {
-    let url;
-    if(!str.startsWith('http')){
+function confirmUrl(str: string) {
+    if (!str.startsWith('http')) {
         str = "https://" + str
     }
+    return str
+}
+function isValidUrl(str: string) {
+    let url;
     try {
         url = new URL(str);
     } catch (_) {

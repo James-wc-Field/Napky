@@ -21,7 +21,8 @@ const extraAttributes = {
   label: "Link Block",
   text: "",
   placeHolder: "Enter link URL...",
-  metaTags: {} as { [property: string]: string }
+  metaTags: {} as { [property: string]: string },
+  summary: ""
 };
 
 export const LinkBlockProjectElement: ProjectElement = {
