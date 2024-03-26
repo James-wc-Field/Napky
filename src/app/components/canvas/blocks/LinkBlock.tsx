@@ -6,7 +6,7 @@ import {
   ProjectElement,
   ProjectElementInstance,
 } from "@canvas/types/ProjectElements";
-import { Card } from "@ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle} from "@ui/card";
 import { Input } from "@ui/input";
 import useProject from "@canvas/hooks/useProject";
 import Image from "next/image";
@@ -71,18 +71,22 @@ function CanvasComponent({
     });
   }
   return (
-    <Card style={style} className="p-2 flex flex-row gap-1 items-center">
-      <div>
-
-        <LinkIcon className="text-zinc-500 h-6 w-6" />
-        <Input
-          placeholder={placeHolder}
-          onChange={handleOnTextChange}
-          value={text}
-        />
-      </div>
-      <h3>{element.extraAttributes?.metaTags["og:title"] || ""}</h3>
-      <p>{element.extraAttributes?.metaTags["og:description"] || ""}</p>
+    <Card style={style} className="p-2 flex gap-1 flex-col">
+      <CardHeader>
+        <CardTitle>{element.extraAttributes?.metaTags["og:title"] || ""}</CardTitle>
+        <CardDescription>{element.extraAttributes?.metaTags["og:description"] || ""}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex items-center">
+          <LinkIcon className="text-zinc-500 h-6 w-6 mr-1" />
+          <Input
+            className="grow"
+            placeholder={placeHolder}
+            onChange={handleOnTextChange}
+            value={text}
+          />
+        </div>
+      </CardContent>
     </Card>
   );
 }

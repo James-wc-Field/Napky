@@ -248,15 +248,12 @@ function CanvasElementWrapper({
       setSelectRef(ref);
     }}
     >
-      {/* Adding this div fixes the location of the resize handle but adds a bug with the parent div that gets the size of the element */}
-
-      <div className="relative">
-      <div onMouseDown={(e) => {
+      <div className="relative" onMouseDown={(e) => {
         if (e.ctrlKey) {
           addSelectedElement(element)
         } else {
           // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
-          // changeSelectedElements([element])
+          changeSelectedElements([element])
         }
       }}>
         <div {...listeners} {...attributes}>
@@ -283,6 +280,5 @@ function CanvasElementWrapper({
         }}
       ></div>
       </div>
-    </div>
   );
 }
