@@ -8,10 +8,11 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import Image from 'next/image';
 import { currentAuthenticatedUser } from "@/dashboard/api";
+import { AuthUser } from "aws-amplify/auth";
 
 export function NavigationBar () {
   // Needs Implemented
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState<AuthUser|null>(null);
   const [project, setProject] = useState(null);
   
 
@@ -21,7 +22,7 @@ export function NavigationBar () {
 
   useEffect(() => {
     const getUser = currentAuthenticatedUser().then((result) => {
-      setUser(result.username);
+      setUser(result);
     }).catch((err) => {
       console.log(err);
     })
@@ -29,7 +30,7 @@ export function NavigationBar () {
     // getProject()
 
     if (pathname === "/discover") {
-        setMiddleState(<></>);
+        setMiddleState(<p></p>);
         setEndState(
           <Button variant={"ghost"} className="text-lg " asChild>
           <Link href={user? "/dashboard" : "/sign-in"}>
@@ -38,7 +39,7 @@ export function NavigationBar () {
         </Button>);
     }
     else if (pathname === "/dashboard") {
-        setMiddleState(<></>);
+        setMiddleState(<p></p>);
         setEndState(
         <Button variant={"ghost"} className="text-lg " asChild>
           <Link href={"/discover"}>
