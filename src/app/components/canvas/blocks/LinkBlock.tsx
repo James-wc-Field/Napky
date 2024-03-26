@@ -10,10 +10,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@ui/c
 import { Input } from "@ui/input";
 import useProject from "@canvas/hooks/useProject";
 import Image from "next/image";
-import React, { KeyboardEventHandler, Suspense, useEffect, useOptimistic, useState } from "react";
+import React from "react";
 import { Skeleton } from "@/components/ui/skeleton"
 import { generateSummary, getOpenGraphTags } from "@/project/[projectID]/api"
-import { useTransition } from "react";
 import Link from "next/link"
 
 const type: ElementsType = "LinkBlock";
@@ -129,9 +128,12 @@ function CanvasComponent({
             {Object.keys(element.extraAttributes.metaTags).length !== 0 ? (
               <CardHeader>
                 <CardTitle>{element.extraAttributes?.metaTags["og:title"] || ""}</CardTitle>
+                <div className="flex row">
+                  <LinkIcon className="text-zinc-500 h-6 w-6 mr-1" />
+                  <Link href={`//${element.extraAttributes.text}`} rel="noopener noreferrer" target="_blank"> {element.extraAttributes.text} </Link>
+                </div>
                 <div className="flex items-center">
                   <Image src="/images/placeholder.jpg" alt={element.extraAttributes.metaTags["og:title"]} width={300} height={200}></Image>
-                  {/* <Link href={element.extraAttributes.text}></Link> */}
                   <CardDescription>{element.extraAttributes?.metaTags["og:description"] || ""}</CardDescription>
                 </div>
                 {element.extraAttributes.summary.length > 0 ? (

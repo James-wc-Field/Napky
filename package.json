@@ -31,8 +31,6 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "framer-motion": "^10.16.14",
-    "fs": "^0.0.1-security",
-    "html-to-text": "^9.0.5",
     "input-otp": "^1.0.1",
     "lucide-react": "^0.344.0",
     "next": "^14.0.3",
@@ -49,7 +47,6 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/html-to-text": "^9.0.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

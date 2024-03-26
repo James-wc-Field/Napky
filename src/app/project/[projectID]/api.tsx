@@ -5,8 +5,6 @@ import { ProjectElementInstance } from "@canvas/types/ProjectElements";
 import { cookieBasedClient } from '@/lib/amplifyServerUtils';
 import puppeteer from 'puppeteer';
 import { parse } from 'node-html-parser';
-import fs from 'fs';
-import { convert } from 'html-to-text';
 import OpenAI from 'openai'
 
 export async function getOpenGraphTags(url: string){
@@ -66,11 +64,6 @@ async function getURLDom(url: string) {
 
 export async function generateSummary(url: string, apiKey: string) {
   if(apiKey === "") return ""
-  const summaryTaskModal: {[property: string]: string} = {
-    "Summary":"Summarize the content in one sentence, ensuring it's no more than 30 words.",
-    "Highlights":"Provide 5 highlights, starting with a summarizing phrase.",
-    "Keywords": "Provide five relevant keywords based on the text content."
-  }
   const html = parse(await getURLDom(url));
   let elements = html.querySelectorAll('p');
   let element = html.querySelector('h1')
