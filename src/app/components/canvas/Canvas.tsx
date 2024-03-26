@@ -162,10 +162,9 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
           </div>
         </div>
       </Selectable>
-
       <CanvasToolbar />
       <CanvasControls />
-      <MiniMap />
+      {/* <MiniMap /> */}
       <CanvasBackground />
     </>
   );
