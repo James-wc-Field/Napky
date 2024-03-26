@@ -14,6 +14,7 @@ import React, { KeyboardEventHandler, Suspense, useEffect, useOptimistic, useSta
 import { Skeleton } from "@/components/ui/skeleton"
 import { generateSummary, getOpenGraphTags } from "@/project/[projectID]/api"
 import { useTransition } from "react";
+import Link from "next/link"
 
 const type: ElementsType = "LinkBlock";
 const extraAttributes = {
@@ -21,7 +22,7 @@ const extraAttributes = {
   text: "",
   placeHolder: "Enter link URL...",
   metaTags: {} as { [property: string]: string },
-  summary: "",
+  summary: [] as string[],
   isRenderingBackup: false
 };
 
@@ -87,6 +88,30 @@ function CanvasComponent({
     });
   }
 
+  async function updateUrl() {
+    const url = confirmUrl(element.extraAttributes.text)
+    if (isValidUrl(url)) {
+      updateElement(element.id, {
+        ...element,
+        extraAttributes: {
+          ...element.extraAttributes,
+          isRenderingBackup: true
+        }
+      })
+      const metaTags = await getOpenGraphTags(url)
+      const summary = await generateSummary(url, key)
+      updateElement(element.id, {
+        ...element,
+        extraAttributes: {
+          ...element.extraAttributes,
+          isRenderingBackup: false,
+          metaTags: metaTags,
+          summary: summary
+
+        }
+      });
+    }
+  }
 
   return (
     <Card style={style} className="p-2 flex gap-1 flex-col">
@@ -104,12 +129,39 @@ function CanvasComponent({
             {Object.keys(element.extraAttributes.metaTags).length !== 0 ? (
               <CardHeader>
                 <CardTitle>{element.extraAttributes?.metaTags["og:title"] || ""}</CardTitle>
-                <CardDescription>{element.extraAttributes?.metaTags["og:description"] || ""}</CardDescription>
-                {element.extraAttributes.summary ? (
+                <div className="flex items-center">
+                  <Image src="/images/placeholder.jpg" alt={element.extraAttributes.metaTags["og:title"]} width={300} height={200}></Image>
+                  {/* <Link href={element.extraAttributes.text}></Link> */}
+                  <CardDescription>{element.extraAttributes?.metaTags["og:description"] || ""}</CardDescription>
+                </div>
+                {element.extraAttributes.summary.length > 0 ? (
                   <CardContent>
-                    <CardDescription>
-                      {element.extraAttributes.summary}
-                    </CardDescription>
+                    <Card className="whitespace-pre-wrap">
+                      <CardHeader>
+                        <CardTitle>
+                          Summary
+                        </CardTitle>
+                        <CardDescription>
+                          {element.extraAttributes.summary[1]}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardHeader>
+                        <CardTitle>
+                          Highlights
+                        </CardTitle>
+                        <CardDescription>
+                          {element.extraAttributes.summary[2]}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardHeader>
+                        <CardTitle>
+                          Keywords
+                        </CardTitle>
+                        <CardDescription>
+                          {element.extraAttributes.summary[3]}
+                        </CardDescription>
+                      </CardHeader>
+                    </Card>
                   </CardContent>
                 ) : (<></>)}
               </CardHeader>
@@ -120,31 +172,9 @@ function CanvasComponent({
                   className="grow"
                   placeholder={placeHolder}
                   onChange={handleOnTextChange}
+                  onBlur={async () => updateUrl()}
                   onKeyDown={async (e) => {
-                    if (e.key === 'Enter') {
-                      const url = confirmUrl(element.extraAttributes.text)
-                      if (isValidUrl(url)) {
-                        updateElement(element.id, {
-                          ...element,
-                          extraAttributes: {
-                            ...element.extraAttributes,
-                            requestSending: true
-                          }
-                        })
-                        const metaTags = await getOpenGraphTags(url)
-                        const summary = await generateSummary(url, key)
-                        updateElement(element.id, {
-                          ...element,
-                          extraAttributes: {
-                            ...element.extraAttributes,
-                            requestSending: false,
-                            metaTags: metaTags,
-                            summary: summary
-
-                          }
-                        });
-                      }
-                    }
+                    if (e.key === 'Enter') updateUrl()
                   }}
                   value={text}
                 />
@@ -156,3 +186,4 @@ function CanvasComponent({
     </Card>
   )
 }
+

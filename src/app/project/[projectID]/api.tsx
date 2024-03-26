@@ -66,7 +66,11 @@ async function getURLDom(url: string) {
 
 export async function generateSummary(url: string, apiKey: string) {
   if(apiKey === "") return ""
-  console.log(url)
+  const summaryTaskModal: {[property: string]: string} = {
+    "Summary":"Summarize the content in one sentence, ensuring it's no more than 30 words.",
+    "Highlights":"Provide 5 highlights, starting with a summarizing phrase.",
+    "Keywords": "Provide five relevant keywords based on the text content."
+  }
   const html = parse(await getURLDom(url));
   let elements = html.querySelectorAll('p');
   let element = html.querySelector('h1')
@@ -83,7 +87,6 @@ export async function generateSummary(url: string, apiKey: string) {
     console.log(error)
     return ""
   }
-  console.log(texts)
   const completion = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: [{
@@ -99,7 +102,18 @@ export async function generateSummary(url: string, apiKey: string) {
     }]
 
   }
-  )
-  return completion.choices[0].message.content
+  ) 
+  const summary = completion.choices[0].message.content
+  // const sum = [{"Summary":summary?.split("Summary\n")[1]},{"Highlights":summary?.split("Highlights\n")[1]},{"Keywords":summary?.split("Keywords\n")[1]}]
+  // return sum
+  const sections = completion.choices[0].message.content?.split('####')
+  let content:string[] = []
+  sections?.forEach((section) => {
+    const header = section.split("\n")[0]
+    console.log("header",header)
+    content.push(section.split(header)[1])
+  })
+  console.log(content)
+  return content;
 
 }
