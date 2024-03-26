@@ -86,6 +86,10 @@ function CanvasComponent({
             value={text}
           />
         </div>
+        <p>
+
+        {element.extraAttributes.summary}
+        </p>
       </CardContent>
     </Card>
   );

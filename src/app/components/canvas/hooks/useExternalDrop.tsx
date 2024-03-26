@@ -72,7 +72,7 @@ export function useExternalDrop() {
                 xPos > canvasRect.width
             ) return;
             const type = "LinkBlock";
-            const tags = await getOpenGraphTags(e.dataTransfer.getData("text/plain"))
+            const tags = await getOpenGraphTags(url)
             let summary = await generateSummary(url, key)
             let newElement = ProjectElements[type as ElementsType].construct(
                 idGenerator(),

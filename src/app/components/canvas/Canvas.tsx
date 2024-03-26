@@ -184,7 +184,7 @@ function CanvasElementWrapper({
       isCanvasElement: true,
     },
   });
-  const { updateElement, zoomLevel, changeSelectedElements, addSelectedElement } = useProject()
+  const { updateElement, zoomLevel, changeSelectedElements, addSelectedElement, selectedElements} = useProject()
   const [isResizing, setIsResizing] = useState(false)
   type Position = {
     x: number | null;
@@ -248,12 +248,16 @@ function CanvasElementWrapper({
       setSelectRef(ref);
     }}
     >
-      <div className="relative" onMouseDown={(e) => {
+      <div className="relative">
+      <div onMouseDown={(e) => {
         if (e.ctrlKey) {
           addSelectedElement(element)
         } else {
+          console.log(selectedElements.length)
           // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
-          changeSelectedElements([element])
+          if(selectedElements.length == 1){
+            changeSelectedElements([element])
+          }
         }
       }}>
         <div {...listeners} {...attributes}>
@@ -280,5 +284,6 @@ function CanvasElementWrapper({
         }}
       ></div>
       </div>
+    </div>
   );
 }

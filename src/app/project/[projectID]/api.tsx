@@ -93,6 +93,6 @@ export async function generateSummary(url: string, apiKey: string) {
 
   }
   )
-  console.log(completion.choices[0])
+  return completion.choices[0].message.content
 
 }
