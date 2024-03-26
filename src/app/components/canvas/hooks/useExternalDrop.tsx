@@ -4,7 +4,7 @@ import { idGenerator } from "@/lib/idGenerator";
 import { generateSummary, getOpenGraphTags } from '@/project/[projectID]/api'
 
 export function useExternalDrop() {
-    const { addElement, scrollLeft, scrollTop, zoomLevel, key } = useProject();
+    const { addElement, scrollLeft, scrollTop, zoomLevel, key, updateElement} = useProject();
     /**
      * External drop handler
      * Handler for external file drop
@@ -71,10 +71,7 @@ export function useExternalDrop() {
                 yPos > canvasRect.height ||
                 xPos > canvasRect.width
             ) return;
-            const type = "LinkBlock";
-            const tags = await getOpenGraphTags(url)
-            let summary = await generateSummary(url, key)
-            let newElement = ProjectElements[type as ElementsType].construct(
+            let newElement = ProjectElements["LinkBlock" as ElementsType].construct(
                 idGenerator(),
                 "root"
             );
@@ -83,9 +80,8 @@ export function useExternalDrop() {
                 ...newElement,
                 extraAttributes: {
                     ...newElement.extraAttributes,
-                    text: e.dataTransfer.getData("text/plain"),
-                    metaTags: tags,
-                    summary: summary
+                    isRenderingBackup: true,
+                    text: e.dataTransfer.getData("text/plain")
                 },
             };
             addElement(
@@ -93,6 +89,15 @@ export function useExternalDrop() {
                 (xPos - scrollLeft) / zoomLevel,
                 (yPos - scrollTop) / zoomLevel
             );
+            updateElement(newElement.id, {
+                ...newElement,
+                extraAttributes: {
+                    ...newElement.extraAttributes,
+                    isRenderingBackup: false,
+                    metaTags: await getOpenGraphTags(url),
+                    summary: await generateSummary(url, key)
+                }
+            })
         }
         else if (e.dataTransfer.getData("text/plain")) {
             const xPos = e.clientX - left;

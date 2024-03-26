@@ -65,6 +65,7 @@ async function getURLDom(url: string) {
 
 
 export async function generateSummary(url: string, apiKey: string) {
+  if(apiKey === "") return ""
   console.log(url)
   const html = parse(await getURLDom(url));
   let elements = html.querySelectorAll('p');
@@ -75,17 +76,23 @@ export async function generateSummary(url: string, apiKey: string) {
     return el.text.trim()
   }).join(' ')
   console.log(totalLength * 0.75)
-
-  const openai = new OpenAI({ apiKey });
+  let openai;
+  try {
+    openai = new OpenAI({ apiKey });
+  }catch(error){
+    console.log(error)
+    return ""
+  }
+  console.log(texts)
   const completion = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: [{
-      role: "user", "content": `Your task is to summarize the website content using the provided html text. You should ignore any javascript code that shows up in the provided text. Your output should use the following template:
-    #### Summary
+      role: "user", "content": `Your task is to summarize the website content using the provided html text. Your output should use the following template:
+    ####Summary
     {Summarize the content in one sentence, ensuring it's no more than 30 words.}
-    #### Highlights
+    ####Highlights
     {Provide 5 highlights, starting with a summarizing phrase. }
-    #### Keywords
+    ####Keywords
     {Provide five relevant keywords based on the text content.}
     
     title: {${element}} text:{${texts}}`
