@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url(themes/test.css);
+
 @layer base {
   :root {
     /* done */
@@ -93,7 +95,6 @@
     --ring: 0 0% 83.1%;
   }
 
-  /* add new theme name to providers.tsx for theme to be accessible*/
   .test {
     /* done  */
     --background: 20, 85%, 97%;
@@ -117,26 +118,6 @@
     --secondary: 215, 48%, 27%;
     --secondary-foreground: 20, 85%, 80%;
     /* done  */
-
-    --popover: 152.73, 38.82%, 16.67%;
-    --popover-foreground: 241.82, 94.29%, 93.14%;
-
-
-    --content: 0, 0%, 0%;
-
-    --border: 151.3, 74.19%, 93.92%;
-    --input: 150, 38.89%, 7.06%;
-
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-
-    --accent: 152.22, 50.94% 45.1%;
-    --accent-foreground: 241.82, 50%, 15%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --ring: 0 0% 83.1%;
   }
 }
 
