@@ -70,6 +70,7 @@ const config = {
         },
         card: {
           DEFAULT: "hsl(var(--card))",
+          subtitle: "hsl(var(--card-subtitle))",
           foreground: "hsl(var(--card-foreground))",
         },
         button:  {

@@ -5,17 +5,18 @@
 @layer base {
   :root {
     /* done */
-    --background: 151.3, 74.19%, 93.92%;
-    --foreground: 241.71, 36.84%, 18.63%;
+    --background: 360, 100%, 100%;
+    --foreground: 0, 0%, 0%;
 
-    --card: 152.22, 50.94%, 58.43%;
+    --card: 152.22, 50.94%, 98%;
     --card-foreground: 241.71, 36.84%, 18.63%;
+    --card-subtitle: 0, 0%, 15%;
 
-    --button: 151.3, 74.19%, 85%;
+    --button: 151.3, 74.19%, 45%;
     --button-foreground: 241.71, 36.84%, 18.63%;
     
     --hover: 151.3, 74.19%, 71%;
-    --hover-foreground: 242.22, 50.94%, 58.43%;
+    --hover-foreground: 242.22, 50.94%, 18.63%;
 
     --popover: 151.3, 74.19%, 93.92%;
     --popover-foreground: 241.71, 36.84%, 18.63%;
@@ -51,10 +52,10 @@
 
   .dark {
     /* done  */
-    --background: 150, 38.89%, 7.06%;
+    --background: 0, 0%, 0%;
     --foreground: 241.82, 94.29%, 93.14%;
 
-    --card: 152.73, 38.82%, 16.67%;
+    --card: 152.73, 38.82%, 5%;
     --card-foreground: 241.82, 94.29%, 93.14%;
 
     --button: 152.22, 50.94%, 58.43%;
@@ -95,9 +96,6 @@
 
   .test {
     /* done  */
-    --background: 20, 85%, 97%;
-    --foreground: 215, 48%, 12%;
-
     --card: 20, 85%, 67%;
     --card-foreground: 215, 48%, 12%;
 
