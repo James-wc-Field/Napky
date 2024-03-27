@@ -14,8 +14,8 @@ export async function currentAuthenticatedUser() {
       nextServerContext: { cookies },
       operation: (contextSpec) => getCurrentUser(contextSpec),
     });
-  } catch {
-    console.log("No current user");
+  } catch (err) {
+    console.log(err);
     return null;
   }
 }
