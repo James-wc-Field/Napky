@@ -85,8 +85,8 @@ export function NavigationBar () {
           </Link> 
         </Button> : 
           <Button variant={"ghost"} className="text-lg " asChild>
-          <Link href={"#"}>
-          SignIn
+          <Link href={"/sign-in"}>
+          Sign In
           </Link> 
         </Button>}
       </div>
