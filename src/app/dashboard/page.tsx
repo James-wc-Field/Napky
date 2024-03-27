@@ -13,7 +13,7 @@ export default async function Page() {
       <>
         <p>Not authenticated</p>
         <Button asChild>
-          <Link href="/login">Sign in</Link>
+          <Link href="/sign-in">Sign in</Link>
         </Button>
       </>
     );
