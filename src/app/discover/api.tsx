@@ -9,30 +9,32 @@ import { cookies } from "next/headers";
  * @returns the current authenticated user
  */
 export async function currentAuthenticatedUser() {
-    const user = await runWithAmplifyServerContext({
+  try {
+    return await runWithAmplifyServerContext({
       nextServerContext: { cookies },
-      operation: (contextSpec) => getCurrentUser(contextSpec)
+      operation: (contextSpec) => getCurrentUser(contextSpec),
     });
-    return user;
+  } catch (err) {
+    console.error(err);
+    return null;
   }
-
+}
 
 /**
  * Get all projects not created by the user
  * @returns an array of all projects not created by the user
  */
 export async function getAllProjects() {
-    const user = await currentAuthenticatedUser();
-    return (
-      await cookieBasedClient.graphql({
-        query: listProjects,
-        variables: {
-          limit: 1000,
-          filter: {
-            userId: { ne: user.userId },
-          },
+  const user = await currentAuthenticatedUser();
+  return (
+    await cookieBasedClient.graphql({
+      query: listProjects,
+      variables: {
+        limit: 1000,
+        filter: {
+          userId: { ne: user?.userId },
         },
-
-      })
-    ).data.listProjects.items;
-  }
+      },
+    })
+  ).data.listProjects.items;
+}
