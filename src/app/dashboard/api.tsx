@@ -3,9 +3,7 @@
 import { cookieBasedClient } from "@/lib/amplifyServerUtils";
 import { listProjects } from "@src/graphql/queries";
 import { createProject } from "@src/graphql/mutations";
-import { getCurrentUser } from "aws-amplify/auth/server";
-import { runWithAmplifyServerContext } from "@/lib/amplifyServerUtils";
-import { cookies } from "next/headers";
+import { currentAuthenticatedUser } from "@/lib/auth";
 
 /**
  * Get all projects created by the user
@@ -52,20 +50,4 @@ export async function createNewProject() {
     })
   ).data.createProject;
   return project.id;
-}
-
-/**
- * Get the current authenticated user
- * @returns the current authenticated user
- */
-export async function currentAuthenticatedUser() {
-  try {
-    return await runWithAmplifyServerContext({
-      nextServerContext: { cookies },
-      operation: (contextSpec) => getCurrentUser(contextSpec),
-    });
-  } catch {
-    console.log("No current user")
-    return null;
-  }
 }

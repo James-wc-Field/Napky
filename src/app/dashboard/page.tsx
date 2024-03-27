@@ -1,9 +1,10 @@
 import { Suspense } from "react";
 import DashboardPage from "./dashboard";
-import { currentAuthenticatedUser, getAllUserProjects } from "./api";
+import { getAllUserProjects } from "./api";
 import { Button } from "@ui/button";
 import Link from "next/link";
 import { Project } from "@src/API";
+import { currentAuthenticatedUser } from "@/lib/auth";
 
 export default async function Page() {
   const currentUser = await currentAuthenticatedUser();
