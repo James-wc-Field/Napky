@@ -30,7 +30,7 @@ export function ProjectCard(props: ProjectsProps) {
   return (
     <>
     <Dialog.Root modal={true}>
-    <Card className="bg-card dark:bg-card h-fit w-cardSW border-none p-1"> 
+    <Card className="bg-card h-fit w-[17vw] border-none p-1"> 
     {/* <>shadow-2xl shadow-secondary</> */}
     <CardHeader className="p-2">
       <CardTitle className="">{project.name}</CardTitle>
