@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url(themes/test.css);
-
 @layer base {
   :root {
     /* done */
