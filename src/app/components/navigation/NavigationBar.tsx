@@ -48,7 +48,7 @@ export function NavigationBar() {
             <Link href={"/discover"}>Discover</Link>
           </Button>
           <Button variant={"ghost"} className="text-lg " asChild>
-            <Link href={"/dashboard"}>Discover</Link>
+            <Link href={"/dashboard"}>Dashboard</Link>
           </Button>
         </>
       );
