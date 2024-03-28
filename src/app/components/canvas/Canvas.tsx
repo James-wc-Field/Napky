@@ -66,7 +66,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
       });
       removeSelectedElements();
     }
-  }
+  } // eslint-disable-line react-hooks/exhaustive-deps
   const canvasViewRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const handleResize = () => {
@@ -83,7 +83,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false);
 
@@ -112,13 +112,13 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [middleMouseIsDown]);
+  }, [middleMouseIsDown]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selectedElements]);
+  }, [selectedElements]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
@@ -218,8 +218,7 @@ function CanvasElementWrapper({
         }
       })
     },
-    [isResizing, startPos]
-  )
+    [isResizing, startPos]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleMouseUp = () => {
     setIsResizing(false)
