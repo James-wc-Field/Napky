@@ -124,7 +124,7 @@ type CanvasContextType = {
    * @param rect Values to update the canvas view rect to
    * @returns
    */
-  useResize: (canvas: HTMLDivElement) => void;
+  useResize: (canvas: HTMLDivElement | null) => void;
 
   isResizing: boolean;
   updateResizing: (resizing: boolean) => void;
@@ -310,14 +310,14 @@ export default function CanvasContextProvider({
     setOuterMostElements({ top, left, right, bottom });
   }, [elements]);
 
-  const useResize = (canvas: HTMLDivElement) => {
-    const canvasViewRef = useRef<HTMLDivElement>(canvas);
+  const useResize = (canvas: HTMLDivElement | null) => {
+    // const canvasViewRef = useRef<HTMLDivElement>(canvas);
     useEffect(() => {
       const handleResize = () => {
         console.log("resize")
-        const { current } = canvasViewRef;
-        if (current) {
-          const boundingBox = current.getBoundingClientRect();
+        // const { current } = canvasViewRef;
+        if (canvas) {
+          const boundingBox = canvas.getBoundingClientRect();
           setCanvasViewRect({
             top: boundingBox.top,
             left: boundingBox.left,
@@ -332,7 +332,7 @@ export default function CanvasContextProvider({
       return () => {
         window.removeEventListener("resize", handleResize);
       };
-    }, [])
+    }, [canvas])
   };
 
   return (
