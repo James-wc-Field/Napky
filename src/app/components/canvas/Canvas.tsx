@@ -62,7 +62,10 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
 
 
   const canvasRef = useRef<HTMLDivElement>(null);
-  useResize(canvasRef.current!)
+  const curr = useMemo(()=>{
+    return canvasRef.current
+  },[canvasRef])
+  useResize(curr)
   useMouseMove(selectableRef.current!)
   useKeyDown()
 
