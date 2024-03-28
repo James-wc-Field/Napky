@@ -128,6 +128,7 @@ type CanvasContextType = {
 
   isResizing: boolean;
   updateResizing: (resizing: boolean) => void;
+  useKeyDown: () => void;
 };
 
 export const CanvasContext = createContext<CanvasContextType | null>(null);
@@ -200,6 +201,24 @@ export default function CanvasContextProvider({
     setSelectedElements(() => []);
   }
 
+  const useKeyDown = () => {
+    useEffect(() => {
+      const handleKeyDown = (e: KeyboardEvent): void => {
+        console.log(e)
+        if (e.key === "Delete") {
+          selectedElements.forEach((element) => {
+            setElements((prev) => prev.filter((el) => el.id !== element.id));
+          });
+          removeSelectedElements();
+        }
+      }
+      document.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.removeEventListener("keydown", handleKeyDown);
+      };
+    },[]);
+  }
+
   const updateMiddleMouseIsDown = (middleMouseIsDown:boolean) => {
     setMiddleMouseIsDown(middleMouseIsDown)
   }
@@ -241,7 +260,7 @@ export default function CanvasContextProvider({
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
       };
-    }, [middleMouseIsDown]);
+    }, [selectableRef]);
   }
   const updateScrollLeft = (delta: number) => {
     setScrollLeft((prev) => prev - delta);
@@ -295,6 +314,7 @@ export default function CanvasContextProvider({
     const canvasViewRef = useRef<HTMLDivElement>(canvas);
     useEffect(() => {
       const handleResize = () => {
+        console.log("resize")
         const { current } = canvasViewRef;
         if (current) {
           const boundingBox = current.getBoundingClientRect();
@@ -342,7 +362,8 @@ export default function CanvasContextProvider({
         middleMouseIsDown,
         updateMiddleMouseIsDown,
         isResizing,
-        updateResizing
+        updateResizing,
+        useKeyDown
       }}
     >
       {children}
