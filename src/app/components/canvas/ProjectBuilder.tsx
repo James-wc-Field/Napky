@@ -27,7 +27,7 @@ export default function ProjectBuilder({ project }: { project: Project }) {
     if (project) {
       loadElements(JSON.parse(project.content || "[]"));
     }
-  }, [project]);
+  }, [project]); // eslint-disable-line react-hooks/exhaustive-deps
       // This stops the scrolling ability
   // document.body.style.overflow = "hidden";
   // Remove this if it causes issues with scrolling on the other pages. 

@@ -16,7 +16,7 @@ interface ProjectsProps {
 }
 
 export function ProjectCard(props: ProjectsProps) {
-  const image = "", alt="t";
+  const image = "";
   const { project } = props;
   
 
@@ -29,7 +29,7 @@ export function ProjectCard(props: ProjectsProps) {
     </CardHeader>
     <CardContent className="p-0">
       <div className="container px-0">
-        {image? <img src={image} className=""/> : <MissingImage/>}
+        {image? <img src={image} className="" alt="t"/> : <MissingImage/>}
       </div>
       <div className="max-h-sampleDesc overflow-clip m-2">
         {project? <p>{project.description}</p>: <p>No description for this project</p>}

@@ -27,7 +27,7 @@ export function ProjectCardDetails(props: ProjectsProps) {
           <CardTitle>{project.name}</CardTitle>
           <p>{project.userId}</p>
           <div className="container px-0">
-            {image? <img src={image} className="rounded-2xl"/> : <MissingImage/>}
+            {image? <img src={image} className="rounded-2xl" alt="t"/> : <MissingImage/>}
           </div>
           <p>Date Created: {project.createdAt}</p>
           <p>Date Modified: {project.updatedAt}</p>
