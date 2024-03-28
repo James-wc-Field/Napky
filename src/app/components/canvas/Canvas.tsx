@@ -40,14 +40,11 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     updateScrollLeft,
     updateScrollTop,
     useResize,
-    removeSelectedElements,
     selectedElements,
-    removeElement,
     changeSelectedElements,
     updateMiddleMouseIsDown,
-    middleMouseIsDown,
-    isResizing,
-    useMouseMove
+    useMouseMove,
+    useKeyDown,
   } = useProject();
 
   const handleScroll = (e: React.WheelEvent) => {
@@ -63,52 +60,21 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     updateScrollTop(deltaY);
   };
 
-  const handleKeyDown = (e: KeyboardEvent): void => {
-    if (e.key === "Delete") {
-      selectedElements.forEach((element) => {
-        removeElement(element.id);
-      });
-      removeSelectedElements();
-    }
-  }
 
   const canvasRef = useRef<HTMLDivElement>(null);
   useResize(canvasRef.current!)
   useMouseMove(selectableRef.current!)
-  // const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false);
+  useKeyDown()
 
 
-  // const handleMouseUp = () => {
-  //   setMiddleMouseIsDown(false);
-  // };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === 1) {
       updateMiddleMouseIsDown(true);
     }
   };
-  // useEffect(() => {
-  //   const handleMouseMove = (e: MouseEvent) => {
-  //     if (middleMouseIsDown) {
-  //       selectableRef.current?.cancel();
-  //       updateScrollLeft(-e.movementX);
-  //       updateScrollTop(-e.movementY);
-  //     }
-  //   };
-  //   document.addEventListener("mousemove", handleMouseMove);
-  //   document.addEventListener("mouseup", handleMouseUp);
-  //   return () => {
-  //     // Cleanup event listeners when component unmounts
-  //     document.removeEventListener("mousemove", handleMouseMove);
-  //     document.removeEventListener("mouseup", handleMouseUp);
-  //   };
-  // }, [middleMouseIsDown]);
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [selectedElements]);
+
+
 
   return (
     <>
