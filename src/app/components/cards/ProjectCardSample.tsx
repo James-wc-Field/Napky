@@ -16,7 +16,7 @@ interface ProjectsProps {
 }
 
 export function ProjectCard(props: ProjectsProps) {
-  const image = "";
+  const image = "", alt="t";
   const { project } = props;
   
 
