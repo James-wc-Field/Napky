@@ -1,7 +1,9 @@
 "use client";
 
-import { ReactNode, createContext, useEffect, useState } from "react";
+import { ReactNode, RefObject, createContext, useEffect, useRef, useState } from "react";
 import { ProjectElementInstance } from "@canvas/types/ProjectElements";
+import { Project } from "@src/API";
+import { SelectableRef } from "react-selectable-box";
 
 type CanvasContextType = {
   elements: ProjectElementInstance[];
@@ -33,7 +35,7 @@ type CanvasContextType = {
    * @param elements Elements to add to the canvas
    * @returns
    */
-  loadElements: (elements: ProjectElementInstance[]) => void;
+  useLoadElements: (project: Project) => void;
   /**
    * Removes an element from the canvas
    * @param id ID of the element to remove
@@ -44,13 +46,13 @@ type CanvasContextType = {
   /**
    * Gets the selected elements
   */
-   selectedElements: ProjectElementInstance[];
+  selectedElements: ProjectElementInstance[];
 
-   /**
-   * Adds multiple elements to the selected elements
-   * @param elements Elements to add to the selected elements
-   * @returns
-   */
+  /**
+  * Adds multiple elements to the selected elements
+  * @param elements Elements to add to the selected elements
+  * @returns
+  */
   changeSelectedElements: (elements: ProjectElementInstance[]) => void;
 
   /**
@@ -107,6 +109,10 @@ type CanvasContextType = {
     height: number;
   };
 
+  middleMouseIsDown: boolean;
+  updateMiddleMouseIsDown: (middleMouseIsDown: boolean) => void;
+
+  useMouseMove: (selectableRef:SelectableRef) => void;
   /**
    * 
    * @param element Element to add to the selected elements
@@ -118,14 +124,10 @@ type CanvasContextType = {
    * @param rect Values to update the canvas view rect to
    * @returns
    */
-  updateCanvasViewRect: (rect: {
-    top: number;
-    left: number;
-    right: number;
-    bottom: number;
-    width: number;
-    height: number;
-  }) => void;
+  useResize: (canvas: HTMLDivElement) => void;
+
+  isResizing: boolean;
+  updateResizing: (resizing: boolean) => void;
 };
 
 export const CanvasContext = createContext<CanvasContextType | null>(null);
@@ -137,6 +139,8 @@ export default function CanvasContextProvider({
 }) {
   const [elements, setElements] = useState<ProjectElementInstance[]>([]);
   const [selectedElements, setSelectedElements] = useState<ProjectElementInstance[]>([]);
+  const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false);
+  const [isResizing, setIsResizing] = useState(false)
   const [projectName, setProjectName] = useState("Untitled");
   const [scrollLeft, setScrollLeft] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
@@ -189,13 +193,24 @@ export default function CanvasContextProvider({
     setSelectedElements((prev) => [...prev, element]);
   }
 
+  const updateResizing = (resizing: boolean) => {
+    setIsResizing(resizing)
+  }
   const removeSelectedElements = () => {
     setSelectedElements(() => []);
   }
 
+  const updateMiddleMouseIsDown = (middleMouseIsDown:boolean) => {
+    setMiddleMouseIsDown(middleMouseIsDown)
+  }
 
-  const loadElements = (newElements: ProjectElementInstance[]) => {
-    setElements(() => [...newElements]);
+
+  const useLoadElements = (project: Project) => {
+    useEffect(() => {
+      if (project) {
+        return setElements(() => [...(JSON.parse(project.content || "[]")) as ProjectElementInstance[]]);
+      }
+    }, [project]);
   };
 
   const updateElement = (id: string, element: ProjectElementInstance) => {
@@ -207,6 +222,27 @@ export default function CanvasContextProvider({
     });
   };
 
+  const useMouseMove = (selectableRef: SelectableRef) => {
+    useEffect(() => {
+      const handleMouseMove = (e: MouseEvent) => {
+        if (middleMouseIsDown) {
+          selectableRef.cancel();
+          updateScrollLeft(-e.movementX);
+          updateScrollTop(-e.movementY);
+        }
+      };
+      const handleMouseUp = () => {
+        setIsResizing(false)
+      }
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+      return () => {
+        // Cleanup event listeners when component unmounts
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", handleMouseUp);
+      };
+    }, [middleMouseIsDown]);
+  }
   const updateScrollLeft = (delta: number) => {
     setScrollLeft((prev) => prev - delta);
   };
@@ -255,22 +291,28 @@ export default function CanvasContextProvider({
     setOuterMostElements({ top, left, right, bottom });
   }, [elements]);
 
-  const updateCanvasViewRect = (rect: {
-    top: number;
-    left: number;
-    right: number;
-    bottom: number;
-    width: number;
-    height: number;
-  }) => {
-    setCanvasViewRect({
-      top: rect.top,
-      left: rect.left,
-      right: rect.right,
-      bottom: rect.bottom,
-      width: rect.width,
-      height: rect.height,
-    });
+  const useResize = (canvas: HTMLDivElement) => {
+    const canvasViewRef = useRef<HTMLDivElement>(canvas);
+    useEffect(() => {
+      const handleResize = () => {
+        const { current } = canvasViewRef;
+        if (current) {
+          const boundingBox = current.getBoundingClientRect();
+          setCanvasViewRect({
+            top: boundingBox.top,
+            left: boundingBox.left,
+            right: boundingBox.right,
+            bottom: boundingBox.bottom,
+            width: boundingBox.width,
+            height: boundingBox.height,
+          });
+        }
+      };
+      window.addEventListener("resize", handleResize);
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }, [])
   };
 
   return (
@@ -290,12 +332,17 @@ export default function CanvasContextProvider({
         updateZoomLevel,
         outerMostElements,
         canvasViewRect,
-        updateCanvasViewRect,
-        loadElements,
+        useResize,
+        useLoadElements,
         updateProjectName,
         projectName,
         removeSelectedElements,
         addSelectedElement,
+        useMouseMove,
+        middleMouseIsDown,
+        updateMiddleMouseIsDown,
+        isResizing,
+        updateResizing
       }}
     >
       {children}
