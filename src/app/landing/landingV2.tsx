@@ -16,7 +16,7 @@ export default function LandingPageV2(props: props) {
       <ScrollArea className='h-full'>
         <Suspense fallback={<p>Loading...</p>}>
             <div className='h-[calc(100vh-300px)] flex justify-center items-center flex-col'>
-                <div className='flex flex-row'>
+                <div className='flex flex-row px-10'>
                     <div className='basis-[30%] flex flex-col'>
                         <div className='w-fit text-9xl mb-12 drop-shadow-lg'>
                             Korkbo
@@ -32,11 +32,11 @@ export default function LandingPageV2(props: props) {
                     </div>
                     <div className='basis-[70%]'>
                         <Image
-                            src="/images/placeholder.jpg"
-                            width={500}
-                            height={500}
+                            src="/images/Project Sample.PNG"
+                            width={2000}
+                            height={2000}
                             alt="Project example"
-                            className='w-full'
+                            className='w-full rounded-2xl border-[1px] border-slate-500 shadow-2xl'
                              />
                     </div>
                 </div>
