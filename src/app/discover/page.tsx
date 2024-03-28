@@ -2,7 +2,7 @@ import React from 'react'
 import { Suspense } from 'react';
 import DiscoverPage from './discover';
 import { Project } from '../../API';
-import { getAllProjects } from '@/dashboard/api';
+import { getAllProjects } from '@/discover/api';
 
 
 export default async function Page() {
