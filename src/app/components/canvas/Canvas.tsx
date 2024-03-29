@@ -8,6 +8,8 @@ import CanvasBackground from "@canvas/CanvasBackground";
 import CanvasToolbar from "@canvas/CanvasToolbar";
 import Selectable, { SelectableRef, useSelectable } from 'react-selectable-box';
 import { useCallback } from "react";
+
+
 export default function Canvas({
   elements,
 }: {
@@ -119,7 +121,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
       </Selectable>
       <CanvasToolbar />
       <CanvasControls />
-      <MiniMap />
+      {/* <MiniMap /> */}
       <CanvasBackground />
     </>
   );
@@ -138,7 +140,7 @@ function CanvasElementWrapper({
       isCanvasElement: true,
     },
   });
-  const { updateElement, addSelectedElement, useResize } = useProject()
+  const { updateElement, zoomLevel, changeSelectedElements, addSelectedElement, selectedElements} = useProject()
   const [isResizing, setIsResizing] = useState(false)
   type Position = {
     x: number | null;
@@ -193,20 +195,16 @@ function CanvasElementWrapper({
       setSelectRef(ref);
     }}
     >
-      {/* Adding this div fixes the location of the resize handle but adds a bug with the parent div that gets the size of the element */}
-
-      {/* <div
-        style={{
-          position: 'relative',
-          display: 'inline-block',
-        }}> */}
-
+      <div className="relative">
       <div onMouseDown={(e) => {
         if (e.ctrlKey) {
           addSelectedElement(element)
         } else {
+          console.log(selectedElements.length)
           // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
-          // changeSelectedElements([element])
+          if(selectedElements.length == 1){
+            changeSelectedElements([element])
+          }
         }
       }}>
         <div {...listeners} {...attributes}>
@@ -228,7 +226,7 @@ function CanvasElementWrapper({
           cursor: 'nwse-resize'
         }}
       ></div>
-      {/* </div> */}
+      </div>
     </div>
   );
 }
