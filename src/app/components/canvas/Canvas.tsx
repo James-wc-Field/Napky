@@ -44,6 +44,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     changeSelectedElements,
     updateMiddleMouseIsDown,
     useMouseMove,
+    middleMouseIsDown,
     useKeyDown,
   } = useProject();
 
@@ -66,18 +67,16 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     return canvasRef.current
   },[canvasRef])
   useResize(curr)
-  useMouseMove(selectableRef.current!)
-  useKeyDown()
-
-
+  useMouseMove(selectableRef,middleMouseIsDown)
+  useKeyDown(selectedElements)
+  
 
   const handleMouseDown = (e: React.MouseEvent) => {
+    console.log(e)
     if (e.button === 1) {
       updateMiddleMouseIsDown(true);
     }
   };
-
-
 
   return (
     <>
