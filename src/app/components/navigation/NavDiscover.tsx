@@ -11,7 +11,7 @@ export function NavDiscover() {
     <>
     <div className="flex w-full m-10">
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
         <Button 
         // adjust the hover over for button
         >
