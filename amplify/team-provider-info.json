@@ -13,7 +13,13 @@
     },
     "categories": {
       "auth": {
-        "napkyb8f78fcb": {},
+        "napkyff72303c": {}
+      }
+    }
+  },
+  "amplify": {
+    "categories": {
+      "auth": {
         "napkyff72303c": {}
       }
     }
