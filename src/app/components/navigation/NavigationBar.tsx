@@ -70,7 +70,7 @@ export function NavigationBar() {
             alt="Happy Squirrel"
             src="/images/icon.png"
           />
-          <p className="mx-2 text-xl">KorkBored</p>
+          <p className="mx-2 text-xl">KorkBo</p>
         </a>
         <div className="flex w-full justify-center mx-5">{middleState}</div>
         <div className="flex justify-end min-w-fit">
