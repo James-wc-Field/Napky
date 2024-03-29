@@ -410,7 +410,7 @@ export default function CanvasContextProvider({
         removeSelectedElements,
         addSelectedElement,
         key,
-        updateKey
+        updateKey,
         useMouseMove,
         middleMouseIsDown,
         updateMiddleMouseIsDown,
