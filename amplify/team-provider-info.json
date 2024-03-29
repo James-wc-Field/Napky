@@ -14,6 +14,9 @@
     "categories": {
       "auth": {
         "napkyff72303c": {}
+      },
+      "storage": {
+        "s3korkbostoragephotos": {}
       }
     }
   },
