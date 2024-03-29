@@ -6,6 +6,9 @@ import { cookieBasedClient } from '@/lib/amplifyServerUtils';
 import puppeteer from 'puppeteer';
 import { parse } from 'node-html-parser';
 import OpenAI from 'openai'
+import { runWithAmplifyServerContext } from '@/lib/amplifyServerUtils';
+import { getCurrentUser } from "aws-amplify/auth/server";
+import { cookies } from 'next/headers';
 
 export async function getOpenGraphTags(url: string){
   const html = parse(await (await fetch(url)).text());
@@ -19,19 +22,32 @@ export async function getOpenGraphTags(url: string){
 }
 
 /**
+ * Get the current authenticated user
+ * @returns the current authenticated user
+ */
+export async function currentAuthenticatedUser() {
+  const user = await runWithAmplifyServerContext({
+    nextServerContext: { cookies },
+    operation: (contextSpec) => getCurrentUser(contextSpec)
+  });
+  return user;
+}
+/**
  * saves a project to the database
  * @param elements a list of elements from a project to save
  */
-export async function saveProject(projectId: string, name: string, elements: ProjectElementInstance[]) {
-  await cookieBasedClient.graphql({
-    query: updateProject,
-    variables: {
-      input: {
+export async function saveProject(projectId: string, name: string, elements: ProjectElementInstance[]){
+    const user = await currentAuthenticatedUser();
+    await cookieBasedClient.graphql({
+      query: updateProject,
+      variables: {
+        input: {
         id: projectId,
-        userId: "user",
-        name: name,
-        description: "description",
-        content: JSON.stringify(elements)
+          userId: user.userId,
+          name: name,
+          description: "description",
+          content: JSON.stringify(elements)
+        }
       }
     }
   });
