@@ -112,7 +112,7 @@ type CanvasContextType = {
   middleMouseIsDown: boolean;
   updateMiddleMouseIsDown: (middleMouseIsDown: boolean) => void;
 
-  useMouseMove: (selectableRef:SelectableRef) => void;
+  useMouseMove: (selectableRef:RefObject<SelectableRef> | null, isMiddleMouseDown:boolean) => void;
   /**
    * 
    * @param element Element to add to the selected elements
@@ -128,7 +128,7 @@ type CanvasContextType = {
 
   isResizing: boolean;
   updateResizing: (resizing: boolean) => void;
-  useKeyDown: () => void;
+  useKeyDown: (selectedElements:ProjectElementInstance[]) => void;
 };
 
 export const CanvasContext = createContext<CanvasContextType | null>(null);
@@ -201,12 +201,11 @@ export default function CanvasContextProvider({
     setSelectedElements(() => []);
   }
 
-  const useKeyDown = () => {
+  const useKeyDown = (selected: ProjectElementInstance[]) => {
     useEffect(() => {
       const handleKeyDown = (e: KeyboardEvent): void => {
-        console.log(e)
         if (e.key === "Delete") {
-          selectedElements.forEach((element) => {
+          selected?.forEach((element) => {
             setElements((prev) => prev.filter((el) => el.id !== element.id));
           });
           removeSelectedElements();
@@ -216,7 +215,7 @@ export default function CanvasContextProvider({
       return () => {
         document.removeEventListener("keydown", handleKeyDown);
       };
-    },[]);
+    },[selected]);
   }
 
   const updateMiddleMouseIsDown = (middleMouseIsDown:boolean) => {
@@ -241,18 +240,18 @@ export default function CanvasContextProvider({
     });
   };
 
-  const useMouseMove = (selectableRef: SelectableRef) => {
+  const useMouseMove = (selectableRef: RefObject<SelectableRef> | null, isMiddleMouseDown:boolean) => {
     useEffect(() => {
       const handleMouseMove = (e: MouseEvent) => {
         if (middleMouseIsDown) {
-          selectableRef.cancel();
+          selectableRef?.current?.cancel();
           updateScrollLeft(-e.movementX);
           updateScrollTop(-e.movementY);
         }
       };
       const handleMouseUp = () => {
-        setIsResizing(false)
-      }
+        setMiddleMouseIsDown(false);
+      };
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
       return () => {
@@ -260,7 +259,7 @@ export default function CanvasContextProvider({
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
       };
-    }, [selectableRef]);
+    }, [selectableRef,isMiddleMouseDown]);
   }
   const updateScrollLeft = (delta: number) => {
     setScrollLeft((prev) => prev - delta);
@@ -311,11 +310,8 @@ export default function CanvasContextProvider({
   }, [elements]);
 
   const useResize = (canvas: HTMLDivElement | null) => {
-    // const canvasViewRef = useRef<HTMLDivElement>(canvas);
     useEffect(() => {
       const handleResize = () => {
-        console.log("resize")
-        // const { current } = canvasViewRef;
         if (canvas) {
           const boundingBox = canvas.getBoundingClientRect();
           setCanvasViewRect({
