@@ -8,7 +8,7 @@ import { ThemeToggle } from "../ThemeToggle";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import Image from 'next/image';
-import { currentAuthenticatedUser } from "@/dashboard/api";
+import { currentAuthenticatedUser } from "@/lib/auth";
 import { AuthUser } from "aws-amplify/auth";
 
 export function NavigationBar () {
