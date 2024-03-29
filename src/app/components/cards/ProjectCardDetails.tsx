@@ -14,10 +14,12 @@ interface ProjectsProps {
 }
 
 export function ProjectCardDetails(props: ProjectsProps) {
+  const image = "";
+  // "https://webneel.com/daily/sites/default/files/images/daily/05-2018/portrait-photography-by-dennis-drozhzhin.jpg"
   const { project } = props;
 
   return (
-    <Card className="bg-card dark:bg-card h-cardDH w-cardDW border-none rounded-[2rem]">
+    <Card className="bg-card dark:bg-card h-cardDH w-cardDW border-none rounded-[2rem] p-2">
       <CardContent className="flex m-3 h-full w-full">
         <div className="flex flex-col w-[600px] h-full">
           <CardTitle>{project.name}</CardTitle>
@@ -31,8 +33,8 @@ export function ProjectCardDetails(props: ProjectsProps) {
               className="rounded-md select-none"
             />
           </div>
-          <p>Date Created: {project.createdAt}</p>
-          <p>Date Modified: {project.updatedAt}</p>
+          <p>Date Created: {project.createdAt.substring(0,10)}</p>
+          <p>Date Modified: {project.updatedAt.substring(0,10)}</p>
           <div className="flex h-full items-end pb-3">
             <Button className="text-4xl h-fit w-full py-3 rounded-full" asChild>
               <Link href={`../project/${project.id}`}>View</Link>
