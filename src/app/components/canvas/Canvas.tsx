@@ -163,6 +163,7 @@ function CanvasElementWrapper({
     return ProjectElements[element.type].canvasComponent;
   }, [element]);
 
+  
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
       if (!isResizing) return
@@ -176,13 +177,12 @@ function CanvasElementWrapper({
         }
       })
     },
-    [isResizing, startPos]
+    [isResizing, startPos, element,updateElement]
   )
 
   const handleMouseUp = () => {
     setIsResizing(false)
   }
-
   useEffect(() => {
     if (isResizing) {
       window.addEventListener('mousemove', handleMouseMove)
@@ -223,7 +223,7 @@ function CanvasElementWrapper({
           <CanvasElement elementInstance={element} />
         </div>
       </div>
-      <div
+      <div className="absolute"
         ref={resizeHandle}
         onMouseDown={(e) => {
           console.log('mousedown')
@@ -233,7 +233,6 @@ function CanvasElementWrapper({
           setStartPos({ x: e.clientX, y: e.clientY })
         }}
         style={{
-          position: 'absolute',
           bottom: -10,
           right: -10,
           width: '10px',
