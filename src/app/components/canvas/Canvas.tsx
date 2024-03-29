@@ -39,7 +39,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     scrollLeft,
     updateScrollLeft,
     updateScrollTop,
-    useResize,
+    useWindowResize,
     selectedElements,
     changeSelectedElements,
     updateMiddleMouseIsDown,
@@ -63,13 +63,13 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
 
 
   const canvasRef = useRef<HTMLDivElement>(null);
-  const curr = useMemo(()=>{
+  const curr = useMemo(() => {
     return canvasRef.current
-  },[canvasRef])
-  useResize(curr)
-  useMouseMove(selectableRef,middleMouseIsDown)
+  }, [canvasRef])
+  useWindowResize(curr)
+  useMouseMove(selectableRef, middleMouseIsDown)
   useKeyDown(selectedElements)
-  
+
 
   const handleMouseDown = (e: React.MouseEvent) => {
     console.log(e)
@@ -139,7 +139,7 @@ function CanvasElementWrapper({
       isCanvasElement: true,
     },
   });
-  const { updateElement, addSelectedElement} = useProject()
+  const { updateElement, addSelectedElement, useResize } = useProject()
   const [isResizing, setIsResizing] = useState(false)
   type Position = {
     x: number | null;
@@ -159,14 +159,8 @@ function CanvasElementWrapper({
   };
   const resizeHandle = useRef<HTMLDivElement>(null)
 
-  const CanvasElement = useMemo(() => {
-    return ProjectElements[element.type].canvasComponent;
-  }, [element]);
-
-  
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (!isResizing) return
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
       const newWidth = element.size.width + e.clientX - startPos.x!
       const newHeight = element.size.height + e.clientY - startPos.y!
       updateElement(element.id, {
@@ -176,27 +170,24 @@ function CanvasElementWrapper({
           height: newHeight
         }
       })
-    },
-    [isResizing, startPos, element,updateElement]
-  )
-
-  const handleMouseUp = () => {
-    setIsResizing(false)
-  }
-  useEffect(() => {
+    }
+    const handleMouseUp = () => {
+      setIsResizing(false)
+    }
     if (isResizing) {
       window.addEventListener('mousemove', handleMouseMove)
       window.addEventListener('mouseup', handleMouseUp)
-    } else {
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('mouseup', handleMouseUp)
     }
-
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [isResizing, handleMouseMove])
+  }, [isResizing, startPos])
+  const CanvasElement = useMemo(() => {
+    return ProjectElements[element.type].canvasComponent;
+  }, [element]);
+  // useResize(element,startPos)
+
   return (
     <div style={style} ref={(ref) => {
       setDragRef(ref);
@@ -226,9 +217,6 @@ function CanvasElementWrapper({
       <div className="absolute"
         ref={resizeHandle}
         onMouseDown={(e) => {
-          console.log('mousedown')
-          console.log(resizeHandle.current)
-          e.preventDefault()
           setIsResizing(true)
           setStartPos({ x: e.clientX, y: e.clientY })
         }}

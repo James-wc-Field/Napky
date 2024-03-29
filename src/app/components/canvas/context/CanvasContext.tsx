@@ -1,7 +1,7 @@
 "use client";
 
-import { ReactNode, RefObject, createContext, useEffect, useRef, useState } from "react";
-import { ProjectElementInstance } from "@canvas/types/ProjectElements";
+import { ReactNode, RefObject, createContext, useCallback, useEffect, useRef, useState } from "react";
+import { Position, ProjectElementInstance } from "@canvas/types/ProjectElements";
 import { Project } from "@src/API";
 import { SelectableRef } from "react-selectable-box";
 
@@ -124,11 +124,12 @@ type CanvasContextType = {
    * @param rect Values to update the canvas view rect to
    * @returns
    */
-  useResize: (canvas: HTMLDivElement | null) => void;
+  useWindowResize: (canvas: HTMLDivElement | null) => void;
 
   isResizing: boolean;
   updateResizing: (resizing: boolean) => void;
   useKeyDown: (selectedElements:ProjectElementInstance[]) => void;
+  useResize:(element: ProjectElementInstance, startPos:Position) => void;
 };
 
 export const CanvasContext = createContext<CanvasContextType | null>(null);
@@ -201,6 +202,33 @@ export default function CanvasContextProvider({
     setSelectedElements(() => []);
   }
 
+  const useResize = (element: ProjectElementInstance, startPos:Position) => { 
+  //   useEffect(() => {
+  //   const handleMouseMove = 
+  //   (e: MouseEvent) => {
+  //     if (isResizing){
+  //       const newWidth = element.size.width + e.clientX - startPos.x!
+  //       const newHeight = element.size.height + e.clientY - startPos.y!
+  //       updateElement(element.id, {
+  //         ...element,
+  //         size: {
+  //           width: newWidth,
+  //           height: newHeight
+  //         }
+  //       })
+  //     }
+  //   }
+  //   const handleMouseUp = () => {
+  //     setIsResizing(false)
+  //   }
+  //   window.addEventListener('mousemove', handleMouseMove)
+  //     window.addEventListener('mouseup', handleMouseUp)
+  //   return () => {
+  //     window.removeEventListener('mousemove', handleMouseMove)
+  //     window.removeEventListener('mouseup', handleMouseUp)
+  //   }
+  // }, [isResizing,startPos])
+}
   const useKeyDown = (selected: ProjectElementInstance[]) => {
     useEffect(() => {
       const handleKeyDown = (e: KeyboardEvent): void => {
@@ -231,14 +259,16 @@ export default function CanvasContextProvider({
     }, [project]);
   };
 
-  const updateElement = (id: string, element: ProjectElementInstance) => {
+  const updateElement = useCallback((id: string, element: ProjectElementInstance) => {
     setElements((prev) => {
       let newElements = [...prev];
       const index = newElements.findIndex((el) => el.id === id);
       newElements[index] = element;
       return newElements;
     });
-  };
+  },[]);
+
+
 
   const useMouseMove = (selectableRef: RefObject<SelectableRef> | null, isMiddleMouseDown:boolean) => {
     useEffect(() => {
@@ -309,7 +339,7 @@ export default function CanvasContextProvider({
     setOuterMostElements({ top, left, right, bottom });
   }, [elements]);
 
-  const useResize = (canvas: HTMLDivElement | null) => {
+  const useWindowResize = (canvas: HTMLDivElement | null) => {
     useEffect(() => {
       const handleResize = () => {
         if (canvas) {
@@ -348,6 +378,7 @@ export default function CanvasContextProvider({
         updateZoomLevel,
         outerMostElements,
         canvasViewRect,
+        useWindowResize,
         useResize,
         useLoadElements,
         updateProjectName,
@@ -359,7 +390,7 @@ export default function CanvasContextProvider({
         updateMiddleMouseIsDown,
         isResizing,
         updateResizing,
-        useKeyDown
+        useKeyDown,
       }}
     >
       {children}

@@ -28,6 +28,11 @@ export type ProjectElement = {
   toolbarPropertiesComponent: React.FC; // How the properties of the element will be rendered in the toolbar
 };
 
+export type Position = {
+  x: number | null;
+  y: number | null;
+}
+
 export type ProjectElementInstance = {
   id: string;
   type: ElementsType;
