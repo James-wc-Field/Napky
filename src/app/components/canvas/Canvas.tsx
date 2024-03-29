@@ -61,7 +61,6 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     updateScrollTop(deltaY);
   };
 
-
   const canvasRef = useRef<HTMLDivElement>(null);
   const curr = useMemo(() => {
     return canvasRef.current
@@ -182,7 +181,7 @@ function CanvasElementWrapper({
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [isResizing, startPos])
+  }, [isResizing, startPos]) // eslint-disable-line react-hooks/exhaustive-deps
   const CanvasElement = useMemo(() => {
     return ProjectElements[element.type].canvasComponent;
   }, [element]);
