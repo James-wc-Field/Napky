@@ -15,17 +15,17 @@ export default function LandingPageV2(props: props) {
       <div className='h-base'>
       <ScrollArea className='h-full'>
         <Suspense fallback={<p>Loading...</p>}>
-            <div className='h-[calc(100vh-300px)] flex justify-center items-center flex-col'>
-                <div className='flex flex-row px-10'>
-                    <div className='basis-[30%] flex flex-col'>
-                        <div className='w-fit text-9xl mb-12 drop-shadow-lg'>
+            <div className='h-[60vh] flex justify-center items-center flex-col'>
+                <div className='flex flex-row px-10 mt-20'>
+                    <div className='basis-[30%] flex flex-col justify-center'>
+                        <div className='w-fit text-7xl mb-12 drop-shadow-lg'>
                             Korkbo
                         </div>
                         <div className='w-fit text-4xl mb-12 drop-shadow-md'>
                             A modern project organization tool
                         </div>
                         <div className='relative w-fit text-3xl bg-secondary py-4 px-8 rounded-2xl text-accent cursor-pointer'>
-                            <div className='absolute w-full h-full left-0 top-0 rounded-2xl z-[-1] shadow-2xl animate-[pulse_2s_ease-in-out_infinite] outline-secondary outline outline-2 outline-offset-1'>
+                            <div className='absolute w-full h-full left-0 top-0 rounded-2xl z-[-0.5] shadow-2xl animate-[pulse_2s_ease-in-out_infinite] outline-accent outline outline-2 outline-offset-0'>
                             </div>
                             Try it out
                         </div>
