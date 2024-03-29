@@ -5,6 +5,7 @@ import { Providers } from "./providers";
 import ConfigureAmplifyClientSide from "./components/ConfigureAmplifyClientSIde";
 import { cn } from "@/lib/utils";
 import { NavigationBar } from "@/components/navigation/NavigationBar";
+import FeedbackToast from "./components/FeedbackToast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,6 +30,7 @@ export default function RootLayout({
             <main>{children}</main>
             {/* Site Footer */}
           </div>
+          <FeedbackToast />
         </Providers>
       </body>
     </html>
