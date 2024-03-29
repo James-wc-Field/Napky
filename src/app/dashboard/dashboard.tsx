@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardHeader, CardFooter, CardContent, CardTitle } from "@ui/card";
+import { Card } from "@ui/card";
 import { Button } from "@ui/button";
 import {
   DropdownMenu,

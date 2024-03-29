@@ -1,4 +1,3 @@
-
 export function MissingImage() {
   return (
     <>
