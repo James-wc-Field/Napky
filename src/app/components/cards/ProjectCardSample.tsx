@@ -3,26 +3,24 @@
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@ui/card"
-import { MissingImage } from "./MissingImage"
+import Image from "next/image";
 import { Project } from '../../../API';
 import { Button } from "../ui/button";
 import Link from "next/link";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ProjectCardDetails } from "./ProjectCardDetails";
+import { MissingImage } from "./MissingImage";
 
 interface ProjectsProps {
   project: Project;
 }
 
 export function ProjectCard(props: ProjectsProps) {
-  const image = "";
   const { project } = props;
-
+  const image = "";
   function buttonPress() {
     console.log("button press: " + project.id);
   }

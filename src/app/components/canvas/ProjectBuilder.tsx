@@ -1,5 +1,5 @@
 "use client";
-import React, { useId } from "react";
+import React, { useId, useMemo } from "react";
 import {
   DndContext,
   TouchSensor,
@@ -22,13 +22,9 @@ import { ThemeToggle } from "@components/ThemeToggle";
 import { saveProject } from "@/project/[projectID]/api";
 
 export default function ProjectBuilder({ project }: { project: Project }) {
-  const { loadElements } = useProject();
-  useEffect(() => {
-    if (project) {
-      loadElements(JSON.parse(project.content || "[]"));
-    }
-  }, [project]);
-      // This stops the scrolling ability
+  const { useLoadElements } = useProject();
+  useLoadElements(project)
+  // This stops the scrolling ability
   // document.body.style.overflow = "hidden";
   // Remove this if it causes issues with scrolling on the other pages. 
   useEffect(() => {
@@ -69,9 +65,9 @@ export default function ProjectBuilder({ project }: { project: Project }) {
             </Button>
           </div>
 
-          <BuildArea />
-        </main>
-        <DragOverlayWrapper />
-      </DndContext>
+        <BuildArea />
+      </main>
+      <DragOverlayWrapper />
+    </DndContext>
   );
 }
