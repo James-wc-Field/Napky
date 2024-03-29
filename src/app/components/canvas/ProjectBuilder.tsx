@@ -1,5 +1,5 @@
 "use client";
-import React, { useId } from "react";
+import React, { useId, useMemo } from "react";
 import {
   DndContext,
   TouchSensor,
@@ -10,7 +10,7 @@ import {
 } from "@dnd-kit/core";
 
 import { Project } from "@src/API";
-import { DocumentCheckIcon } from "@heroicons/react/24/solid";
+import { Save } from "lucide-react";
 import useProject from "./hooks/useProject";
 import { useEffect } from "react";
 import BuildArea from "@canvas/BuildArea";
@@ -28,13 +28,9 @@ import { Button} from "@/components/ui/button";
 
 
 export default function ProjectBuilder({ project }: { project: Project }) {
-  const { loadElements, updateKey} = useProject();
-  useEffect(() => {
-    if (project) {
-      loadElements(JSON.parse(project.content || "[]"));
-    }
-  }, [project]);
-      // This stops the scrolling ability
+  const { useLoadElements, loadElements, updateKey} = useProject();
+  useLoadElements(project)
+  // This stops the scrolling ability
   // document.body.style.overflow = "hidden";
   // Remove this if it causes issues with scrolling on the other pages. 
   useEffect(() => {
@@ -56,26 +52,23 @@ export default function ProjectBuilder({ project }: { project: Project }) {
   return (
       <DndContext id={id} sensors={sensors} collisionDetection={pointerWithin}>
         <main className="flex flex-col w-full h-full max-h-90vh">
-          <div className="flex justify-between border-b-1 border-slate-500 p-2 gap-2 items-center">
-            <h2 className="truncate font-medium">
+          
+          {/* This is the Project "NavBar" */}
+          <div className="flex border-b-1 border-border p-2 gap-2 items-center">
+              <p  className="truncate font-medium">Project</p>
               <span className="mr-2">
-                Project:
                 <Input
                   placeholder={project.name}
                   onChange={(e) => updateProjectName(e.target.value)}
-                ></Input>
+                />
               </span>
-            </h2>
-            <ThemeToggle />
             <Button
               className="gap-1"
               onClick={() => saveProject(project.id, projectName, elements)}
             >
-              <DocumentCheckIcon className="h-5 w-6" />
-              <p>Save</p>
+              <Save className="h-5 w-6" />
             </Button>
           </div>
-
           <BuildArea />
         <Popover>
       <PopoverTrigger asChild style={{top: '95%', left:'50%', transform: 'translate(-50%, -50%)'}} className="absolute">

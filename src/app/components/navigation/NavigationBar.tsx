@@ -1,46 +1,69 @@
-'use client'
+"use client";
+
 import { ReactElement, useEffect, useState } from "react";
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from "next/navigation";
 import { NavDiscover } from "./NavDiscover";
 import { NavDashboard } from "./NavDashboard";
 import { ThemeToggle } from "../ThemeToggle";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import Image from 'next/image';
+import { currentAuthenticatedUser } from "@/lib/auth";
+import { AuthUser } from "aws-amplify/auth";
 
 export function NavigationBar () {
   // Needs Implemented
-  const [user, setUser] = useState("");
-  const [project, setProject] = useState("");
+  const [user, setUser] = useState<AuthUser|null>(null);
+  const [project, setProject] = useState(null);
+  
 
   const [middleState, setMiddleState] = useState(<></>);
   const [endState, setEndState] = useState<ReactElement>(<></>);
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   useEffect(() => {
-    // getUser()
+    // setUser();
     // getProject()
 
     if (pathname === "/discover") {
-        setMiddleState(NavDiscover());
+        setMiddleState(<p></p>);
         setEndState(
           <Button variant={"ghost"} className="text-lg " asChild>
-          <Link href={"/dashboard"}>
+          <Link href={user? "/dashboard" : "/sign-in"}>
           Dashboard
           </Link> 
         </Button>);
     }
     else if (pathname === "/dashboard") {
-        setMiddleState(NavDashboard());
+        setMiddleState(<p></p>);
         setEndState(
         <Button variant={"ghost"} className="text-lg " asChild>
-          <Link href={"/discover"}>
-            Discover
-          </Link> 
-        </Button>);
-    }
-    else if (pathname.startsWith("/project/")) {
-        setMiddleState(<>{project}</>);
+          <Link href={"/dashboard"}>Dashboard</Link>
+        </Button>
+      );
+    } else if (pathname === "/dashboard") {
+      setMiddleState(NavDashboard());
+      setEndState(
+        <Button variant={"ghost"} className="text-lg " asChild>
+          <Link href={"/discover"}>Discover</Link>
+        </Button>
+      );
+    } else if (pathname.startsWith("/project/")) {
+      setMiddleState(<>{project}</>);
+      setEndState(
+        <>
+          <Button variant={"ghost"} className="text-lg " asChild>
+            <Link href={"/discover"}>Discover</Link>
+          </Button>
+          <Button variant={"ghost"} className="text-lg " asChild>
+            <Link href={user? "/dashboard" : "/sign-in"}>
+            Dashboard
+            </Link> 
+          </Button>
+          </>);
+        }
+      else {
+        setMiddleState(<></>);
         setEndState(
           <>
           <Button variant={"ghost"} className="text-lg " asChild>
@@ -49,13 +72,14 @@ export function NavigationBar () {
             </Link> 
           </Button>
           <Button variant={"ghost"} className="text-lg " asChild>
-            <Link href={"/dashboard"}>
-            Discover
+            <Link href={user? "/dashboard" : "/sign-in"}>
+            Dashboard
             </Link> 
           </Button>
-          </>);
-        }
-      },[pathname, project]);
+          </>
+        )
+      }
+      },[pathname]);
 
   return (
     <>
@@ -85,7 +109,7 @@ export function NavigationBar () {
           </Link> 
         </Button> : 
           <Button variant={"ghost"} className="text-lg " asChild>
-          <Link href={"#"}>
+          <Link href={"/sign-in"}>
           SignIn
           </Link> 
         </Button>}

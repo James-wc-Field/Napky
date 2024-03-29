@@ -17,7 +17,6 @@ export function SignInForm() {
     },
   });
 
-  // TODO: Send data to server
   const { toast } = useToast();
   async function onSubmit(data: SignInInput) {
     toast({
