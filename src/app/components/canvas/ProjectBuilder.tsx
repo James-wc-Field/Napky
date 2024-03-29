@@ -13,16 +13,22 @@ import { Project } from "@src/API";
 import { Save } from "lucide-react";
 import useProject from "./hooks/useProject";
 import { useEffect } from "react";
-import { Input } from "@ui/input";
-import { Button } from "@ui/button";
 import BuildArea from "@canvas/BuildArea";
 import DragOverlayWrapper from "@canvas/DragOverlayWrapper";
 import usePreventZoom from "@canvas/hooks/usePreventZoom";
 import { ThemeToggle } from "@components/ThemeToggle";
 import { saveProject } from "@/project/[projectID]/api";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { Input } from "@/components/ui/input";
+import { Button} from "@/components/ui/button";
+
 
 export default function ProjectBuilder({ project }: { project: Project }) {
-  const { useLoadElements } = useProject();
+  const { useLoadElements, loadElements, updateKey} = useProject();
   useLoadElements(project)
   // This stops the scrolling ability
   // document.body.style.overflow = "hidden";
@@ -35,7 +41,6 @@ export default function ProjectBuilder({ project }: { project: Project }) {
   }, []);
   const id = useId();
   const { elements, updateProjectName, projectName } = useProject();
-
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 2 } }),
     useSensor(TouchSensor, {
@@ -64,10 +69,33 @@ export default function ProjectBuilder({ project }: { project: Project }) {
               <Save className="h-5 w-6" />
             </Button>
           </div>
-
-        <BuildArea />
-      </main>
-      <DragOverlayWrapper />
-    </DndContext>
+          <BuildArea />
+        <Popover>
+      <PopoverTrigger asChild style={{top: '95%', left:'50%', transform: 'translate(-50%, -50%)'}} className="absolute">
+        <Button variant="outline">AI Summary</Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80">
+        <div className="grid gap-4">
+          <div className="space-y-2">
+            <h4 className="font-medium leading-none">API Key</h4>
+            <p className="text-sm text-muted-foreground">
+              Add your OpenAI API key here.
+            </p>
+          </div>
+          <div className="grid gap-2">
+            <div className="grid grid-cols-3 items-center gap-4">
+              <Input onChange={(e)=> updateKey(e.target.value)}
+                id="width"
+                defaultValue=""
+                className="col-span-3 h-8"
+              />
+            </div>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+        </main>
+        <DragOverlayWrapper />
+      </DndContext>
   );
 }

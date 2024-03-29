@@ -8,6 +8,10 @@ import { SelectableRef } from "react-selectable-box";
 type CanvasContextType = {
   elements: ProjectElementInstance[];
 
+
+  key: string;
+
+  updateKey: (key: string) => void
   /**
    * Adds an element to the canvas at a specific position
    * @param element Element to add to the canvas
@@ -66,6 +70,14 @@ type CanvasContextType = {
    * @returns
    */
   updateElement: (id: string, element: ProjectElementInstance) => void;
+
+
+  /**
+   * 
+   * @param id ID of the element to return
+   * @returns Project element instance that matches the id
+   */
+  getElement: (id: string) => ProjectElementInstance | undefined;
 
   scrollLeft: number;
   /**
@@ -140,6 +152,7 @@ export default function CanvasContextProvider({
   children: ReactNode;
 }) {
   const [elements, setElements] = useState<ProjectElementInstance[]>([]);
+  const [key, setKey] = useState<string>("");
   const [selectedElements, setSelectedElements] = useState<ProjectElementInstance[]>([]);
   const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false);
   const [isResizing, setIsResizing] = useState(false)
@@ -190,6 +203,10 @@ export default function CanvasContextProvider({
     setSelectedElements(() => [...elements]);
   };
 
+  const getElement = (id: string)=> {
+    return elements.find((el)=>{el.id === id})
+  }
+
 
   const addSelectedElement = (element: ProjectElementInstance) => {
     setSelectedElements((prev) => [...prev, element]);
@@ -202,6 +219,12 @@ export default function CanvasContextProvider({
     setSelectedElements(() => []);
   }
 
+  const updateKey =(key:string) => {
+    setKey(() => key)
+  }
+  const loadElements = (newElements: ProjectElementInstance[]) => {
+    setElements(() => [...newElements]);
+  }
   const useResize = (element: ProjectElementInstance, startPos:Position) => { 
   //   useEffect(() => {
   //   const handleMouseMove = 
@@ -366,6 +389,7 @@ export default function CanvasContextProvider({
       value={{
         elements,
         addElement,
+        getElement,
         removeElement,
         updateElement,
         selectedElements,
@@ -385,6 +409,8 @@ export default function CanvasContextProvider({
         projectName,
         removeSelectedElements,
         addSelectedElement,
+        key,
+        updateKey,
         useMouseMove,
         middleMouseIsDown,
         updateMiddleMouseIsDown,
