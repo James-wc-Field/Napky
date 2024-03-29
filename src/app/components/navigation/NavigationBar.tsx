@@ -1,6 +1,7 @@
-'use client'
+"use client";
+
 import { ReactElement, useEffect, useState } from "react";
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from "next/navigation";
 import { NavDiscover } from "./NavDiscover";
 import { NavDashboard } from "./NavDashboard";
 import { ThemeToggle } from "../ThemeToggle";
@@ -18,14 +19,9 @@ export function NavigationBar () {
 
   const [middleState, setMiddleState] = useState(<></>);
   const [endState, setEndState] = useState<ReactElement>(<></>);
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   useEffect(() => {
-    const getUser = currentAuthenticatedUser().then((result) => {
-      setUser(result);
-    }).catch((err) => {
-      console.log(err);
-    })
     // setUser();
     // getProject()
 
@@ -42,19 +38,22 @@ export function NavigationBar () {
         setMiddleState(<p></p>);
         setEndState(
         <Button variant={"ghost"} className="text-lg " asChild>
-          <Link href={"/discover"}>
-            Discover
-          </Link> 
-        </Button>);
-    }
-    else if (pathname.startsWith("/project/")) {
-        setMiddleState(<>{project}</>);
-        setEndState(
-          <>
+          <Link href={"/dashboard"}>Dashboard</Link>
+        </Button>
+      );
+    } else if (pathname === "/dashboard") {
+      setMiddleState(NavDashboard());
+      setEndState(
+        <Button variant={"ghost"} className="text-lg " asChild>
+          <Link href={"/discover"}>Discover</Link>
+        </Button>
+      );
+    } else if (pathname.startsWith("/project/")) {
+      setMiddleState(<>{project}</>);
+      setEndState(
+        <>
           <Button variant={"ghost"} className="text-lg " asChild>
-            <Link href={"/discover"}>
-            Discover
-            </Link> 
+            <Link href={"/discover"}>Discover</Link>
           </Button>
           <Button variant={"ghost"} className="text-lg " asChild>
             <Link href={user? "/dashboard" : "/sign-in"}>
