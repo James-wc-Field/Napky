@@ -28,7 +28,7 @@ import { Button} from "@/components/ui/button";
 
 
 export default function ProjectBuilder({ project }: { project: Project }) {
-  const { useLoadElements, loadElements, updateKey} = useProject();
+  const { useLoadElements, updateKey} = useProject();
   useLoadElements(project)
   // This stops the scrolling ability
   // document.body.style.overflow = "hidden";
