@@ -74,18 +74,25 @@ function CanvasComponent({
             </Button>
           </CollapsibleTrigger>
         </div>
-        <CollapsibleContent>
-        <ListDroppable element={element} numItems={children.length}>
-          {children.length > 0 ? (
-            children.map((childId) => {
-              const child = elements.find((e) => e.id === childId);
-              if (!child) return null;
-              return <ListElementWrapper key={childId} element={child} />;
-            })
-          ) : (
-            <p>{placeHolder}</p>
-          )}
+        {!isOpen && children.length > 0 ? (
+        <ListDroppable element={element} numItems={1}>
+          <ListElementWrapper key={children[0]} element={elements.find((e) => e.id === children[0])!} />
         </ListDroppable>
+        ) : (<></>)}
+        <CollapsibleContent className="grow">
+          <ListDroppable element={element} numItems={children.length}>
+            {children.length > 0 ? (
+              children.map((childId) => {
+                const child = elements.find((e) => e.id === childId);
+                if (!child) return null;
+                return <ListElementWrapper key={childId} element={child} />;
+              })
+            ) : (
+              <div>
+                <p>{placeHolder}</p>
+              </div>
+            )}
+          </ListDroppable>
         </CollapsibleContent>
       </Card>
     </Collapsible >
@@ -111,17 +118,23 @@ function ListDroppable({
       ),
     },
   });
+  const style = {
+    maxWidth: element.size.width,
+    minHeight: element.size.height,
+  };
 
   return (
-      <Card
-        ref={setNodeRef}
-        className={`
-        flex-1 flex flex-col items-center justify-center gap-1
-        ${numItems > 0 ? "border-0" : ""}
+    <Card
+      ref={setNodeRef}
+      style={style}
+      className={`
+
+        flex-1 flex flex-col gap-1
+        ${numItems > 0 ? "border-0" : "items-center justify-center"}
         ${isOver ? "ring-1 ring-current" : ""}`}
-      >
-        {children}
-      </Card>
+    >
+      {children}
+    </Card>
   );
 }
 
