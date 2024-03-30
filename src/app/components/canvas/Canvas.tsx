@@ -9,23 +9,11 @@ import CanvasToolbar from "@canvas/CanvasToolbar";
 import Selectable, { SelectableRef, useSelectable } from 'react-selectable-box';
 import { useCallback } from "react";
 
-
 export default function Canvas({
   elements,
 }: {
   elements: ProjectElementInstance[];
 }) {
-  return (
-    <MainCanvasDroppable>
-      {elements.map((element) => {
-        if (element.parentId !== "root") return null;
-        return <CanvasElementWrapper key={element.id} element={element} />;
-      })}
-    </MainCanvasDroppable>
-  );
-}
-
-function MainCanvasDroppable({ children }: { children?: ReactNode }) {
   const selectableRef = useRef<SelectableRef>(null);
   const { isOver, setNodeRef } = useDroppable({
     id: "canvas-droppable",
@@ -114,7 +102,10 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
                 zIndex: 2,
               }}
             >
-              {children}
+              {elements.map((element) => {
+                if (element.parentId !== "root") return null;
+                return <CanvasElementWrapper key={element.id} element={element} />;
+              })}
             </div>
           </div>
         </div>
@@ -140,7 +131,7 @@ function CanvasElementWrapper({
       isCanvasElement: true,
     },
   });
-  const { updateElement, zoomLevel, changeSelectedElements, addSelectedElement, selectedElements} = useProject()
+  const { updateElement, zoomLevel, changeSelectedElements, addSelectedElement, selectedElements } = useProject()
   const [isResizing, setIsResizing] = useState(false)
   type Position = {
     x: number | null;
@@ -155,8 +146,6 @@ function CanvasElementWrapper({
     visibility: isDragging ? "hidden" : undefined,
     width: element.size.width,
     height: element.size.height,
-    cursor: isSelected ? "move" : "default",
-    border: isSelected ? '1px solid #1677ff' : undefined,
   };
   const resizeHandle = useRef<HTMLDivElement>(null)
 
@@ -189,6 +178,10 @@ function CanvasElementWrapper({
   }, [element]);
   // useResize(element,startPos)
 
+  const selectStyle: React.CSSProperties = {
+    cursor: isSelected ? "move" : "default",
+    border: isSelected ? '1px solid #1677ff' : undefined,
+  }
   return (
     <div style={style} ref={(ref) => {
       setDragRef(ref);
@@ -196,36 +189,24 @@ function CanvasElementWrapper({
     }}
     >
       <div className="relative">
-      <div onMouseDown={(e) => {
-        if (e.ctrlKey) {
-          addSelectedElement(element)
-        } else {
-          console.log(selectedElements.length)
-          // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
-          if(selectedElements.length == 1){
-            changeSelectedElements([element])
+        <div onMouseDown={(e) => {
+          if (e.ctrlKey) {
+            addSelectedElement(element)
+          } else {
+            // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
           }
-        }
-      }}>
-        <div {...listeners} {...attributes}>
-          <CanvasElement elementInstance={element} />
+        }}>
+          <div style={selectStyle} {...listeners} {...attributes}>
+            <CanvasElement elementInstance={element} />
+          </div>
         </div>
-      </div>
-      <div className="absolute"
-        ref={resizeHandle}
-        onMouseDown={(e) => {
-          setIsResizing(true)
-          setStartPos({ x: e.clientX, y: e.clientY })
-        }}
-        style={{
-          bottom: -10,
-          right: -10,
-          width: '10px',
-          height: '10px',
-          backgroundColor: 'grey',
-          cursor: 'nwse-resize'
-        }}
-      ></div>
+        <div className="absolute -bottom-5 -right-5 w-3 h-3 bg-gray-500 cursor-nwse-resize"
+          ref={resizeHandle}
+          onMouseDown={(e) => {
+            setIsResizing(true)
+            setStartPos({ x: e.clientX, y: e.clientY })
+          }}
+        ></div>
       </div>
     </div>
   );

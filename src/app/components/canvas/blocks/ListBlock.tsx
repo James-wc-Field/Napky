@@ -10,6 +10,10 @@ import {
 import { Card } from "@ui/card";
 import { useDroppable, useDraggable } from "@dnd-kit/core";
 import useProject from "@canvas/hooks/useProject";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Button } from "@/components/ui/button";
+import { ChevronsUpDown } from "lucide-react";
+import { useState } from "react"
 
 const type: ElementsType = "ListBlock";
 
@@ -55,22 +59,36 @@ function CanvasComponent({
     minHeight: element.size.height,
   };
   const { elements } = useProject();
-
+  const [isOpen, setIsOpen] = useState(true)
   return (
-    <Card style={style} className="flex flex-col gap-2 p-2">
-      <p>{label}</p>
-      <ListDroppable element={element} numItems={children.length}>
-        {children.length > 0 ? (
-          children.map((childId) => {
-            const child = elements.find((e) => e.id === childId);
-            if (!child) return null;
-            return <ListElementWrapper key={childId} element={child} />;
-          })
-        ) : (
-          <p>{placeHolder}</p>
-        )}
-      </ListDroppable>
-    </Card>
+    <Collapsible
+      open={isOpen}
+      onOpenChange={setIsOpen}>
+      <Card style={style} className="flex flex-col gap-2 p-2">
+        <div className="flex flex-row justify-between">
+          <p className="content-center">{label}</p>
+          <CollapsibleTrigger className="-right-10" asChild>
+            <Button variant="ghost" size="sm" className="w-9 p-0">
+              <ChevronsUpDown className="h-4 w-4" />
+              <span className="sr-only">Toggle</span>
+            </Button>
+          </CollapsibleTrigger>
+        </div>
+        <CollapsibleContent>
+        <ListDroppable element={element} numItems={children.length}>
+          {children.length > 0 ? (
+            children.map((childId) => {
+              const child = elements.find((e) => e.id === childId);
+              if (!child) return null;
+              return <ListElementWrapper key={childId} element={child} />;
+            })
+          ) : (
+            <p>{placeHolder}</p>
+          )}
+        </ListDroppable>
+        </CollapsibleContent>
+      </Card>
+    </Collapsible >
   );
 }
 
@@ -95,15 +113,15 @@ function ListDroppable({
   });
 
   return (
-    <Card
-      ref={setNodeRef}
-      className={`
+      <Card
+        ref={setNodeRef}
+        className={`
         flex-1 flex flex-col items-center justify-center gap-1
         ${numItems > 0 ? "border-0" : ""}
         ${isOver ? "ring-1 ring-current" : ""}`}
-    >
-      {children}
-    </Card>
+      >
+        {children}
+      </Card>
   );
 }
 
