@@ -4,6 +4,7 @@ import { cookieBasedClient } from "@/lib/amplifyServerUtils";
 import { listProjects } from "@src/graphql/queries";
 import { createProject } from "@src/graphql/mutations";
 import { currentAuthenticatedUser } from "@/lib/auth";
+import { getCurrentUser } from "aws-amplify/auth";
 
 /**
  * Get all projects created by the user
@@ -50,4 +51,18 @@ export async function createNewProject() {
     })
   ).data.createProject;
   return project.id;
+}
+
+
+export async function currentAuthenticated() {
+  try {
+    const { username, userId, signInDetails } = await getCurrentUser();
+    console.log(`The username: ${username}`);
+    console.log(`The userId: ${userId}`);
+    console.log(`The signInDetails: ${signInDetails}`);
+    return { username, userId, signInDetails };
+  } catch (err) {
+    console.log(err);
+    return { username: undefined, userId: undefined, signInDetails: undefined };
+  }
 }

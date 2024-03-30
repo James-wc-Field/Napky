@@ -1,5 +1,5 @@
 import useProject from './useProject'
-import { ElementsType, ProjectElements } from "@canvas/types/ProjectElements";
+import { ElementsType, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
 import { generateSummary, getOpenGraphTags } from '@/project/[projectID]/api'
 
