@@ -1,9 +1,9 @@
 import React from "react";
-import { TextBlockProjectElement } from "@canvas/blocks/TextBlock";
-import { ImageBlockProjectElement } from "@canvas/blocks/ImageBlock";
-import { LinkBlockProjectElement } from "@canvas/blocks/LinkBlock";
-import { ListBlockProjectElement } from "@canvas/blocks/ListBlock";
-import { TodoBlockProjectElement } from "@canvas/blocks/TodoBlock";
+import { TextBlockProjectElement } from "..//blocks/TextBlock";
+import { ImageBlockProjectElement } from "../blocks/ImageBlock";
+import { LinkBlockProjectElement } from "..//blocks/LinkBlock";
+import { ListBlockProjectElement } from "../blocks/ListBlock";
+import { TodoBlockProjectElement } from "../blocks/TodoBlock";
 
 export type ElementsType =
   | "TextBlock"

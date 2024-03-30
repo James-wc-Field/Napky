@@ -5,11 +5,11 @@ import {
   ElementsType,
   ProjectElement,
   ProjectElementInstance,
-} from "@canvas/types/ProjectElements";
+} from "@/project/[projectID]/types/ProjectElements";
 import { Card } from "@ui/card";
 import { Textarea } from "@ui/textarea";
 import { Checkbox } from "@ui/checkbox";
-import useProject from "@canvas/hooks/useProject";
+import useProject from "@/project/[projectID]/hooks/useProject";
 
 const type: ElementsType = "TodoBlock";
 

@@ -14,7 +14,7 @@ import {
 
 import { EyeIcon } from "@heroicons/react/16/solid";
 import { EyeSlashIcon } from "@heroicons/react/16/solid";
-import { SignUpInputExtended } from "@components/SignUpForm";
+import { SignUpInputExtended } from "@/(accounts)/sign-in/SignUpForm";
 
 export function EmailField({
   form,

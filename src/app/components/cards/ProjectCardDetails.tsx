@@ -14,8 +14,6 @@ interface ProjectsProps {
 }
 
 export function ProjectCardDetails(props: ProjectsProps) {
-  const image = "";
-  // "https://webneel.com/daily/sites/default/files/images/daily/05-2018/portrait-photography-by-dennis-drozhzhin.jpg"
   const { project } = props;
 
   return (

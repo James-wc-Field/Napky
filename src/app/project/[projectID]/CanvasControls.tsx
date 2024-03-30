@@ -2,7 +2,7 @@ import { PlusIcon, MinusIcon } from "@heroicons/react/24/solid";
 import { Card } from "@ui/card";
 import { Button } from "@ui/button";
 import React from "react";
-import useProject from "@canvas/hooks/useProject";
+import useProject from "@/project/[projectID]/hooks/useProject";
 
 export default function CanvasControls() {
   const { updateZoomLevel } = useProject();
