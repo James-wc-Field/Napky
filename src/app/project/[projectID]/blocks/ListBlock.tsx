@@ -6,10 +6,10 @@ import {
   ProjectElement,
   ProjectElementInstance,
   ProjectElements,
-} from "@canvas/types/ProjectElements";
+} from "@/project/[projectID]/types/ProjectElements";
 import { Card } from "@ui/card";
 import { useDroppable, useDraggable } from "@dnd-kit/core";
-import useProject from "@canvas/hooks/useProject";
+import useProject from "@/project/[projectID]/hooks/useProject";
 
 const type: ElementsType = "ListBlock";
 

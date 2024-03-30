@@ -13,9 +13,9 @@ import { Project } from "@src/API";
 import { Save } from "lucide-react";
 import useProject from "./hooks/useProject";
 import { useEffect } from "react";
-import BuildArea from "@canvas/BuildArea";
-import DragOverlayWrapper from "@canvas/DragOverlayWrapper";
-import usePreventZoom from "@canvas/hooks/usePreventZoom";
+import BuildArea from "@/project/[projectID]/BuildArea";
+import DragOverlayWrapper from "@/project/[projectID]/DragOverlayWrapper";
+import usePreventZoom from "@/project/[projectID]/hooks/usePreventZoom";
 import { ThemeToggle } from "@components/ThemeToggle";
 import { saveProject } from "@/project/[projectID]/api";
 import {

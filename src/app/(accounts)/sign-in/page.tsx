@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "@ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@ui/tabs";
-import { SignInForm } from "@/components/SignInForm";
-import { SignUpForm } from "@/components/SignUpForm";
+import { SignInForm } from "@/(accounts)/sign-in/SignInForm";
+import { SignUpForm } from "@/(accounts)/sign-in/SignUpForm";
 import Link from "next/link";
 import { Copyright } from "@/components/Copyright";
 

@@ -2,7 +2,7 @@ import React from "react";
 import { Suspense } from "react";
 import { getAllProjects } from "@/discover/api";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ProjectCard } from "@/components/cards/ProjectCardSample";
+import { ProjectCard } from "@/components/cards/ProjectCard";
 import { LoadingSpinner } from "@/components/ui/spinner";
 
 export default function Page() {

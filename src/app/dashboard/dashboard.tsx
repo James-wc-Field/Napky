@@ -20,7 +20,7 @@ import { Suspense } from 'react';
 import { Project } from "@src/API";
 import { createNewProject } from "./api";
 import { useRouter } from "next/navigation";
-import { ProjectCard } from "@/components/cards/ProjectCardSample";
+import { ProjectCard } from "@/components/cards/ProjectCard";
 
 type props = {
     projects: Project[];

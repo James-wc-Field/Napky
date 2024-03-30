@@ -1,9 +1,9 @@
 import React from "react";
-import ToolbarBtnElement from "@canvas/ToolbarBtnElement";
-import { ProjectElements } from "@canvas/types/ProjectElements";
+import ToolbarBtnElement from "@/project/[projectID]/ToolbarBtnElement";
+import { ProjectElements } from "@/project/[projectID]/types/ProjectElements";
 import { Card } from "@ui/card";
 import { useDroppable } from "@dnd-kit/core";
-import { Button } from "../ui/button";
+import { Button } from "../../components/ui/button";
 import { Save} from "lucide-react";
 
 export default function CanvasToolbar() {
