@@ -9,7 +9,6 @@ export default function Page() {
   return (
     <div className="h-base">
       <ScrollArea className="h-full">
-        <p>Title Here? Welcome Banner?</p>
         <Suspense fallback={<Loading />}>
           <ProjectList />
         </Suspense>
