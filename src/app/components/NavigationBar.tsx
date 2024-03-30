@@ -25,7 +25,7 @@ export async function NavigationBar({children}: {children: React.ReactNode}) {
             src="/images/icon.png"
           />
           <p className="mx-2 text-xl">
-            KorkBored
+            KorkBo
           </p>
         </a>
         <div className="flex w-full justify-center mx-5">
