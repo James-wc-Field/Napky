@@ -8,7 +8,6 @@ import { currentAuthenticatedUser } from "@/lib/auth";
 
 export default async function Page() {
   const currentUser = await currentAuthenticatedUser();
-  console.log("CURRENT USER",currentUser);
   if (!currentUser)
     return (
       <>

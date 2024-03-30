@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext } from "react";
-import { CanvasContext } from "@canvas/context/CanvasContext";
+import { CanvasContext } from "@/project/[projectID]/context/CanvasContext";
 
 function useProject() {
   const context = useContext(CanvasContext);
