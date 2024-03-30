@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import CanvasContextProvider from "./components/canvas/context/CanvasContext";
+import CanvasContextProvider from "./project/[projectID]/context/CanvasContext";
 import { ThemeProvider } from "./components/theme-provider";
 import { Toaster } from "@ui/toaster";
 

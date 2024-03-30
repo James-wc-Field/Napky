@@ -1,5 +1,5 @@
 import React from "react";
-import ProjectBuilder from "@canvas/ProjectBuilder";
+import ProjectBuilder from "@/project/[projectID]/ProjectBuilder";
 import { Suspense } from "react";
 import { Project } from "@src/API";
 import {saveProject, getProjectData, generateSummary} from './api';
