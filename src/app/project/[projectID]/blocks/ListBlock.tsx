@@ -6,14 +6,14 @@ import {
   ProjectElement,
   ProjectElementInstance,
   ProjectElements,
-} from "@canvas/types/ProjectElements";
+} from "@/project/[projectID]/types/ProjectElements";
 import { Card } from "@ui/card";
 import { useDroppable, useDraggable } from "@dnd-kit/core";
-import useProject from "@canvas/hooks/useProject";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown } from "lucide-react";
 import { useState } from "react"
+import useProject from "@/project/[projectID]/hooks/useProject";
 
 const type: ElementsType = "ListBlock";
 

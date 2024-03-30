@@ -5,10 +5,10 @@ import {
   ElementsType,
   ProjectElement,
   ProjectElementInstance,
-} from "@canvas/types/ProjectElements";
+} from "@/project/[projectID]/types/ProjectElements";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@ui/card";
 import { Input } from "@ui/input";
-import useProject from "@canvas/hooks/useProject";
+import useProject from "@/project/[projectID]/hooks/useProject";
 import Image from "next/image";
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton"

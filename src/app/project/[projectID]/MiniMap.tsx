@@ -1,6 +1,6 @@
 import React from "react";
-import { ProjectElementInstance } from "@canvas/types/ProjectElements";
-import useProject from "@canvas/hooks/useProject";
+import { ProjectElementInstance } from "@/project/[projectID]/types/ProjectElements";
+import useProject from "@/project/[projectID]/hooks/useProject";
 import { useDndMonitor } from "@dnd-kit/core";
 
 // Minimap implementation based on example at https://cgxmxt.csb.app/
