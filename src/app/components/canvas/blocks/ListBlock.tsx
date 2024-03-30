@@ -19,7 +19,6 @@ const type: ElementsType = "ListBlock";
 
 const extraAttributes = {
   label: "List Block",
-  placeHolder: "Add other blocks here...",
   children: [] as string[],
 };
 
@@ -56,7 +55,7 @@ function CanvasComponent({
   const { label, placeHolder, children: children } = element.extraAttributes;
   const style = {
     maxWidth: element.size.width,
-    minHeight: element.size.height,
+    minHeight: element.size.height
   };
   const { elements } = useProject();
   const [isOpen, setIsOpen] = useState(true)
@@ -75,11 +74,11 @@ function CanvasComponent({
           </CollapsibleTrigger>
         </div>
         {!isOpen && children.length > 0 ? (
-        <ListDroppable element={element} numItems={1}>
-          <ListElementWrapper key={children[0]} element={elements.find((e) => e.id === children[0])!} />
-        </ListDroppable>
+          <ListDroppable element={element} numItems={1}>
+            <ListElementWrapper key={children[0]} element={elements.find((e) => e.id === children[0])!} />
+          </ListDroppable>
         ) : (<></>)}
-        <CollapsibleContent className="grow">
+        <CollapsibleContent>
           <ListDroppable element={element} numItems={children.length}>
             {children.length > 0 ? (
               children.map((childId) => {
@@ -87,11 +86,7 @@ function CanvasComponent({
                 if (!child) return null;
                 return <ListElementWrapper key={childId} element={child} />;
               })
-            ) : (
-              <div>
-                <p>{placeHolder}</p>
-              </div>
-            )}
+            ) : (<></>)}
           </ListDroppable>
         </CollapsibleContent>
       </Card>
@@ -118,22 +113,18 @@ function ListDroppable({
       ),
     },
   });
-  const style = {
-    maxWidth: element.size.width,
-    minHeight: element.size.height,
-  };
-
   return (
     <Card
       ref={setNodeRef}
-      style={style}
       className={`
-
         flex-1 flex flex-col gap-1
         ${numItems > 0 ? "border-0" : "items-center justify-center"}
-        ${isOver ? "ring-1 ring-current" : ""}`}
+        ${isOver ? "ring-1 ring-current border-dashed" : ""}`}
     >
       {children}
+      <div className="flex items-center justify-center border-r border-l border-b rounded-lg h-20">
+        Add other blocks here...
+      </div>
     </Card>
   );
 }

@@ -274,6 +274,7 @@ export default function CanvasContextProvider({
   }
 
 
+
   const useLoadElements = (project: Project) => {
     useEffect(() => {
       if (project) {

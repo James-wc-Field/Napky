@@ -1,4 +1,4 @@
-import { ReactNode, use, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { ProjectElementInstance, ProjectElements } from "@canvas/types/ProjectElements";
 import useProject from "@canvas/hooks/useProject";
@@ -7,7 +7,6 @@ import CanvasControls from "@canvas/CanvasControls";
 import CanvasBackground from "@canvas/CanvasBackground";
 import CanvasToolbar from "@canvas/CanvasToolbar";
 import Selectable, { SelectableRef, useSelectable } from 'react-selectable-box';
-import { useCallback } from "react";
 
 export default function Canvas({
   elements,
@@ -71,6 +70,7 @@ export default function Canvas({
     <>
       <Selectable ref={selectableRef} value={selectedElements} onStart={(e) => {
         console.log(e.target)
+        console.log(elements)
         if ((e.target as HTMLElement).id !== "canvas-pane-droppable" && (e.target as HTMLElement).id !== "canvas-viewport") {
           selectableRef.current?.cancel();
         }
@@ -131,7 +131,7 @@ function CanvasElementWrapper({
       isCanvasElement: true,
     },
   });
-  const { updateElement, zoomLevel, changeSelectedElements, addSelectedElement, selectedElements } = useProject()
+  const { updateElement, addSelectedElement, elements} = useProject()
   const [isResizing, setIsResizing] = useState(false)
   type Position = {
     x: number | null;
@@ -153,13 +153,30 @@ function CanvasElementWrapper({
     const handleMouseMove = (e: MouseEvent) => {
       const newWidth = element.size.width + e.clientX - startPos.x!
       const newHeight = element.size.height + e.clientY - startPos.y!
-      updateElement(element.id, {
-        ...element,
-        size: {
-          width: newWidth,
-          height: newHeight
+      if (element.extraAttributes?.children) {
+        element.extraAttributes.children.forEach((id: string) => {
+          const child = elements.find((e) => e.id === id);
+          if (child) {
+            updateElement(id, {
+              ...child,
+              size: {
+                width: newWidth,
+                height: newHeight
+              }
+            })
+          }
         }
-      })
+        )
+      }
+      if (element.id) {
+        updateElement(element.id, {
+          ...element,
+          size: {
+            width: newWidth,
+            height: newHeight
+          }
+        })
+      }
     }
     const handleMouseUp = () => {
       setIsResizing(false)
@@ -176,14 +193,8 @@ function CanvasElementWrapper({
   const CanvasElement = useMemo(() => {
     return ProjectElements[element.type].canvasComponent;
   }, [element]);
-  // useResize(element,startPos)
-
-  const selectStyle: React.CSSProperties = {
-    cursor: isSelected ? "move" : "default",
-    border: isSelected ? '1px solid #1677ff' : undefined,
-  }
   return (
-    <div style={style} ref={(ref) => {
+    <div className={`left-${element.position.x} top-${element.position.y}`}style={style} ref={(ref) => {
       setDragRef(ref);
       setSelectRef(ref);
     }}
@@ -196,7 +207,7 @@ function CanvasElementWrapper({
             // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
           }
         }}>
-          <div style={selectStyle} {...listeners} {...attributes}>
+          <div className={`${isSelected ? "cursor-move border-blue-600 border-2 border-solid rounded-lg" : "cursor-default"}`} {...listeners} {...attributes}>
             <CanvasElement elementInstance={element} />
           </div>
         </div>
