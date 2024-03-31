@@ -56,7 +56,7 @@ export default function Home() {
                   Free-form organizing power - no more lists
                 </div>
                 <div className='w-fit text-3xl mb-12 drop-shadow-md text-accent text-center border-4 border-white p-3 rounded-lg translate-x-[-3rem] translate-y-2'>
-                  Add links directly to your project - no more "tabzilla"
+                  Add links directly to your project - no more {"tabzilla"}
                 </div>
                 <div className='w-fit text-3xl drop-shadow-md text-accent text-center border-4 border-white p-3 rounded-lg translate-x-24 translate-y-12'>
                   AI integrated tools for high-efficiency work
