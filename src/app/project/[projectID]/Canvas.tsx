@@ -193,6 +193,7 @@ function CanvasElementWrapper({
   const CanvasElement = useMemo(() => {
     return ProjectElements[element.type].canvasComponent;
   }, [element]);
+  const parentRef = useRef<HTMLDivElement>(null)
   return (
     <div className={`left-${element.position.x} top-${element.position.y}`}style={style} ref={(ref) => {
       setDragRef(ref);
@@ -207,7 +208,7 @@ function CanvasElementWrapper({
             // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
           }
         }}>
-          <div className={`${isSelected ? "cursor-move border-blue-600 border-2 border-solid rounded-lg" : "cursor-default"}`} {...listeners} {...attributes}>
+          <div ref={parentRef} className={`${isSelected ? "cursor-move border-blue-600 border-2 border-solid rounded-lg" : "cursor-default"}`} {...listeners} {...attributes}>
             <CanvasElement elementInstance={element} />
           </div>
         </div>
