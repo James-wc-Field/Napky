@@ -9,13 +9,9 @@ import { cookies } from "next/headers";
  * @returns the current authenticated user
  */
 export async function currentAuthenticatedUser() {
-  try {
-    return await runWithAmplifyServerContext({
-      nextServerContext: { cookies },
-      operation: (contextSpec) => getCurrentUser(contextSpec),
-    });
-  } catch (err) {
-    console.log(err);
-    return null;
-  }
+  const cookieStore = cookies;
+  return await runWithAmplifyServerContext({
+    nextServerContext: { cookies:cookieStore },
+    operation: (contextSpec) => getCurrentUser(contextSpec),
+  });
 }
