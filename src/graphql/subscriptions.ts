@@ -8,6 +8,45 @@ type GeneratedSubscription<InputType, OutputType> = string & {
   __generatedSubscriptionOutput: OutputType;
 };
 
+export const onCreateComments = /* GraphQL */ `subscription OnCreateComments($filter: ModelSubscriptionCommentsFilterInput) {
+  onCreateComments(filter: $filter) {
+    id
+    comment
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateCommentsSubscriptionVariables,
+  APITypes.OnCreateCommentsSubscription
+>;
+export const onUpdateComments = /* GraphQL */ `subscription OnUpdateComments($filter: ModelSubscriptionCommentsFilterInput) {
+  onUpdateComments(filter: $filter) {
+    id
+    comment
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateCommentsSubscriptionVariables,
+  APITypes.OnUpdateCommentsSubscription
+>;
+export const onDeleteComments = /* GraphQL */ `subscription OnDeleteComments($filter: ModelSubscriptionCommentsFilterInput) {
+  onDeleteComments(filter: $filter) {
+    id
+    comment
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteCommentsSubscriptionVariables,
+  APITypes.OnDeleteCommentsSubscription
+>;
 export const onCreateProject = /* GraphQL */ `subscription OnCreateProject($filter: ModelSubscriptionProjectFilterInput) {
   onCreateProject(filter: $filter) {
     id
