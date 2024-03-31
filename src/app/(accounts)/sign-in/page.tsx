@@ -12,8 +12,7 @@ import type { WithAuthenticatorProps } from '@aws-amplify/ui-react';
 import { withAuthenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { useRouter } from "next/navigation";
-
-export function Page() {
+function Page() {
   return (
     <div className="flex h-screen justify-center items-center">
       {/* <Card className="max-w-full w-[340px]">
