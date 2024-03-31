@@ -5,7 +5,7 @@ import useProject from "@/project/[projectID]/hooks/useProject";
 import MiniMap from "@/project/[projectID]/MiniMap";
 import CanvasControls from "@/project/[projectID]/CanvasControls";
 import CanvasBackground from "@/project/[projectID]/CanvasBackground";
-import CanvasToolbar from "@/project/[projectID]/CanvasToolbar";
+import { CanvasToolbar } from "@/project/[projectID]/CanvasToolbar";
 import Selectable, { SelectableRef, useSelectable } from 'react-selectable-box';
 import { useCallback } from "react";
 
@@ -63,7 +63,7 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
     updateScrollTop(deltaY);
   };
 
-  const canvasRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef(null);
   const curr = useMemo(() => {
     return canvasRef.current
   }, [canvasRef])
@@ -73,7 +73,6 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
 
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    console.log(e)
     if (e.button === 1) {
       updateMiddleMouseIsDown(true);
     }
@@ -82,13 +81,11 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
   return (
     <>
       <Selectable ref={selectableRef} value={selectedElements} onStart={(e) => {
-        console.log(e.target)
         if ((e.target as HTMLElement).id !== "canvas-pane-droppable" && (e.target as HTMLElement).id !== "canvas-viewport") {
           selectableRef.current?.cancel();
         }
       }}
         onEnd={(value) => {
-          console.log(value)
           changeSelectedElements(value as ProjectElementInstance[])
         }}>
         <div
@@ -117,12 +114,12 @@ function MainCanvasDroppable({ children }: { children?: ReactNode }) {
               {children}
             </div>
           </div>
+          <CanvasBackground />
         </div>
       </Selectable>
-      <CanvasToolbar />
+      <CanvasToolbar ref={canvasRef} />
       <CanvasControls />
       {/* <MiniMap /> */}
-      <CanvasBackground />
     </>
   );
 }
@@ -140,7 +137,7 @@ function CanvasElementWrapper({
       isCanvasElement: true,
     },
   });
-  const { updateElement, zoomLevel, changeSelectedElements, addSelectedElement, selectedElements} = useProject()
+  const { updateElement, zoomLevel, changeSelectedElements, addSelectedElement, selectedElements } = useProject()
   const [isResizing, setIsResizing] = useState(false)
   type Position = {
     x: number | null;
@@ -196,36 +193,35 @@ function CanvasElementWrapper({
     }}
     >
       <div className="relative">
-      <div onMouseDown={(e) => {
-        if (e.ctrlKey) {
-          addSelectedElement(element)
-        } else {
-          console.log(selectedElements.length)
-          // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
-          if(selectedElements.length == 1){
-            changeSelectedElements([element])
+        <div onMouseDown={(e) => {
+          if (e.ctrlKey) {
+            addSelectedElement(element)
+          } else {
+            // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
+            if (selectedElements.length == 1) {
+              changeSelectedElements([element])
+            }
           }
-        }
-      }}>
-        <div {...listeners} {...attributes}>
-          <CanvasElement elementInstance={element} />
+        }}>
+          <div {...listeners} {...attributes}>
+            <CanvasElement elementInstance={element} />
+          </div>
         </div>
-      </div>
-      <div className="absolute"
-        ref={resizeHandle}
-        onMouseDown={(e) => {
-          setIsResizing(true)
-          setStartPos({ x: e.clientX, y: e.clientY })
-        }}
-        style={{
-          bottom: -10,
-          right: -10,
-          width: '10px',
-          height: '10px',
-          backgroundColor: 'grey',
-          cursor: 'nwse-resize'
-        }}
-      ></div>
+        <div className="absolute"
+          ref={resizeHandle}
+          onMouseDown={(e) => {
+            setIsResizing(true)
+            setStartPos({ x: e.clientX, y: e.clientY })
+          }}
+          style={{
+            bottom: -10,
+            right: -10,
+            width: '10px',
+            height: '10px',
+            backgroundColor: 'grey',
+            cursor: 'nwse-resize'
+          }}
+        ></div>
       </div>
     </div>
   );

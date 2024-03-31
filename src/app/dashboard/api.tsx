@@ -18,7 +18,7 @@ export async function getAllUserProjects() {
     await cookieBasedClient.graphql({
       query: listProjects,
       variables: {
-        limit: 1000,
+        limit: 100,
         filter: {
           userId: { eq: user.userId },
         },
