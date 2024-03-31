@@ -7,6 +7,7 @@ import {
   ProjectElementInstance,
   ProjectElements,
 } from "@/project/[projectID]/types/ProjectElements";
+import { useSpring, animated } from '@react-spring/web'
 import { Card } from "@ui/card";
 import { useDroppable, useDraggable } from "@dnd-kit/core";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -52,44 +53,53 @@ function CanvasComponent({
   elementInstance: ProjectElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
-  const { label, placeHolder, children: children } = element.extraAttributes;
+  const { label, children: children } = element.extraAttributes;
   const style = {
     maxWidth: element.size.width,
     minHeight: element.size.height
   };
+  const [springs, api] = useSpring(() => ({
+    from: { height: 0 },
+    to: { height: 200 },
+  }))
   const { elements } = useProject();
   const [isOpen, setIsOpen] = useState(true)
   return (
     <Collapsible
       open={isOpen}
-      onOpenChange={setIsOpen}>
-      <Card style={style} className="flex flex-col gap-2 p-2">
-        <div className="flex flex-row justify-between">
-          <p className="content-center">{label}</p>
-          <CollapsibleTrigger className="-right-10" asChild>
-            <Button variant="ghost" size="sm" className="w-9 p-0">
-              <ChevronsUpDown className="h-4 w-4" />
-              <span className="sr-only">Toggle</span>
-            </Button>
-          </CollapsibleTrigger>
-        </div>
-        {!isOpen && children.length > 0 ? (
-          <ListDroppable element={element} numItems={1}>
-            <ListElementWrapper key={children[0]} element={elements.find((e) => e.id === children[0])!} />
-          </ListDroppable>
-        ) : (<></>)}
-        <CollapsibleContent>
-          <ListDroppable element={element} numItems={children.length}>
-            {children.length > 0 ? (
-              children.map((childId) => {
-                const child = elements.find((e) => e.id === childId);
-                if (!child) return null;
-                return <ListElementWrapper key={childId} element={child} />;
-              })
-            ) : (<></>)}
-          </ListDroppable>
-        </CollapsibleContent>
-      </Card>
+      onOpenChange={()=> {
+        setIsOpen(!isOpen)
+        api.start({from: { height: isOpen ? element.size.height : 200 }, to: { height: isOpen ? 200 : element.size.height}})
+      }}>
+      <animated.div style={springs}>
+        <Card style={style} className="flex flex-col gap-2 p-2">
+          <div className="flex flex-row justify-between">
+            <p className="content-center">{label}</p>
+            <CollapsibleTrigger className="-right-10" asChild>
+              <Button variant="ghost" size="sm" className="w-9 p-0">
+                <ChevronsUpDown className="h-4 w-4" />
+                <span className="sr-only">Toggle</span>
+              </Button>
+            </CollapsibleTrigger>
+          </div>
+          {!isOpen && children.length > 0 ? (
+            <ListDroppable element={element} numItems={1}>
+              <ListElementWrapper key={children[0]} element={elements.find((e) => e.id === children[0])!} />
+            </ListDroppable>
+          ) : (<></>)}
+          <CollapsibleContent>
+            <ListDroppable element={element} numItems={children.length}>
+              {children.length > 0 ? (
+                children.map((childId) => {
+                  const child = elements.find((e) => e.id === childId);
+                  if (!child) return null;
+                  return <ListElementWrapper key={childId} element={child} />;
+                })
+              ) : (<></>)}
+            </ListDroppable>
+          </CollapsibleContent>
+        </Card>
+      </animated.div>
     </Collapsible >
   );
 }
@@ -122,7 +132,7 @@ function ListDroppable({
         ${isOver ? "ring-1 ring-current border-dashed" : ""}`}
     >
       {children}
-      <div className="flex items-center justify-center border-r border-l border-b rounded-lg h-20">
+      <div className={`h-20 justify-center items-center flex ${numItems > 0 ? "border-l border-b rounded-lg border-r" : ""}`}>
         Add other blocks here...
       </div>
     </Card>
