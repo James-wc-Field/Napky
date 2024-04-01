@@ -14,7 +14,8 @@ import { useShallow } from "zustand/react/shallow";
 
 
 export default function Canvas() {
-  const { elements, scrollLeft, scrollTop, zoomLevel, selectedElements, updateZoomLevel, updateSelectedElements, updateScrollLeft, updateScrollTop } = useProjectStore(useShallow((state) => state));
+  const { scrollLeft, scrollTop, zoomLevel, selectedElements, updateZoomLevel, updateSelectedElements, updateScrollLeft, updateScrollTop } = useProjectStore(useShallow((state) => state));
+  const elements = useProjectStore(useShallow((state) => state.elements))
   const [middleMouseIsDown, updateMiddleMouseIsDown] = useState(false)
   const selectableRef = useRef<SelectableRef>(null);
   const { isOver, setNodeRef } = useDroppable({

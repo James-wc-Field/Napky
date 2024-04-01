@@ -4,7 +4,7 @@
 import { type ReactNode, createContext, useRef, useContext } from 'react'
 import { type StoreApi, useStore } from 'zustand'
 
-import { type ProjectStore, createCounterStore } from '../[projectID]/project-store'
+import { type ProjectStore, createProjectStore } from '../[projectID]/project-store'
 
 export const ProjectStoreContext = createContext<StoreApi<ProjectStore> | null>(
     null,
@@ -19,7 +19,7 @@ export const ProjectStoreProvider = ({
 }: ProjectStoreProviderProps) => {
     const storeRef = useRef<StoreApi<ProjectStore>>()
     if (!storeRef.current) {
-        storeRef.current = createCounterStore()
+        storeRef.current = createProjectStore()
     }
 
     return (
