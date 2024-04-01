@@ -7,9 +7,10 @@ import { Button } from "../../components/ui/button";
 import { Save } from "lucide-react";
 import * as htmlToImage from "html-to-image";
 import useProject from "./hooks/useProject";
+import { uploadImage } from "./api";
 
 export const CanvasToolbar = forwardRef(function (props, ref: any) {
-  const { } = useProject();
+  const { projectId } = useProject();
   const { setNodeRef } = useDroppable({
     id: "toolbar-area",
     data: { isToolbar: true },
@@ -25,13 +26,9 @@ export const CanvasToolbar = forwardRef(function (props, ref: any) {
       <ToolbarBtnElement projectElement={ProjectElements.ListBlock} />
       <ToolbarBtnElement projectElement={ProjectElements.TodoBlock} />
       <Button onClick={() => {
-        htmlToImage.toJpeg(ref.current!).then(function (dataUrl) {
-          var link = document.createElement('a');
-          link.download = 'my-image-name.jpeg';
-          link.href = dataUrl;
-          link.click();
-        });
-      }} className="gap-1">
+        uploadImage(projectId, ref);
+      }
+      } className="gap-1">
         <Save className="h-5 w-6" />
       </Button>
     </Card>
