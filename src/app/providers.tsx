@@ -7,6 +7,7 @@ import { Toaster } from "@ui/toaster";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
+
     <ThemeProvider
       attribute="class"
       defaultTheme="system"
@@ -14,7 +15,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
       disableTransitionOnChange
     >
       <Toaster />
-      <CanvasContextProvider>{children}</CanvasContextProvider>
+      <CanvasContextProvider>
+        {children}
+      </CanvasContextProvider>
     </ThemeProvider>
   );
 }

@@ -6,25 +6,17 @@ import { idGenerator } from "@/lib/idGenerator";
 import useProject from "@/project/[projectID]/hooks/useProject";
 import { ProjectElementInstance } from "@/project/[projectID]/types/ProjectElements";
 import { useExternalDrop } from "@/project/[projectID]/hooks/useExternalDrop";
+import { useProjectStore } from "./storeProvider";
+import { useShallow } from "zustand/react/shallow";
 export default function BuildArea() {
-
-  const {
-    elements,
-    addElement,
-    updateElement,
-    scrollLeft,
-    scrollTop,
-    zoomLevel,
-    selectedElements,
-    changeSelectedElements
-  } = useProject();
+  const { elements, addElement, updateElement, scrollLeft, scrollTop, zoomLevel, selectedElements } = useProjectStore(useShallow((state) => state));
   useDndMonitor({
     onDragStart: (event) => {
-      const elementId = event.active.data.current?.elementId;
-      if (!selectedElements.find((element) => element.id == elementId)) {
-        const selected = [elements.find((element) => element.id == elementId)]
-        changeSelectedElements(selected as ProjectElementInstance[])
-      }
+      // const elementId = event.active.data.current?.elementId;
+      // if (!selectedElements.find((element) => element.id == elementId)) {
+      //   const selected = [elements.find((element) => element.id == elementId)]
+      //   changeSelectedElements(selected as ProjectElementInstance[])
+      // }
     },
     onDragEnd: (event) => {
       const { active, over, delta } = event;
@@ -64,7 +56,7 @@ export default function BuildArea() {
       if (isCanvasElement && isCanvasDropArea) {
         const elementId = active.data?.current?.elementId;
         const dragged = elements.find((element) => element.id == elementId);
-        const wasDraggedSelected = selectedElements.includes(dragged!)
+        const wasDraggedSelected = selectedElements().includes(dragged!)
         if (!dragged) return;
         if (!wasDraggedSelected) {
           updateElement(dragged.id, {
@@ -78,7 +70,7 @@ export default function BuildArea() {
             },
           });
         } else {
-          selectedElements.forEach((element) => {
+          selectedElements().forEach((element) => {
             updateElement(element.id, {
               ...element,
               position: {
@@ -267,7 +259,7 @@ export default function BuildArea() {
   });
 
 
-const { externalDropHandler } = useExternalDrop();
+  const { externalDropHandler } = useExternalDrop();
   return (
     <div
       id="canvas-wrapper"
@@ -275,7 +267,7 @@ const { externalDropHandler } = useExternalDrop();
       onDragOver={(e) => e.preventDefault()}
       className="relative overflow-hidden z-0 w-full h-full"
     >
-      <Canvas elements={elements} />
+      <Canvas />
     </div>
   );
 }
