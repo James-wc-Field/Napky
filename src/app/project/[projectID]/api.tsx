@@ -13,14 +13,14 @@ import { cookies } from 'next/headers';
 import { currentAuthenticatedUser } from "@/lib/auth";
 
 
-export async function getOpenGraphTags(url: string){
+export async function getOpenGraphTags(url: string) {
   const html = parse(await (await fetch(url)).text());
-  const attributes= html.querySelectorAll('meta').reduce<{ [property: string]: string }>((accumulator,element) => {
-      if (element.getAttribute('property')?.startsWith('og') && element.hasAttribute('content')){
-          accumulator[element.getAttribute('property')!] = element.getAttribute('content')!;
-      }
-      return accumulator
-  },{})
+  const attributes = html.querySelectorAll('meta').reduce<{ [property: string]: string }>((accumulator, element) => {
+    if (element.getAttribute('property')?.startsWith('og') && element.hasAttribute('content')) {
+      accumulator[element.getAttribute('property')!] = element.getAttribute('content')!;
+    }
+    return accumulator
+  }, {})
   return attributes
 }
 
@@ -56,10 +56,12 @@ export async function saveProject(
  * @param projectID the id of the project to get
  */
 export async function getProjectData(projectID: string) {
-  return (await cookieBasedClient.graphql({
+  const data = (await cookieBasedClient.graphql({
     query: getProject,
     variables: { id: projectID }
   })).data.getProject;
+  console.log(data)
+  return data;
 }
 
 
@@ -77,7 +79,7 @@ async function getURLDom(url: string) {
 
 
 export async function generateSummary(url: string, apiKey: string) {
-  if(apiKey === "") return ""
+  if (apiKey === "") return ""
   const html = parse(await getURLDom(url));
   let elements = html.querySelectorAll('p');
   let element = html.querySelector('h1')
@@ -90,7 +92,7 @@ export async function generateSummary(url: string, apiKey: string) {
   let openai;
   try {
     openai = new OpenAI({ apiKey });
-  }catch(error){
+  } catch (error) {
     console.log(error)
     return ""
   }
@@ -109,15 +111,15 @@ export async function generateSummary(url: string, apiKey: string) {
     }]
 
   }
-  ) 
+  )
   const summary = completion.choices[0].message.content
   // const sum = [{"Summary":summary?.split("Summary\n")[1]},{"Highlights":summary?.split("Highlights\n")[1]},{"Keywords":summary?.split("Keywords\n")[1]}]
   // return sum
   const sections = completion.choices[0].message.content?.split('####')
-  let content:string[] = []
+  let content: string[] = []
   sections?.forEach((section) => {
     const header = section.split("\n")[0]
-    console.log("header",header)
+    console.log("header", header)
     content.push(section.split(header)[1])
   })
   console.log(content)

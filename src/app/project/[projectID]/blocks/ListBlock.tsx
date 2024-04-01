@@ -23,6 +23,7 @@ export const ListBlockProjectElement: ProjectElement = {
   type,
   construct: (id: string, parentId: string) => ({
     id,
+    selected: false,
     type,
     position: { x: 0, y: 0 },
     size: { width: 300, height: 100 },
