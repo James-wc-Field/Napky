@@ -1,0 +1,13 @@
+type Comments @model @auth(rules: [{allow: public, operations: [create]}]) {
+  id: ID!
+  comment: String
+}
+
+type Project @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  userId: String!
+  name: String!
+  description: String
+  content: String
+}
+ 

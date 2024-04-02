@@ -1,4 +1,3 @@
-import { ProjectCard } from '@components/cards/ProjectCardSample';
 import { ProjectCardDetails } from '@/components/cards/ProjectCardDetails';
 import { Project } from '../../API';
 import { ScrollArea } from '@/components/ui/scroll-area';

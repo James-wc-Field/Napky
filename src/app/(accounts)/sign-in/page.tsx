@@ -1,15 +1,22 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "@ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@ui/tabs";
-import { SignInForm } from "@/components/SignInForm";
-import { SignUpForm } from "@/components/SignUpForm";
+import { SignInForm } from "@/(accounts)/sign-in/SignInForm";
+import { SignUpForm } from "@/(accounts)/sign-in/SignUpForm";
 import Link from "next/link";
 import { Copyright } from "@/components/Copyright";
 
-export default function Page() {
+import type { WithAuthenticatorProps } from '@aws-amplify/ui-react';
+import { withAuthenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
+import { useRouter } from "next/navigation";
+
+export function Page() {
   return (
     <div className="flex h-screen justify-center items-center">
-      <Card className="max-w-full w-[340px]">
+      {/* <Card className="max-w-full w-[340px]">
         <CardHeader className="flex justify-center">
           <h1 className="text-2xl font-bold">Welcome</h1>
         </CardHeader>
@@ -36,7 +43,18 @@ export default function Page() {
         <CardFooter className="flex flex-col">
           <Copyright />
         </CardFooter>
-      </Card>
+      </Card> */}
     </div>
   );
 }
+
+function App({ signOut, user }: WithAuthenticatorProps) {
+  return (
+    <>
+      <h1>Hello {user?.username}</h1>
+      <button onClick={signOut}>Sign out</button>
+    </>
+  );
+}
+
+export default withAuthenticator(App);

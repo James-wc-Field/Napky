@@ -1,38 +1,24 @@
+"use server";
+
 import { cookieBasedClient } from "@/lib/amplifyServerUtils";
 import { listProjects } from "@/../graphql/queries";
-import { runWithAmplifyServerContext } from "@/lib/amplifyServerUtils";
-import { getCurrentUser } from "aws-amplify/auth/server";
-import { cookies } from "next/headers";
-
-/**
- * Get the current authenticated user
- * @returns the current authenticated user
- */
-export async function currentAuthenticatedUser() {
-    const user = await runWithAmplifyServerContext({
-      nextServerContext: { cookies },
-      operation: (contextSpec) => getCurrentUser(contextSpec)
-    });
-    return user;
-  }
-
+import { currentAuthenticatedUser } from "@/lib/auth";
 
 /**
  * Get all projects not created by the user
  * @returns an array of all projects not created by the user
  */
 export async function getAllProjects() {
-    const user = await currentAuthenticatedUser();
-    return (
-      await cookieBasedClient.graphql({
-        query: listProjects,
-        variables: {
-          limit: 1000,
-          filter: {
-            userId: { ne: user.userId },
-          },
+  const user = await currentAuthenticatedUser();
+  return (
+    await cookieBasedClient.graphql({
+      query: listProjects,
+      variables: {
+        limit: 1000,
+        filter: {
+          userId: { ne: user?.userId },
         },
-
-      })
-    ).data.listProjects.items;
-  }
+      },
+    })
+  ).data.listProjects.items;
+}
