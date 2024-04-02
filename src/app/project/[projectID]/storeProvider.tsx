@@ -2,9 +2,11 @@
 'use client'
 
 import { type ReactNode, createContext, useRef, useContext } from 'react'
-import { type StoreApi, useStore } from 'zustand'
+import { type StoreApi } from 'zustand'
+import { useStoreWithEqualityFn as useStore } from 'zustand/traditional'
 
 import { type ProjectStore, createProjectStore } from '../[projectID]/project-store'
+import { shallow } from 'zustand/shallow'
 
 export const ProjectStoreContext = createContext<StoreApi<ProjectStore> | null>(
     null,
@@ -38,5 +40,5 @@ export const useProjectStore = <T,>(
         throw new Error(`useCounterStore must be use within CounterStoreProvider`)
     }
 
-    return useStore(projectStoreContext, selector)
+    return useStore(projectStoreContext, selector, shallow)
 }
