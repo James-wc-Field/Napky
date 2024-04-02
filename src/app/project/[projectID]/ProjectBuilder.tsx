@@ -23,11 +23,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useProjectStore } from "./storeProvider";
+import { shallow } from "zustand/shallow";
 export default function ProjectBuilder() {
   const elements = useProjectStore((state) => state.elements);
   const updateProjectName = useProjectStore((state) => state.updateProjectName);
   const projectName = useProjectStore((state) => state.projectName);
   const projectId = useProjectStore((state) => state.projectId);
+  const updateKey = useProjectStore((state) => state.updateKey);
   useEffect(() => {
     const html = document.querySelector("html");
     if (html) {
@@ -78,11 +80,11 @@ export default function ProjectBuilder() {
               </div>
               <div className="grid gap-2">
                 <div className="grid grid-cols-3 items-center gap-4">
-                  {/* <Input onChange={(e) => updateKey(e.target.value)}
+                  <Input onChange={(e) => updateKey(e.target.value)}
                     id="width"
                     defaultValue=""
                     className="col-span-3 h-8"
-                  /> */}
+                  />
                 </div>
               </div>
             </div>
