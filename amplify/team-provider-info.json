@@ -1,4 +1,3 @@
-
 {
   "dev": {
     "awscloudformation": {
@@ -14,7 +13,16 @@
     },
     "categories": {
       "auth": {
-        "napkyb8f78fcb": {},
+        "napkyff72303c": {}
+      },
+      "storage": {
+        "s3korkbostoragephotos": {}
+      }
+    }
+  },
+  "amplify": {
+    "categories": {
+      "auth": {
         "napkyff72303c": {}
       }
     }

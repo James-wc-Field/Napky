@@ -1,15 +1,10 @@
 "use server";
 
 import { cookieBasedClient } from "@/lib/amplifyServerUtils";
-import { listProjects } from "../../graphql/queries";
-import { createProject } from "../../graphql/mutations";
-import { getCurrentUser } from "aws-amplify/auth/server";
-import { runWithAmplifyServerContext } from '@/lib/amplifyServerUtils';
-import config from '@/../amplifyconfiguration.json';
-import { cookies } from 'next/headers';
-import { generateServerClientUsingCookies } from '@aws-amplify/adapter-nextjs/api';
-
-
+import { listProjects } from "@src/graphql/queries";
+import { createProject } from "@src/graphql/mutations";
+import { currentAuthenticatedUser } from "@/lib/auth";
+import { getCurrentUser } from "aws-amplify/auth";
 
 /**
  * Get all projects created by the user
@@ -17,6 +12,9 @@ import { generateServerClientUsingCookies } from '@aws-amplify/adapter-nextjs/ap
  */
 export async function getAllUserProjects() {
   const user = await currentAuthenticatedUser();
+  if (!user) {
+    return [];
+  }
   return (
     await cookieBasedClient.graphql({
       query: listProjects,
@@ -26,7 +24,6 @@ export async function getAllUserProjects() {
           userId: { eq: user.userId },
         },
       },
-
     })
   ).data.listProjects.items;
 }
@@ -37,6 +34,9 @@ export async function getAllUserProjects() {
  */
 export async function createNewProject() {
   const user = await currentAuthenticatedUser();
+  if (!user) {
+    return null;
+  }
   const project = (
     await cookieBasedClient.graphql({
       query: createProject,
@@ -53,14 +53,16 @@ export async function createNewProject() {
   return project.id;
 }
 
-/**
- * Get the current authenticated user
- * @returns the current authenticated user
- */
-export async function currentAuthenticatedUser() {
-  const user = await runWithAmplifyServerContext({
-    nextServerContext: { cookies },
-    operation: (contextSpec) => getCurrentUser(contextSpec)
-  });
-  return user;
+
+export async function currentAuthenticated() {
+  try {
+    const { username, userId, signInDetails } = await getCurrentUser();
+    console.log(`The username: ${username}`);
+    console.log(`The userId: ${userId}`);
+    console.log(`The signInDetails: ${signInDetails}`);
+    return { username, userId, signInDetails };
+  } catch (err) {
+    console.log(err);
+    return { username: undefined, userId: undefined, signInDetails: undefined };
+  }
 }

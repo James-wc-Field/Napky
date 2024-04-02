@@ -1,17 +1,38 @@
-import React from 'react'
-import { Suspense } from 'react';
-import DiscoverPage from './discover';
-import { Project } from '../../API';
-import { getAllProjects } from '@/discover/api';
+import React from "react";
+import { Suspense } from "react";
+import { getAllProjects } from "@/discover/api";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ProjectCard } from "@/components/cards/ProjectCard";
+import { LoadingSpinner } from "@/components/ui/spinner";
 
+export default function Page() {
+  return (
+    <div className="h-base">
+      <ScrollArea className="h-full">
+        <Suspense fallback={<Loading />}>
+          <ProjectList />
+        </Suspense>
+      </ScrollArea>
+    </div>
+  );
+}
 
-export default async function Page() {
-  const projects: Project[] = await getAllProjects();
+async function ProjectList() {
+  const projects = await getAllProjects();
 
   return (
-    <Suspense fallback={<p>Loading...</p>}>
-      <DiscoverPage projects={projects}/>
-    </Suspense>
-  )
-  }
+    <div className="flex flex-wrap gap-7 p-10">
+      {projects.map((project) => (
+        <ProjectCard key={project.id} project={project} />
+      ))}
+    </div>
+  );
+}
 
+function Loading() {
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <LoadingSpinner />
+    </div>
+  );
+}

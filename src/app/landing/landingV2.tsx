@@ -1,4 +1,3 @@
-import { ProjectCard } from '@components/cards/ProjectCardSample';
 import { ProjectCardDetails } from '@/components/cards/ProjectCardDetails';
 import { Project } from '../../API';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -7,14 +6,16 @@ import { Dialog } from '@/components/ui/dialog';
 import { DialogContent, DialogTrigger } from '@radix-ui/react-dialog';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image'
+import { NavigationBarV2 } from '@/components/NavigationBarV2';
 
 type props = {};
 
 export default function LandingPageV2(props: props) {
     return (
-      <div className='h-base'>
-      <ScrollArea className='h-full'>
+    <div className='h-base'>
+    <ScrollArea className='h-full'>
         <Suspense fallback={<p>Loading...</p>}>
+            <NavigationBarV2 />
             <div className='h-[60vh] flex justify-center items-center flex-col'>
                 <div className='flex flex-row px-10 mt-20'>
                     <div className='basis-[30%] flex flex-col justify-center'>
@@ -37,7 +38,7 @@ export default function LandingPageV2(props: props) {
                             height={2000}
                             alt="Project example"
                             className='w-full rounded-2xl border-[1px] border-slate-500 shadow-2xl'
-                             />
+                            />
                     </div>
                 </div>
             </div>
@@ -77,7 +78,7 @@ export default function LandingPageV2(props: props) {
                 </div>
             </div>
         </Suspense>        
-      </ScrollArea>
-      </div>
+    </ScrollArea>
+    </div>
     )
   }
