@@ -9,9 +9,7 @@ function BuilderPage({ params }: { params: { projectID: string } }) {
   const { fetch } = useProjectStore(useShallow((state) => state));
   useEffect(() => {
     fetch(projectID);
-  }, [projectID]);
-  // await generateSummary('https://www.popularwoodworking.com/how-to-build-shelves/','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');
-
+  }, [projectID, fetch]);
 
   return (
     <Suspense fallback={<p>Loading...</p>}>

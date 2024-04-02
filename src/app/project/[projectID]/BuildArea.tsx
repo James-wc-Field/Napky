@@ -1,21 +1,26 @@
-import { DragEvent, use } from "react";
 import Canvas from "@/project/[projectID]/Canvas";
 import { useDndMonitor } from "@dnd-kit/core";
 import { ElementsType, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
-import useProject from "@/project/[projectID]/hooks/useProject";
-import { ProjectElementInstance } from "@/project/[projectID]/types/ProjectElements";
 import { useExternalDrop } from "@/project/[projectID]/hooks/useExternalDrop";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
 export default function BuildArea() {
-  const { elements, addElement, updateElement, scrollLeft, scrollTop, zoomLevel, selectedElements } = useProjectStore(useShallow((state) => state));
+  console.log("BuildArea")
+  const elements = useProjectStore((state) => state.elements);
+  const addElement = useProjectStore((state) => state.addElement);
+  const updateElement = useProjectStore((state) => state.updateElement);
+  const selectedElements = useProjectStore((state) => state.selectedElements);
+  const scrollLeft = useProjectStore(useShallow((state) => state.scrollLeft));
+  const scrollTop = useProjectStore(useShallow((state) => state.scrollTop));
+  const zoomLevel = useProjectStore(useShallow((state) => state.zoomLevel));
+
   useDndMonitor({
     onDragStart: (event) => {
       // const elementId = event.active.data.current?.elementId;
-      // if (!selectedElements.find((element) => element.id == elementId)) {
+      // if (!(selectedElements().find((element) => element.id == elementId))) {
       //   const selected = [elements.find((element) => element.id == elementId)]
-      //   changeSelectedElements(selected as ProjectElementInstance[])
+      //   updateSelectedElements(selected as ProjectElementInstance[])
       // }
     },
     onDragEnd: (event) => {
@@ -45,11 +50,17 @@ export default function BuildArea() {
         const diffY = overTop - initialTop;
 
         addElement(
-          newElement,
-          (delta.x - diffX - scrollLeft) / zoomLevel,
-          (delta.y - diffY - scrollTop) / zoomLevel
+          {
+            ...newElement,
+            position: {
+              x: (delta.x - diffX - scrollLeft) / zoomLevel,
+              y: (delta.y - diffY - scrollTop) / zoomLevel,
+            },
+            extraAttributes: {
+              ...newElement.extraAttributes,
+            },
+          }
         );
-        console.log("NEW ELEMENT:", newElement);
       }
 
       // Drag existing CanvasElement to new position
@@ -59,6 +70,7 @@ export default function BuildArea() {
         const wasDraggedSelected = selectedElements().includes(dragged!)
         if (!dragged) return;
         if (!wasDraggedSelected) {
+          console.log("dragging!")
           updateElement(dragged.id, {
             ...dragged,
             position: {
@@ -85,7 +97,6 @@ export default function BuildArea() {
           );
 
         }
-        console.log("DRAGGED:", dragged);
       }
 
       // Drag list element onto canvas
@@ -190,9 +201,7 @@ export default function BuildArea() {
           listId as string
         );
 
-        addElement(newElement, 0, 0);
-        console.log("NEW ELEMENT:", newElement);
-
+        addElement(newElement);
         const list = elements.find((element) => element.id == listId);
         if (!list || !over.data.current?.accepts.includes(type)) return;
 

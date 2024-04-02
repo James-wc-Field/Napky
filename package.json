@@ -45,6 +45,7 @@
     "react-redux": "^9.1.0",
     "react-selectable-box": "^1.9.0",
     "recoil": "^0.7.7",
+    "sharp": "^0.33.3",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.4",

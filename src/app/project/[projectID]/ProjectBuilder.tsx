@@ -9,14 +9,11 @@ import {
   PointerSensor,
 } from "@dnd-kit/core";
 
-import { Project } from "@src/API";
 import { Save } from "lucide-react";
-import useProject from "./hooks/useProject";
 import { useEffect } from "react";
 import BuildArea from "@/project/[projectID]/BuildArea";
 import DragOverlayWrapper from "@/project/[projectID]/DragOverlayWrapper";
 import usePreventZoom from "@/project/[projectID]/hooks/usePreventZoom";
-import { ThemeToggle } from "@components/ThemeToggle";
 import { saveProject } from "@/project/[projectID]/api";
 import {
   Popover,
@@ -26,10 +23,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useProjectStore } from "./storeProvider";
-import { useShallow } from "zustand/react/shallow";
-
 export default function ProjectBuilder() {
-  const { elements, updateProjectName, projectName, projectId } = useProjectStore(useShallow((state) => state));
+  const elements = useProjectStore((state) => state.elements);
+  const updateProjectName = useProjectStore((state) => state.updateProjectName);
+  const projectName = useProjectStore((state) => state.projectName);
+  const projectId = useProjectStore((state) => state.projectId);
   useEffect(() => {
     const html = document.querySelector("html");
     if (html) {

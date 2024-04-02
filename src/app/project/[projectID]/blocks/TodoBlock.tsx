@@ -9,7 +9,7 @@ import {
 import { Card } from "@ui/card";
 import { Textarea } from "@ui/textarea";
 import { Checkbox } from "@ui/checkbox";
-import useProject from "@/project/[projectID]/hooks/useProject";
+import { useProjectStore } from "../storeProvider";
 
 const type: ElementsType = "TodoBlock";
 
@@ -25,6 +25,7 @@ export const TodoBlockProjectElement: ProjectElement = {
   construct: (id: string, parentId: string) => ({
     id,
     type,
+    selected: false,
     position: { x: 0, y: 0 },
     size: { width: 300, height: 75 },
     parentId,
@@ -49,7 +50,7 @@ function CanvasComponent({
 }: {
   elementInstance: ProjectElementInstance;
 }) {
-  const { updateElement } = useProject();
+  const updateElement = useProjectStore((state) => state.updateElement);
   const element = elementInstance as CustomInstance;
   const { placeHolder, checked, items } = element.extraAttributes;
   const style = {

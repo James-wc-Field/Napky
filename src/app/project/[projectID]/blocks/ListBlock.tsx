@@ -9,7 +9,7 @@ import {
 } from "@/project/[projectID]/types/ProjectElements";
 import { Card } from "@ui/card";
 import { useDroppable, useDraggable } from "@dnd-kit/core";
-import useProject from "@/project/[projectID]/hooks/useProject";
+import { useProjectStore } from "../storeProvider";
 
 const type: ElementsType = "ListBlock";
 
@@ -55,7 +55,8 @@ function CanvasComponent({
     maxWidth: element.size.width,
     minHeight: element.size.height,
   };
-  const { elements } = useProject();
+
+  const elements = useProjectStore((state) => state.elements);
 
   return (
     <Card style={style} className="flex flex-col gap-2 p-2">
