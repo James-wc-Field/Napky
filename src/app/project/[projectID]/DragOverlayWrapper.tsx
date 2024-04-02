@@ -9,11 +9,14 @@ import {
 } from "@dnd-kit/core";
 import React, { useState } from "react";
 import { ElementsType, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
-import useProject from "@/project/[projectID]/hooks/useProject";
+import { useProjectStore } from "./storeProvider";
+import { useShallow } from "zustand/react/shallow";
 
 export default function DragOverlayWrapper() {
-  const {} = useProject();
-  const { elements, zoomLevel, selectedElements, removeSelectedElements} = useProject();
+  const removeSelectedElements = useProjectStore((state) => state.removeSelectedElements);
+  const selectedElements = useProjectStore((state) => state.selectedElements);
+  const elements = useProjectStore((state) => state.elements);
+  const zoomLevel = useProjectStore((state) => state.zoomLevel);
   const [draggedItem, setDraggedItem] = useState<Active | null>(null);
 
 
@@ -29,7 +32,7 @@ export default function DragOverlayWrapper() {
     onDragEnd: (event: DragEndEvent) => {
       setDraggedItem(null);
       removeSelectedElements();
-      
+
     },
   });
 
@@ -53,24 +56,20 @@ export default function DragOverlayWrapper() {
   const isListElement = draggedItem.data?.current?.isListElement;
   if (isCanvasElement || isListElement) {
     const elementId = draggedItem.data?.current?.elementId;
-    const isSelected = selectedElements.find((element) => element.id === elementId) ? true : false;
     const element = elements.find((element) => element.id === elementId);
-    console.log(element)
-    console.log(isSelected)
-    console.log(selectedElements)
+    const isSelected = element?.selected;
+
     if (!element) return <div>Dragged element not found</div>;
-    if (isSelected){
+    if (isSelected) {
       node = <>
-      {selectedElements.map((element) => {
-        const CanvasElementComponent =
-          ProjectElements[element.type as ElementsType].canvasComponent;
-        return <CanvasElementComponent key={element.id} elementInstance={element} />;
-      })}</>;
-    }else{
-      console.log("HERE")
+        {selectedElements().map((element) => {
+          const CanvasElementComponent =
+            ProjectElements[element.type as ElementsType].canvasComponent;
+          return <CanvasElementComponent key={element.id} elementInstance={element} />;
+        })}</>;
+    } else {
       const CanvasElementComponent =
         ProjectElements[element.type as ElementsType].canvasComponent;
-        console.log(element)
       node = <CanvasElementComponent elementInstance={element} />;
     }
   }

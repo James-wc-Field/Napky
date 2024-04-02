@@ -1,8 +1,7 @@
 import { ReactNode, use, useEffect, useMemo, useRef, useState } from "react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { ProjectElementInstance, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
-import useProject from "@/project/[projectID]/hooks/useProject";
-import MiniMap from "@/project/[projectID]/MiniMap";
+// import MiniMap from "@/project/[projectID]/MiniMap";
 import CanvasControls from "@/project/[projectID]/CanvasControls";
 import CanvasBackground from "@/project/[projectID]/CanvasBackground";
 import CanvasToolbar from "@/project/[projectID]/CanvasToolbar";
@@ -11,12 +10,18 @@ import { useCallback } from "react";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
 
-
-
 export default function Canvas() {
-  const { scrollLeft, scrollTop, zoomLevel, selectedElements, updateZoomLevel, updateSelectedElements, updateScrollLeft, updateScrollTop } = useProjectStore(useShallow((state) => state));
-  const elements = useProjectStore(useShallow((state) => state.elements))
-  const [middleMouseIsDown, updateMiddleMouseIsDown] = useState(false)
+  const updateZoomLevel = useProjectStore((state) => state.updateZoomLevel);
+  const updateScrollLeft = useProjectStore((state) => state.updateScrollLeft);
+  const updateScrollTop = useProjectStore((state) => state.updateScrollTop);
+  const elements = useProjectStore((state) => state.elements);
+  const selectedElements = useProjectStore((state) => state.selectedElements);
+  const updateSelectedElements = useProjectStore((state) => state.updateSelectedElements);
+  const scrollLeft = useProjectStore((state) => state.scrollLeft);
+  const scrollTop = useProjectStore((state) => state.scrollTop);
+  const zoomLevel = useProjectStore((state) => state.zoomLevel);
+  const removeSelectedElements = useProjectStore((state) => state.removeSelectedElements);
+  const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false)
   const selectableRef = useRef<SelectableRef>(null);
   const { isOver, setNodeRef } = useDroppable({
     id: "canvas-droppable",
@@ -25,6 +30,34 @@ export default function Canvas() {
     },
   });
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
+      if (e.key === "Delete") removeSelectedElements();
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [removeSelectedElements]);
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (middleMouseIsDown) {
+        selectableRef?.current?.cancel();
+        updateScrollLeft(-e.movementX);
+        updateScrollTop(-e.movementY);
+      }
+    };
+    const handleMouseUp = () => {
+      setMiddleMouseIsDown(false);
+    };
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      // Cleanup event listeners when component unmounts
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [middleMouseIsDown, selectableRef, updateScrollLeft, updateScrollTop]);
 
   const handleScroll = (e: React.WheelEvent) => {
     const { deltaX, deltaY } = e;
@@ -49,16 +82,14 @@ export default function Canvas() {
 
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    console.log(e)
     if (e.button === 1) {
-      updateMiddleMouseIsDown(true);
+      setMiddleMouseIsDown(true);
     }
   };
 
   return (
     <>
       <Selectable ref={selectableRef} value={selectedElements()} onStart={(e) => {
-        console.log(e.target)
         if ((e.target as HTMLElement).id !== "canvas-pane-droppable" && (e.target as HTMLElement).id !== "canvas-viewport") {
           selectableRef.current?.cancel();
         }
@@ -177,9 +208,7 @@ function CanvasElementWrapper({
         <div onMouseDown={(e) => {
           if (e.ctrlKey) {
             updateSelectedElements([element])
-          } else {
-            console.log(selectedElements.length)
-            // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
+          } else {            // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
             if (selectedElements.length == 1) {
               updateSelectedElements([element])
             }

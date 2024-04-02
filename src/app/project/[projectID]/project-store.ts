@@ -13,6 +13,7 @@ export type ProjectState = {
     scrollLeft: number
     scrollTop: number
     elements: ProjectElementInstance[]
+    key: string
 }
 
 export type ElementsState = {
@@ -24,10 +25,12 @@ export type ProjectActions = {
     updateZoomLevel: (zoomin: boolean, multiplier: number) => void
     updateScrollLeft: (scrollLeft: number) => void
     updateScrollTop: (scrollTop: number) => void
-    addElement: (element: ProjectElementInstance, x?: number, y?: number) => void
+    addElement: (element: ProjectElementInstance) => void
     updateElement: (id: string, element: ProjectElementInstance) => void
     selectedElements: () => ProjectElementInstance[]
     updateSelectedElements: (selectedElements: ProjectElementInstance[]) => void
+    removeSelectedElements: () => void
+    updateKey: (key: string) => void
     //     selectedElements: ProjectElementInstance[]
     //     changeSelectedElements: (selectedElements: ProjectElementInstance[]) => void
 }
@@ -46,7 +49,8 @@ export const defaultInitState: ProjectState = {
     zoomLevel: 1,
     scrollLeft: 0,
     scrollTop: 0,
-    elements: [] as ProjectElementInstance[]
+    elements: [] as ProjectElementInstance[],
+    key: "",
 }
 const updateZoomLevel = (zoomLevel: number, zoomIn: boolean, multiplier: number) => {
     const MIN_ZOOM = 0.05;
@@ -73,6 +77,99 @@ export const createElementsStore = (
     }))
 }
 
+//   const useWindowResize = (canvas: HTMLDivElement | null) => {
+//     useEffect(() => {
+//       const handleResize = () => {
+//         if (canvas) {
+//           const boundingBox = canvas.getBoundingClientRect();
+//           setCanvasViewRect({
+//             top: boundingBox.top,
+//             left: boundingBox.left,
+//             right: boundingBox.right,
+//             bottom: boundingBox.bottom,
+//             width: boundingBox.width,
+//             height: boundingBox.height,
+//           });
+//         }
+//       };
+//       window.addEventListener("resize", handleResize);
+//       return () => {
+//         window.removeEventListener("resize", handleResize);
+//       };
+//     }, [canvas])
+//   };
+
+
+
+//   const [outerMostElements, setOuterMostElements] = useState<{
+//     top: ProjectElementInstance | null;
+//     left: ProjectElementInstance | null;
+//     right: ProjectElementInstance | null;
+//     bottom: ProjectElementInstance | null;
+//   }>({ top: null, left: null, right: null, bottom: null });
+//   const [canvasViewRect, setCanvasViewRect] = useState({
+//     top: 0,
+//     left: 0,
+//     right: 0,
+//     bottom: 0,
+//     width: 0,
+//     height: 0,
+//   });
+
+
+//   const useResize = (element: ProjectElementInstance, startPos:Position) => {
+//   //   useEffect(() => {
+//   //   const handleMouseMove =
+//   //   (e: MouseEvent) => {
+//   //     if (isResizing){
+//   //       const newWidth = element.size.width + e.clientX - startPos.x!
+//   //       const newHeight = element.size.height + e.clientY - startPos.y!
+//   //       updateElement(element.id, {
+//   //         ...element,
+//   //         size: {
+//   //           width: newWidth,
+//   //           height: newHeight
+//   //         }
+//   //       })
+//   //     }
+//   //   }
+//   //   const handleMouseUp = () => {
+//   //     setIsResizing(false)
+//   //   }
+//   //   window.addEventListener('mousemove', handleMouseMove)
+//   //     window.addEventListener('mouseup', handleMouseUp)
+//   //   return () => {
+//   //     window.removeEventListener('mousemove', handleMouseMove)
+//   //     window.removeEventListener('mouseup', handleMouseUp)
+//   //   }
+//   // }, [isResizing,startPos])
+// }
+
+
+
+//   useEffect(() => {
+//     let top: ProjectElementInstance | null = null;
+//     let left: ProjectElementInstance | null = null;
+//     let right: ProjectElementInstance | null = null;
+//     let bottom: ProjectElementInstance | null = null;
+
+//     elements.forEach((element) => {
+//       if (!top || element.position.y < top.position.y) {
+//         top = element;
+//       }
+//       if (!left || element.position.x < left.position.x) {
+//         left = element;
+//       }
+//       if (!right || element.position.x > right.position.x) {
+//         right = element;
+//       }
+//       if (!bottom || element.position.y > bottom.position.y) {
+//         bottom = element;
+//       }
+//     });
+
+//     setOuterMostElements({ top, left, right, bottom });
+//   }, [elements]);
 
 export const createProjectStore = (
     initState: ProjectState = defaultInitState,
@@ -81,9 +178,8 @@ export const createProjectStore = (
         ...initState,
         fetch: async (projectId: string) => {
             const project = await getProjectData(projectId)
-
-            set({ projectId, projectName: project?.name, projectDescription: project?.description || "", elements: JSON.parse(project?.content ?? "") || [] })
-            console.log(get().elements)
+            if (!project) return
+            set({ projectId, projectName: project.name, projectDescription: project.description ?? "", elements: JSON.parse(project.content ?? "[]") })
         },
         updateProjectName: (name: string) => set({ projectName: name }),
         updateZoomLevel(zoomin, multiplier) {
@@ -91,15 +187,14 @@ export const createProjectStore = (
         },
         updateScrollLeft: (scrollLeft: number) => set({ scrollLeft }),
         updateScrollTop: (scrollTop: number) => set({ scrollTop }),
-        addElement: (element: ProjectElementInstance, x?: number, y?: number) => set((state) => ({
+        addElement: (element: ProjectElementInstance) => set((state) => ({
             elements: [...state.elements, element]
         })),
         updateElement: (id: string, element: ProjectElementInstance) => set((state) => ({
             elements: state.elements.map((el) => el.id === id ? element : el)
         })),
         selectedElements: () => {
-            return []
-            // return elements.filter((el) => el.selected)
+            return get().elements.filter((el) => el.selected)
         },
         updateSelectedElements: (selectedElements: ProjectElementInstance[]) => {
             set((state) => ({
@@ -107,28 +202,12 @@ export const createProjectStore = (
                 elements: updateSelectedElements(state.elements, selectedElements)
             }))
         },
+        removeSelectedElements: () => set((state) => ({
+            ...state,
+            elements: state.elements.map((el) => el.selected ? { ...el, selected: false } : el)
+        })),
+        updateKey: (key: string) => set({
+            key
+        })
     }))
 }
-
-
-// const addElement = (
-//     element: ProjectElementInstance,
-//     x?: number,
-//     y?: number
-//   ) => {
-//     setElements((prev) => {
-//       let newElements = [...prev];
-//       if (x && y) {
-//         element.position.x = x;
-//         element.position.y = y;
-//       }
-//       newElements = [...newElements, element];
-//       return newElements;
-//     });
-//   };
-
-
-
-// const removeElement = (id: string) => {
-//     setElements((prev) => prev.filter((element) => element.id !== id));
-//   };

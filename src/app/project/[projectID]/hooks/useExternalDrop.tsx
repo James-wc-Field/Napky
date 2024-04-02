@@ -1,10 +1,15 @@
-import useProject from './useProject'
 import { ElementsType, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
 import { generateSummary, getOpenGraphTags } from '@/project/[projectID]/api'
+import { useProjectStore } from '../storeProvider';
 
 export function useExternalDrop() {
-    const { addElement, scrollLeft, scrollTop, zoomLevel, key, updateElement} = useProject();
+    const updateElement = useProjectStore((state) => state.updateElement);
+    const addElement = useProjectStore((state) => state.addElement);
+    const scrollLeft = useProjectStore((state) => state.scrollLeft);
+    const scrollTop = useProjectStore((state) => state.scrollTop);
+    const zoomLevel = useProjectStore((state) => state.zoomLevel);
+    const key = useProjectStore((state) => state.key);
     /**
      * External drop handler
      * Handler for external file drop
@@ -41,21 +46,17 @@ export function useExternalDrop() {
                         idGenerator(),
                         "root"
                     );
-                    console.log("NEW ELEMENT:", newElement);
-                    console.log(src)
-                    newElement = {
+                    addElement({
                         ...newElement,
+                        position: {
+                            x: (xPos - scrollLeft) / zoomLevel,
+                            y: (yPos - scrollTop) / zoomLevel,
+                        },
                         extraAttributes: {
                             ...newElement.extraAttributes,
                             src: src,
                         },
-                    };
-
-                    addElement(
-                        newElement,
-                        (xPos - scrollLeft) / zoomLevel,
-                        (yPos - scrollTop) / zoomLevel
-                    );
+                    });
                 };
 
                 reader.readAsDataURL(file);
@@ -75,20 +76,18 @@ export function useExternalDrop() {
                 idGenerator(),
                 "root"
             );
-            console.log("NEW ELEMENT:", newElement);
-            newElement = {
+            addElement({
                 ...newElement,
+                position: {
+                    x: (xPos - scrollLeft) / zoomLevel,
+                    y: (yPos - scrollTop) / zoomLevel,
+                },
                 extraAttributes: {
                     ...newElement.extraAttributes,
                     isRenderingBackup: true,
                     text: e.dataTransfer.getData("text/plain")
                 },
-            };
-            addElement(
-                newElement,
-                (xPos - scrollLeft) / zoomLevel,
-                (yPos - scrollTop) / zoomLevel
-            );
+            });
             updateElement(newElement.id, {
                 ...newElement,
                 extraAttributes: {
@@ -113,19 +112,17 @@ export function useExternalDrop() {
                 idGenerator(),
                 "root"
             );
-            console.log("NEW ELEMENT:", newElement);
-            newElement = {
+            addElement({
                 ...newElement,
+                position: {
+                    x: (xPos - scrollLeft) / zoomLevel,
+                    y: (yPos - scrollTop) / zoomLevel,
+                },
                 extraAttributes: {
                     ...newElement.extraAttributes,
                     text: e.dataTransfer.getData("text/plain"),
                 },
-            };
-            addElement(
-                newElement,
-                (xPos - scrollLeft) / zoomLevel,
-                (yPos - scrollTop) / zoomLevel
-            );
+            });
         };
     }
     return { externalDropHandler }

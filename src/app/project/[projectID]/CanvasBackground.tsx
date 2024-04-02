@@ -1,8 +1,10 @@
 import React from "react";
-import useProject from "@/project/[projectID]/hooks/useProject";
+import { useProjectStore } from "./storeProvider";
 
 export default function CanvasBackground() {
-  const { zoomLevel, scrollLeft, scrollTop } = useProject();
+  const zoomLevel = useProjectStore((state) => state.zoomLevel);
+  const scrollLeft = useProjectStore((state) => state.scrollLeft);
+  const scrollTop = useProjectStore((state) => state.scrollTop);
   const BASE_SIZE = 24;
   return (
     <svg
