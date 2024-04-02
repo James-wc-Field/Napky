@@ -25,7 +25,7 @@ export default function LandingPageV2(props: props) {
                             A modern project organization tool
                         </div>
                         <div className='relative w-fit text-3xl bg-secondary py-4 px-8 rounded-2xl text-accent cursor-pointer'>
-                            <div className='absolute w-full h-full left-0 top-0 rounded-2xl z-[-0.5] shadow-2xl animate-[pulse_2s_ease-in-out_infinite] outline-accent outline outline-2 outline-offset-0'>
+                            <div className='absolute w-full h-full left-0 top-0 rounded-2xl z-[-0.5] shadow-2xl animate-[pulse_2s_ease-in-out_infinite] outline-accent outline outline-4 outline-offset-0'>
                             </div>
                             Try it out
                         </div>
