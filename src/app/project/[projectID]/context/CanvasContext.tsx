@@ -1,13 +1,12 @@
 "use client";
 
-import { ReactNode, RefObject, createContext, useCallback, useEffect, useRef, useState } from "react";
+import { ReactNode, RefObject, createContext, useCallback, useEffect, useState } from "react";
 import { Position, ProjectElementInstance } from "@/project/[projectID]/types/ProjectElements";
 import { Project } from "@src/API";
 import { SelectableRef } from "react-selectable-box";
 
 type CanvasContextType = {
   elements: ProjectElementInstance[];
-
 
   key: string;
 
