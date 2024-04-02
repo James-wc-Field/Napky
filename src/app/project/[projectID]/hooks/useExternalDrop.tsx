@@ -63,9 +63,18 @@ export function useExternalDrop() {
           );
         };
 
+        // Create hash of file, then convert hash to string to use as filename: https://stackoverflow.com/questions/40031688/javascript-arraybuffer-to-hex
+        const hash = await crypto.subtle.digest("SHA-256", await file.arrayBuffer());
+        const filename = Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+        console.log("FILENAME:", filename);
+
+
+
+        // ---- INVALID IDENTITY POOL CONFIGURATION EXCEPTION ----
+
         try {
           const result = await uploadData({
-            key: "photos/" + file.name,
+            key: filename,
             data: file,
           }).result;
           console.log("Succeeded: ", result);
@@ -73,7 +82,12 @@ export function useExternalDrop() {
           console.log("Error : ", error);
         }
 
-        reader.readAsDataURL(file);
+        // ---- INVALID IDENTITY POOL CONFIGURATION EXCEPTION ----
+
+
+
+        // Don't use this right now, need to figure out adding file to S3 first (above)
+        // reader.readAsDataURL(file);
       }
     } else if (isValidUrl(confirmUrl(e.dataTransfer.getData("text/plain")))) {
       const url = confirmUrl(e.dataTransfer.getData("text/plain"));
