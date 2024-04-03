@@ -6,9 +6,9 @@ import { Project } from '../../API';
 
 export default async function Page() {
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    // <Suspense fallback={<p>Loading...</p>}>
       <LandingPageV2/>
-    </Suspense>
+    // </Suspense>
   )
   }
 
