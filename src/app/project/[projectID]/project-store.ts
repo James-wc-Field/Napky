@@ -185,8 +185,8 @@ export const createProjectStore = (
         updateZoomLevel(zoomin, multiplier) {
             set((state) => ({ zoomLevel: updateZoomLevel(state.zoomLevel, zoomin, multiplier) }))
         },
-        updateScrollLeft: (scrollLeft: number) => set({ scrollLeft }),
-        updateScrollTop: (scrollTop: number) => set({ scrollTop }),
+        updateScrollLeft: (scrollLeft: number) => set((state) => ({ scrollLeft: state.scrollLeft - scrollLeft })),
+        updateScrollTop: (scrollTop: number) => set((state) => ({ scrollTop: state.scrollTop - scrollTop })),
         addElement: (element: ProjectElementInstance) => set((state) => ({
             elements: [...state.elements, element]
         })),
