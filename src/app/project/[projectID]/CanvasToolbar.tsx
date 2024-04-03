@@ -6,8 +6,10 @@ import { useDroppable } from "@dnd-kit/core";
 import { Button } from "../../components/ui/button";
 import { Save } from "lucide-react";
 import { PencilIcon } from "@heroicons/react/24/solid";
+import { useProjectStore } from "./storeProvider";
 
 export default function CanvasToolbar() {
+  const updateIsDrawing = useProjectStore((state) => state.updateIsDrawing);
   const { setNodeRef } = useDroppable({
     id: "toolbar-area",
     data: { isToolbar: true },
@@ -25,7 +27,10 @@ export default function CanvasToolbar() {
       <Button className="gap-1">
         <Save className="h-6 w-6" />
       </Button>
-      <Button onClick={ } className="gap-1">
+      <Button onClick={() => {
+        updateIsDrawing();
+        console.log("updateIsDrawing");
+      }} className="gap-1">
         <PencilIcon className="h-6 w-6" />
       </Button>
     </Card>
