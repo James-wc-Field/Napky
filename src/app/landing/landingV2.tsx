@@ -54,19 +54,19 @@ export default function LandingPageV2(props: props) {
                                 alt="Project example"
                                 className='w-full'
                             />
-                            <div className='text-center mt-4 text-3xl drop-shadow-lg text-accent md:hidden'>Link Organizing</div>
+                            <div className='text-center mt-4 text-3xl drop-shadow-lg text-accent md:hidden'>Link Management</div>
                             <div className='text-center mt-4 text-xl drop-shadow-lg text-accent mb-16 md:hidden'>Store your links in your project rather than keeping them as open tabs.</div>
                         </div>
                         <div className='flex flex-col basis-[30%]'>
                             <Image
-                                src="/images/links-edited.png"
+                                src="/images/climbing-holds-edited.png"
                                 width={2000}
                                 height={2000}
                                 alt="Project example"
                                 className='w-full'
                             />
-                            <div className='text-center mt-4 text-3xl drop-shadow-lg text-accent md:hidden'>This is some text</div>
-                            <div className='text-center mt-4 text-xl drop-shadow-lg text-accent mb-16 md:hidden'>This is some more text</div>
+                            <div className='text-center mt-4 text-3xl drop-shadow-lg text-accent md:hidden'>Project Organization</div>
+                            <div className='text-center mt-4 text-xl drop-shadow-lg text-accent mb-16 md:hidden'>Organize projects in freeform.</div>
                         </div>
                         <div className='flex flex-col basis-[30%]'>
                             <Image
@@ -82,15 +82,23 @@ export default function LandingPageV2(props: props) {
                     </div>
                     <div className=' hidden flex-col md:flex-row w-full justify-between md:flex'>
                         <div className='flex flex-col basis-[30%]'>
-                            <div className='text-center mt-4 text-3xl drop-shadow-lg text-accent'>Link Organizing</div>
+                            <div className='text-center mt-4 text-3xl drop-shadow-lg text-accent'>Link Management</div>
+                        </div>
+                        <div className='flex flex-col basis-[30%]'>
+                            <div className='text-center mt-4 text-3xl drop-shadow-lg text-accent'>Project Organization</div>
+                        </div>
+                        <div className='flex flex-col basis-[30%]'>
+                            <div className='text-center mt-4 text-3xl drop-shadow-lg text-accent'>This is some text</div>
+                        </div>
+                    </div>
+                    <div className=' hidden flex-col md:flex-row w-full justify-between md:flex'>
+                        <div className='flex flex-col basis-[30%]'>
                             <div className='text-center mt-4 text-xl drop-shadow-lg text-accent'>Store your links in your project rather than keeping them as open tabs.</div>
                         </div>
                         <div className='flex flex-col basis-[30%]'>
-                            <div className='text-center mt-4 text-3xl drop-shadow-lg text-accent'>This is some text</div>
-                            <div className='text-center mt-4 text-xl drop-shadow-lg text-accent'>This is some more text</div>
+                            <div className='text-center mt-4 text-xl drop-shadow-lg text-accent'>Organize projects in freeform.</div>
                         </div>
                         <div className='flex flex-col basis-[30%]'>
-                            <div className='text-center mt-4 text-3xl drop-shadow-lg text-accent'>This is some text</div>
                             <div className='text-center mt-4 text-xl drop-shadow-lg text-accent'>This is some more text</div>
                         </div>
                     </div>
