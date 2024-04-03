@@ -27,7 +27,7 @@ export default function RootLayout({
       <body className={cn("min-h-screen", inter.className)}>
         <Providers>
           <ConfigureAmplifyClientSide />
-          <div className="h-screen overflow-hidden">
+          <div> {/* className="h-screen overflow-hidden"> */}
             <main>{children}</main>
             {/* Site Footer */}
           </div>
