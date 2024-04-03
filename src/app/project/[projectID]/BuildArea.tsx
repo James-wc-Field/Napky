@@ -6,7 +6,6 @@ import { useExternalDrop } from "@/project/[projectID]/hooks/useExternalDrop";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
 export default function BuildArea() {
-  // console.log("BuildArea")
   const elements = useProjectStore((state) => state.elements);
   const addElement = useProjectStore((state) => state.addElement);
   const updateElement = useProjectStore((state) => state.updateElement);
@@ -14,13 +13,14 @@ export default function BuildArea() {
   const scrollLeft = useProjectStore(useShallow((state) => state.scrollLeft));
   const scrollTop = useProjectStore(useShallow((state) => state.scrollTop));
   const zoomLevel = useProjectStore(useShallow((state) => state.zoomLevel));
+  const updateSelectedElements = useProjectStore((state) => state.updateSelectedElements);
 
   useDndMonitor({
     onDragStart: (event) => {
+      // if (event.active.data?.current?.isCanvasElement) return
       // const elementId = event.active.data.current?.elementId;
       // if (!(selectedElements().find((element) => element.id == elementId))) {
-      //   const selected = [elements.find((element) => element.id == elementId)]
-      //   updateSelectedElements(selected as ProjectElementInstance[])
+      //   updateSelectedElements([elements.find((element) => element.id == elementId)!])
       // }
     },
     onDragEnd: (event) => {
@@ -70,7 +70,6 @@ export default function BuildArea() {
         const wasDraggedSelected = selectedElements().includes(dragged!)
         if (!dragged) return;
         if (!wasDraggedSelected) {
-          console.log("dragging!")
           updateElement(dragged.id, {
             ...dragged,
             position: {
