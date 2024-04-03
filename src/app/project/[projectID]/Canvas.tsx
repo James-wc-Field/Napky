@@ -39,17 +39,24 @@ export default function Canvas() {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [removeSelectedElements]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button === 1) {
+      setMiddleMouseIsDown(true);
+    }
+  };
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (middleMouseIsDown) {
+      selectableRef?.current?.cancel();
+      updateScrollLeft(-e.movementX);
+      updateScrollTop(-e.movementY);
+    }
+  }, [selectableRef, updateScrollLeft, updateScrollTop, middleMouseIsDown])
+  const handleMouseUp = useCallback(() => {
+    setMiddleMouseIsDown(false);
+  }, [])
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (middleMouseIsDown) {
-        selectableRef?.current?.cancel();
-        updateScrollLeft(-e.movementX);
-        updateScrollTop(-e.movementY);
-      }
-    };
-    const handleMouseUp = () => {
-      setMiddleMouseIsDown(false);
-    };
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
     return () => {
@@ -57,7 +64,7 @@ export default function Canvas() {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [middleMouseIsDown, selectableRef, updateScrollLeft, updateScrollTop]);
+  }, [handleMouseMove, handleMouseUp]);
 
   const handleScroll = (e: React.WheelEvent) => {
     const { deltaX, deltaY } = e;
@@ -73,23 +80,15 @@ export default function Canvas() {
   };
 
   const canvasRef = useRef<HTMLDivElement>(null);
-  const curr = useMemo(() => {
-    return canvasRef.current
-  }, [canvasRef])
+  // const curr = useMemo(() => {
+  //   return canvasRef.current
+  // }, [canvasRef])
   // useWindowResize(curr)
-  // useMouseMove(selectableRef, middleMouseIsDown)
-  // useKeyDown(selectedElements)
-
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (e.button === 1) {
-      setMiddleMouseIsDown(true);
-    }
-  };
 
   return (
     <>
       <Selectable ref={selectableRef} value={selectedElements()} onStart={(e) => {
+        console.log(e)
         if ((e.target as HTMLElement).id !== "canvas-pane-droppable" && (e.target as HTMLElement).id !== "canvas-viewport") {
           selectableRef.current?.cancel();
         }

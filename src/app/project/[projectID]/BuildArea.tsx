@@ -6,7 +6,7 @@ import { useExternalDrop } from "@/project/[projectID]/hooks/useExternalDrop";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
 export default function BuildArea() {
-  console.log("BuildArea")
+  // console.log("BuildArea")
   const elements = useProjectStore((state) => state.elements);
   const addElement = useProjectStore((state) => state.addElement);
   const updateElement = useProjectStore((state) => state.updateElement);
