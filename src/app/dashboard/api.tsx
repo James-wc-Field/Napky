@@ -44,7 +44,7 @@ export async function createNewProject() {
           userId: user.userId,
           name: "untitled",
           description: "",
-          content: "",
+          content: "[]",
         },
       },
     })
