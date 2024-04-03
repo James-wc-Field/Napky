@@ -21,6 +21,7 @@ export const ImageBlockProjectElement: ProjectElement = {
     id,
     type,
     position: { x: 0, y: 0 },
+    selected: false,
     size: { width: 300, height: 200 },
     parentId,
     extraAttributes,
