@@ -133,7 +133,7 @@ function CanvasComponent({
                   <Link href={`//${element.extraAttributes.text}`} rel="noopener noreferrer" target="_blank"> {element.extraAttributes.text} </Link>
                 </div>
                 <div className="flex items-center">
-                  <Image src="/images/placeholder.jpg" alt={element.extraAttributes.metaTags["og:title"]} width={300} height={200}></Image>
+                  <Image src={element.extraAttributes.metaTags["og:image"]} alt={element.extraAttributes.metaTags["og:title"]} width={300} height={200} unoptimized></Image>
                   <CardDescription>{element.extraAttributes?.metaTags["og:description"] || ""}</CardDescription>
                 </div>
                 {element.extraAttributes.summary.length > 0 ? (
