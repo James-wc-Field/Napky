@@ -14,9 +14,7 @@ export type ProjectState = {
     scrollTop: number
     elements: ProjectElementInstance[]
     key: string
-}
-
-export type ElementsState = {
+    isDrawing: boolean
 }
 
 export type ProjectActions = {
@@ -31,16 +29,12 @@ export type ProjectActions = {
     updateSelectedElements: (selectedElements: ProjectElementInstance[]) => void
     removeSelectedElements: () => void
     updateKey: (key: string) => void
+    updateIsDrawing: (isDrawing?: boolean) => void
     //     selectedElements: ProjectElementInstance[]
     //     changeSelectedElements: (selectedElements: ProjectElementInstance[]) => void
 }
 
-export type ElementsActions = {
-}
-
-
 export type ProjectStore = ProjectState & ProjectActions
-export type ElementsStore = ElementsState & ElementsActions
 
 export const defaultInitState: ProjectState = {
     projectId: "",
@@ -51,6 +45,7 @@ export const defaultInitState: ProjectState = {
     scrollTop: 0,
     elements: [] as ProjectElementInstance[],
     key: "",
+    isDrawing: false
 }
 const updateZoomLevel = (zoomLevel: number, zoomIn: boolean, multiplier: number) => {
     const MIN_ZOOM = 0.05;
@@ -67,14 +62,6 @@ const updateZoomLevel = (zoomLevel: number, zoomIn: boolean, multiplier: number)
 
 const updateSelectedElements = (elements: ProjectElementInstance[], selectedElements: ProjectElementInstance[]) => {
     return elements.map((el) => selectedElements.find((sel) => sel.id === el.id) ? { ...el, selected: true } : { ...el, selected: false })
-}
-
-export const createElementsStore = (
-    initState: ElementsState = { elements: [] }) => {
-    return createStore<ElementsStore>((set) => ({
-        ...initState,
-
-    }))
 }
 
 //   const useWindowResize = (canvas: HTMLDivElement | null) => {
@@ -116,34 +103,6 @@ export const createElementsStore = (
 //     height: 0,
 //   });
 
-
-//   const useResize = (element: ProjectElementInstance, startPos:Position) => {
-//   //   useEffect(() => {
-//   //   const handleMouseMove =
-//   //   (e: MouseEvent) => {
-//   //     if (isResizing){
-//   //       const newWidth = element.size.width + e.clientX - startPos.x!
-//   //       const newHeight = element.size.height + e.clientY - startPos.y!
-//   //       updateElement(element.id, {
-//   //         ...element,
-//   //         size: {
-//   //           width: newWidth,
-//   //           height: newHeight
-//   //         }
-//   //       })
-//   //     }
-//   //   }
-//   //   const handleMouseUp = () => {
-//   //     setIsResizing(false)
-//   //   }
-//   //   window.addEventListener('mousemove', handleMouseMove)
-//   //     window.addEventListener('mouseup', handleMouseUp)
-//   //   return () => {
-//   //     window.removeEventListener('mousemove', handleMouseMove)
-//   //     window.removeEventListener('mouseup', handleMouseUp)
-//   //   }
-//   // }, [isResizing,startPos])
-// }
 
 
 
@@ -208,6 +167,9 @@ export const createProjectStore = (
         })),
         updateKey: (key: string) => set({
             key
+        }),
+        updateIsDrawing: (isDrawing?: boolean) => set({
+            isDrawing: isDrawing ?? !get().isDrawing
         })
     }))
 }
