@@ -88,7 +88,6 @@ export default function Canvas() {
   return (
     <>
       <Selectable ref={selectableRef} value={selectedElements()} onStart={(e) => {
-        console.log(e)
         if ((e.target as HTMLElement).id !== "canvas-pane-droppable" && (e.target as HTMLElement).id !== "canvas-viewport") {
           selectableRef.current?.cancel();
         }
