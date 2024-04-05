@@ -23,7 +23,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useProjectStore } from "./storeProvider";
-import { shallow } from "zustand/shallow";
 export default function ProjectBuilder() {
   const elements = useProjectStore((state) => state.elements);
   const updateProjectName = useProjectStore((state) => state.updateProjectName);

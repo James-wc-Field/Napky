@@ -8,8 +8,6 @@ import {
   ProjectElements,
 } from "@/project/[projectID]/types/ProjectElements";
 import { Card } from "@ui/card";
-import { useDroppable, useDraggable } from "@dnd-kit/core";
-import { useProjectStore } from "../storeProvider";
 
 const type: ElementsType = "ListBlock";
 
@@ -57,7 +55,6 @@ function CanvasComponent({
     minHeight: element.size.height,
   };
 
-  const elements = useProjectStore((state) => state.elements);
 
   return (
     <Card style={style} className="flex flex-col gap-2 p-2">
@@ -79,31 +76,18 @@ function CanvasComponent({
 
 function ListDroppable({
   children,
-  element,
   numItems,
 }: {
   children: React.ReactNode;
   element: ProjectElementInstance;
   numItems: number;
 }) {
-  const { isOver, setNodeRef } = useDroppable({
-    id: element.id + "-list-droppable",
-    data: {
-      isListDroppable: true,
-      elementId: element.id,
-      accepts: Object.keys(ProjectElements).filter(
-        (type) => type !== element.type
-      ),
-    },
-  });
 
   return (
     <Card
-      ref={setNodeRef}
       className={`
         flex-1 flex flex-col items-center justify-center gap-1
-        ${numItems > 0 ? "border-0" : ""}
-        ${isOver ? "ring-1 ring-current" : ""}`}
+        ${numItems > 0 ? "border-0" : ""}`}
     >
       {children}
     </Card>
@@ -111,24 +95,10 @@ function ListDroppable({
 }
 
 function ListElementWrapper({ element }: { element: ProjectElementInstance }) {
-  const { attributes, listeners, isDragging, setNodeRef } = useDraggable({
-    id: element?.id + "-drag-handler",
-    data: {
-      type: element.type,
-      elementId: element.id,
-      isListElement: true,
-    },
-  });
+
 
   const ListElement = ProjectElements[element.type].canvasComponent;
   return (
-    <div
-      ref={setNodeRef}
-      {...attributes}
-      {...listeners}
-      className={`${isDragging ? "opacity-50" : ""} w-full`}
-    >
-      <ListElement elementInstance={element} />
-    </div>
+    <ListElement elementInstance={element} />
   );
 }

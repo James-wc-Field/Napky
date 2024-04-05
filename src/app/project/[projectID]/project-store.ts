@@ -1,10 +1,6 @@
-// src/stores/counter-store.ts
-import { Project } from '@src/API'
 import { createStore } from 'zustand/vanilla'
 import { ProjectElementInstance } from './types/ProjectElements'
 import { getProjectData } from './api'
-import { init } from 'next/dist/compiled/webpack/webpack'
-import { useEffect, useState } from 'react'
 
 export type ProjectState = {
     projectId: string
@@ -17,8 +13,6 @@ export type ProjectState = {
     key: string
 }
 
-export type ElementsState = {
-}
 
 export type ProjectActions = {
     fetch: (projectId: string) => void
@@ -34,12 +28,8 @@ export type ProjectActions = {
     updateKey: (key: string) => void
 }
 
-export type ElementsActions = {
-}
-
 
 export type ProjectStore = ProjectState & ProjectActions
-export type ElementsStore = ElementsState & ElementsActions
 
 export const defaultInitState: ProjectState = {
     projectId: "",
@@ -68,13 +58,6 @@ const updateSelectedElements = (elements: ProjectElementInstance[], selectedElem
     return elements.map((el) => selectedElements.find((sel) => sel.id === el.id) ? { ...el, selected: true } : { ...el, selected: false })
 }
 
-export const createElementsStore = (
-    initState: ElementsState = { elements: [] }) => {
-    return createStore<ElementsStore>((set) => ({
-        ...initState,
-
-    }))
-}
 
 // export const useWindowResize = (canvas: HTMLDivElement | null) => {
 //     useEffect(() => {

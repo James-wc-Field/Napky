@@ -13,7 +13,6 @@ export default function BuildArea() {
   const scrollLeft = useProjectStore(useShallow((state) => state.scrollLeft));
   const scrollTop = useProjectStore(useShallow((state) => state.scrollTop));
   const zoomLevel = useProjectStore(useShallow((state) => state.zoomLevel));
-  const updateSelectedElements = useProjectStore((state) => state.updateSelectedElements);
 
   useDndMonitor({
     onDragStart: (event) => {
