@@ -4,6 +4,7 @@ import { createStore } from 'zustand/vanilla'
 import { ProjectElementInstance } from './types/ProjectElements'
 import { getProjectData } from './api'
 import { init } from 'next/dist/compiled/webpack/webpack'
+import { useEffect, useState } from 'react'
 
 export type ProjectState = {
     projectId: string
@@ -31,8 +32,6 @@ export type ProjectActions = {
     updateSelectedElements: (selectedElements: ProjectElementInstance[]) => void
     removeSelectedElements: () => void
     updateKey: (key: string) => void
-    //     selectedElements: ProjectElementInstance[]
-    //     changeSelectedElements: (selectedElements: ProjectElementInstance[]) => void
 }
 
 export type ElementsActions = {
@@ -77,44 +76,42 @@ export const createElementsStore = (
     }))
 }
 
-//   const useWindowResize = (canvas: HTMLDivElement | null) => {
+// export const useWindowResize = (canvas: HTMLDivElement | null) => {
 //     useEffect(() => {
-//       const handleResize = () => {
-//         if (canvas) {
-//           const boundingBox = canvas.getBoundingClientRect();
-//           setCanvasViewRect({
-//             top: boundingBox.top,
-//             left: boundingBox.left,
-//             right: boundingBox.right,
-//             bottom: boundingBox.bottom,
-//             width: boundingBox.width,
-//             height: boundingBox.height,
-//           });
-//         }
-//       };
-//       window.addEventListener("resize", handleResize);
-//       return () => {
-//         window.removeEventListener("resize", handleResize);
-//       };
+//         const handleResize = () => {
+//             if (canvas) {
+//                 const boundingBox = canvas.getBoundingClientRect();
+//                 setCanvasViewRect({
+//                     top: boundingBox.top,
+//                     left: boundingBox.left,
+//                     right: boundingBox.right,
+//                     bottom: boundingBox.bottom,
+//                     width: boundingBox.width,
+//                     height: boundingBox.height,
+//                 });
+//             }
+//         };
+//         window.addEventListener("resize", handleResize);
+//         return () => {
+//             window.removeEventListener("resize", handleResize);
+//         };
 //     }, [canvas])
-//   };
+// };
 
-
-
-//   const [outerMostElements, setOuterMostElements] = useState<{
+// const [outerMostElements, setOuterMostElements] = useState<{
 //     top: ProjectElementInstance | null;
 //     left: ProjectElementInstance | null;
 //     right: ProjectElementInstance | null;
 //     bottom: ProjectElementInstance | null;
-//   }>({ top: null, left: null, right: null, bottom: null });
-//   const [canvasViewRect, setCanvasViewRect] = useState({
+// }>({ top: null, left: null, right: null, bottom: null });
+// const [canvasViewRect, setCanvasViewRect] = useState({
 //     top: 0,
 //     left: 0,
 //     right: 0,
 //     bottom: 0,
 //     width: 0,
 //     height: 0,
-//   });
+// });
 
 
 //   const useResize = (element: ProjectElementInstance, startPos:Position) => {
