@@ -23,7 +23,7 @@ export default function Canvas() {
   const removeSelectedElements = useProjectStore((state) => state.removeSelectedElements);
   const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false)
   const selectableRef = useRef<SelectableRef>(null);
-  const { isOver, setNodeRef } = useDroppable({
+  const { setNodeRef } = useDroppable({
     id: "canvas-droppable",
     data: {
       isCanvasDropArea: true,
