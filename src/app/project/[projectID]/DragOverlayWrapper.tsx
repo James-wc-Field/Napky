@@ -8,7 +8,7 @@ import {
   useDndMonitor,
 } from "@dnd-kit/core";
 import React, { useState } from "react";
-import { ElementsType, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
+import { ElementsType, ProjectElements } from "@/project/[projectID]/ProjectElements";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
 
