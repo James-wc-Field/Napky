@@ -6,8 +6,9 @@ import {
   ProjectElement,
   ProjectElementInstance,
   ProjectElements,
-} from "@/project/[projectID]/types/ProjectElements";
+} from "./Block";
 import { Card } from "@ui/card";
+import { useDroppable, useDraggable } from "@dnd-kit/core";
 
 const type: ElementsType = "ListBlock";
 
@@ -21,21 +22,13 @@ export const ListBlockProjectElement: ProjectElement = {
   type,
   construct: (id: string, parentId: string) => ({
     id,
-    selected: false,
     type,
     position: { x: 0, y: 0 },
     size: { width: 300, height: 100 },
     parentId,
     extraAttributes,
   }),
-
-  toolbarElement: {
-    icon: Bars4Icon,
-    label: "List",
-  },
-
   canvasComponent: CanvasComponent,
-  toolbarPropertiesComponent: () => <div>Properties Component</div>,
 };
 
 type CustomInstance = ProjectElementInstance & {
@@ -47,7 +40,6 @@ function CanvasComponent({
 }: {
   elementInstance: ProjectElementInstance;
 }) {
-  console.log(elementInstance as CustomInstance);
   const element = elementInstance as CustomInstance;
   const { label, placeHolder, children: children } = element.extraAttributes;
   const style = {
@@ -55,50 +47,24 @@ function CanvasComponent({
     minHeight: element.size.height,
   };
 
+  const ListElement = ProjectElements[element.type].canvasComponent;
 
   return (
     <Card style={style} className="flex flex-col gap-2 p-2">
       <p>{label}</p>
-      <ListDroppable element={element} numItems={children.length}>
+      <Card
+        className="
+        flex-1 flex flex-col items-center justify-center gap-1 border-0"
         {children.length > 0 ? (
           children.map((childId) => {
             const child = elements.find((e) => e.id === childId);
             if (!child) return null;
-            return <ListElementWrapper key={childId} element={child} />;
+            <ListElement elementInstance={element} />
           })
         ) : (
           <p>{placeHolder}</p>
         )}
-      </ListDroppable>
-    </Card>
-  );
-}
-
-function ListDroppable({
-  children,
-  numItems,
-}: {
-  children: React.ReactNode;
-  element: ProjectElementInstance;
-  numItems: number;
-}) {
-
-  return (
-    <Card
-      className={`
-        flex-1 flex flex-col items-center justify-center gap-1
-        ${numItems > 0 ? "border-0" : ""}`}
-    >
-      {children}
-    </Card>
-  );
-}
-
-function ListElementWrapper({ element }: { element: ProjectElementInstance }) {
-
-
-  const ListElement = ProjectElements[element.type].canvasComponent;
-  return (
-    <ListElement elementInstance={element} />
+      </Card>
+    </Card >
   );
 }

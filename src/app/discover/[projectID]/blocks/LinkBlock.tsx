@@ -5,24 +5,20 @@ import {
   ElementsType,
   ProjectElement,
   ProjectElementInstance,
-} from "@/project/[projectID]/ProjectElements";
+} from "./Block";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@ui/card";
 import { Input } from "@ui/input";
 import Image from "next/image";
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton"
-import { generateSummary, getOpenGraphTags } from "@/project/[projectID]/api"
 import Link from "next/link"
-import { useProjectStore } from "../storeProvider";
 
 const type: ElementsType = "LinkBlock";
 const extraAttributes = {
   label: "Link Block",
   text: "",
-  placeHolder: "Enter link URL...",
   metaTags: {} as { [property: string]: string },
-  summary: [] as string[],
-  isRenderingBackup: false
+  summary: [] as string[]
 };
 
 export const LinkBlockProjectElement: ProjectElement = {
@@ -30,42 +26,19 @@ export const LinkBlockProjectElement: ProjectElement = {
   construct: (id: string, parentId: string) => ({
     id,
     type,
-    selected: false,
     position: { x: 0, y: 0 },
     size: { width: 300, height: 75 },
     parentId,
     extraAttributes,
   }),
-
-  toolbarElement: {
-    icon: LinkIcon,
-    label: "Link",
-  },
-
   canvasComponent: CanvasComponent,
-  toolbarPropertiesComponent: () => <div>Properties Component</div>,
 };
 
 type CustomInstance = ProjectElementInstance & {
   extraAttributes: typeof extraAttributes;
 };
 
-function confirmUrl(str: string) {
-  if (!str.startsWith('http')) {
-    str = "https://" + str
-  }
-  return str
-}
-function isValidUrl(str: string) {
-  let url;
-  try {
-    url = new URL(str);
-  } catch (_) {
-    return false;
-  }
 
-  return url.protocol === "http:" || url.protocol === "https:";
-}
 
 function CanvasComponent({
   elementInstance,
@@ -73,47 +46,11 @@ function CanvasComponent({
   elementInstance: ProjectElementInstance;
 }) {
   // const { updateElement, key } = useProject();
-  const updateElement = useProjectStore((state) => state.updateElement);
-  const key = useProjectStore((state) => state.key);
   const element = elementInstance as CustomInstance;
   const { placeHolder, text } = element.extraAttributes;
   const style = {
     maxWidth: element.size.width,
   };
-  function handleOnTextChange(e: React.ChangeEvent<HTMLInputElement>) {
-    updateElement(element.id, {
-      ...element,
-      extraAttributes: {
-        ...element.extraAttributes,
-        text: e.target.value,
-      },
-    });
-  }
-
-  async function updateUrl() {
-    const url = confirmUrl(element.extraAttributes.text)
-    if (isValidUrl(url)) {
-      updateElement(element.id, {
-        ...element,
-        extraAttributes: {
-          ...element.extraAttributes,
-          isRenderingBackup: true
-        }
-      })
-      const metaTags = await getOpenGraphTags(url)
-      const summary = await generateSummary(url, key)
-      updateElement(element.id, {
-        ...element,
-        extraAttributes: {
-          ...element.extraAttributes,
-          isRenderingBackup: false,
-          metaTags: metaTags,
-          summary: summary
-
-        }
-      });
-    }
-  }
 
   return (
     <Card style={style} className="p-2 flex gap-1 flex-col">
@@ -174,13 +111,8 @@ function CanvasComponent({
               <div className="flex items-center">
                 <LinkIcon className="text-zinc-500 h-6 w-6 mr-1" />
                 <Input
-                  className="grow"
+                  className="grow disabled:bg-gray-100"
                   placeholder={placeHolder}
-                  onChange={handleOnTextChange}
-                  onBlur={async () => updateUrl()}
-                  onKeyDown={async (e) => {
-                    if (e.key === 'Enter') updateUrl()
-                  }}
                   value={text}
                 />
               </div>

@@ -2,7 +2,7 @@
 
 import { getProject } from "../../../graphql/queries";
 import { updateProject } from "../../../graphql/mutations";
-import { ProjectElementInstance } from "@/project/[projectID]/types/ProjectElements";
+import { ProjectElementInstance } from "@/project/[projectID]/ProjectElements";
 import { cookieBasedClient } from '@/lib/amplifyServerUtils';
 import puppeteer from 'puppeteer';
 import { parse } from 'node-html-parser';

@@ -13,7 +13,7 @@ import { ReactNode } from "react";
 export default function Layout({ children }: { children: ReactNode }) {
     return (
         <>
-            {/* <NavigationBar>
+            <NavigationBar>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button
@@ -45,7 +45,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                 <Button variant={"ghost"} className="text-lg " asChild>
                     <Link href={"/dashboard"}>Dashboard</Link>
                 </Button>
-            </NavigationBar> */}
+            </NavigationBar>
             {children}
         </>
     )

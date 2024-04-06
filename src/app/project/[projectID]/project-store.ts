@@ -1,5 +1,5 @@
 import { createStore } from 'zustand/vanilla'
-import { ProjectElementInstance } from './types/ProjectElements'
+import { ProjectElementInstance } from './ProjectElements'
 import { getProjectData } from './api'
 
 export type ProjectState = {

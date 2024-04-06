@@ -5,7 +5,7 @@ import usePreventZoom from "@/project/[projectID]/hooks/usePreventZoom";
 import { useProjectStore } from "@/project/[projectID]/storeProvider";
 import CanvasControls from "@/project/[projectID]/CanvasControls";
 import CanvasBackground from "@/project/[projectID]/CanvasBackground";
-import { ProjectElementInstance, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
+import { ProjectElementInstance, ProjectElements } from "./blocks/Block";
 export default function Project({ elements }: { elements: ProjectElementInstance[] }) {
     const updateScrollLeft = useProjectStore((state) => state.updateScrollLeft);
     const updateScrollTop = useProjectStore((state) => state.updateScrollTop);
@@ -104,6 +104,7 @@ function CanvasElementWrapper({
     const CanvasElement = useMemo(() => {
         return ProjectElements[element.type].canvasComponent;
     }, [element]);
+
 
     return (
         <div style={style}
