@@ -62,7 +62,7 @@ export function useExternalDrop() {
                 reader.readAsDataURL(file);
             }
         }
-        else if (isValidUrl(confirmUrl(e.dataTransfer.getData("text/plain")))) {
+        else if (isValidUrl(e.dataTransfer.getData("text/plain"))) {
             const url = confirmUrl(e.dataTransfer.getData("text/plain"))
             const xPos = e.clientX - left;
             const yPos = e.clientY - top;
