@@ -20,7 +20,7 @@ export default function Canvas() {
   const scrollLeft = useProjectStore((state) => state.scrollLeft);
   const scrollTop = useProjectStore((state) => state.scrollTop);
   const zoomLevel = useProjectStore((state) => state.zoomLevel);
-  const removeSelectedElements = useProjectStore((state) => state.removeSelectedElements);
+  const deleteSelectedElements = useProjectStore((state) => state.deleteSelectedElements);
   const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false)
   const selectableRef = useRef<SelectableRef>(null);
   const { isOver, setNodeRef } = useDroppable({
@@ -32,13 +32,16 @@ export default function Canvas() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
-      if (e.key === "Delete") removeSelectedElements();
+      if (e.key === "Delete") {
+        console.log(e.key)
+        deleteSelectedElements();
+      }
     }
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [removeSelectedElements]);
+  }, [deleteSelectedElements]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === 1) {
