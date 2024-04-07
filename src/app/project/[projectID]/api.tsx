@@ -2,14 +2,11 @@
 
 import { getProject } from "../../../graphql/queries";
 import { updateProject } from "../../../graphql/mutations";
-import { ProjectElementInstance } from "@/project/[projectID]/ProjectElements";
+import { ProjectElementInstance } from "@/components/ProjectElements";
 import { cookieBasedClient } from '@/lib/amplifyServerUtils';
 import puppeteer from 'puppeteer';
 import { parse } from 'node-html-parser';
 import OpenAI from 'openai'
-import { runWithAmplifyServerContext } from '@/lib/amplifyServerUtils';
-import { getCurrentUser } from "aws-amplify/auth/server";
-import { cookies } from 'next/headers';
 import { currentAuthenticatedUser } from "@/lib/auth";
 
 

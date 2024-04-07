@@ -1,9 +1,9 @@
 import React from "react";
-import { TextBlockProjectElement } from "./blocks/TextBlock";
-import { ImageBlockProjectElement } from "./blocks/ImageBlock";
-import { LinkBlockProjectElement } from "./blocks/LinkBlock";
-import { ListBlockProjectElement } from "./blocks/ListBlock";
-import { TodoBlockProjectElement } from "./blocks/TodoBlock";
+import { TextBlockProjectElement } from "../project/[projectID]/blocks/TextBlock";
+import { ImageBlockProjectElement } from "../project/[projectID]/blocks/ImageBlock";
+import { LinkBlockProjectElement } from "../project/[projectID]/blocks/LinkBlock";
+import { ListBlockProjectElement } from "../project/[projectID]/blocks/ListBlock";
+import { TodoBlockProjectElement } from "../project/[projectID]/blocks/TodoBlock";
 
 export type ElementsType =
   | "TextBlock"

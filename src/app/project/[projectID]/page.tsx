@@ -3,10 +3,9 @@ import React, { useEffect } from "react";
 import ProjectBuilder from "@/project/[projectID]/ProjectBuilder";
 import { Suspense } from "react";
 import { useProjectStore } from "./storeProvider";
-import { useShallow } from "zustand/react/shallow";
 function BuilderPage({ params }: { params: { projectID: string } }) {
   const projectID = params.projectID;
-  const { fetch } = useProjectStore(useShallow((state) => state));
+  const fetch = useProjectStore((state) => state.fetch);
   useEffect(() => {
     fetch(projectID);
   }, [projectID, fetch]);

@@ -1,4 +1,4 @@
-import { ElementsType, ProjectElements } from "@/project/[projectID]/ProjectElements";
+import { ElementsType, ProjectElements } from "@/components/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
 import { generateSummary, getOpenGraphTags } from '@/project/[projectID]/api'
 import { useProjectStore } from '../storeProvider';

@@ -5,7 +5,7 @@ import {
   ElementsType,
   ProjectElement,
   ProjectElementInstance,
-} from "@/project/[projectID]/ProjectElements";
+} from "@/components/ProjectElements";
 import { Card } from "@ui/card";
 import { Textarea } from "@ui/textarea";
 import { useProjectStore } from "../storeProvider";
