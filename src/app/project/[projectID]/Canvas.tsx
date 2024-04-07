@@ -21,6 +21,7 @@ export default function Canvas() {
   const scrollTop = useProjectStore((state) => state.scrollTop);
   const zoomLevel = useProjectStore((state) => state.zoomLevel);
   const removeSelectedElements = useProjectStore((state) => state.removeSelectedElements);
+  const setAllElementsSelected = useProjectStore((state) => state.setAllElementsSelected);
   const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false)
   const selectableRef = useRef<SelectableRef>(null);
   const { setNodeRef } = useDroppable({
@@ -30,9 +31,16 @@ export default function Canvas() {
     },
   });
 
+  console.log(elements)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
+      console.log(e)
       if (e.key === "Delete") removeSelectedElements();
+      if (e.key === "a" && e.ctrlKey) {
+        e.preventDefault();
+        console.log("ctrl+a")
+        setAllElementsSelected();
+      }
     }
     document.addEventListener("keydown", handleKeyDown);
     return () => {
@@ -202,19 +210,17 @@ function CanvasElementWrapper({
       setSelectRef(ref);
     }}
     >
-      <div className="relative">
-        <div onMouseDown={(e) => {
-          if (e.ctrlKey) {
+      <div onMouseDown={(e) => {
+        if (e.ctrlKey) {
+          updateSelectedElements([element])
+        } else {            // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
+          if (selectedElements.length == 1) {
             updateSelectedElements([element])
-          } else {            // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
-            if (selectedElements.length == 1) {
-              updateSelectedElements([element])
-            }
           }
-        }}>
-          <div {...listeners} {...attributes}>
-            <CanvasElement elementInstance={element} />
-          </div>
+        }
+      }} className="relative">
+        <div {...listeners} {...attributes}>
+          <CanvasElement elementInstance={element} />
         </div>
         <div className="absolute"
           ref={resizeHandle}
