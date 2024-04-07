@@ -32,6 +32,7 @@ export type ProjectActions = {
     updateSelectedElements: (selectedElements: ProjectElementInstance[]) => void
     removeSelectedElements: () => void
     updateKey: (key: string) => void
+    setAllElementsSelected: () => void
 }
 
 export type ElementsActions = {
@@ -205,6 +206,9 @@ export const createProjectStore = (
         })),
         updateKey: (key: string) => set({
             key
-        })
+        }),
+        setAllElementsSelected: () => set((state) => ({
+            elements: state.elements.map((el) => ({ ...el, selected: true }))
+        })),
     }))
 }
