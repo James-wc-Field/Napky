@@ -1,3 +1,4 @@
+"use server"
 import { cookieBasedClient } from "@/lib/amplifyServerUtils";
 import { getProject } from "@src/graphql/queries";
 
@@ -10,6 +11,5 @@ export async function getProjectData(projectID: string) {
         query: getProject,
         variables: { id: projectID }
     })).data.getProject;
-    console.log(data)
     return data;
 }

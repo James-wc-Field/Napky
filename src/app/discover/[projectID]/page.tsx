@@ -1,13 +1,17 @@
-import { ProjectStoreProvider } from "@/project/[projectID]/storeProvider"
-import { getProjectData } from "./api"
+'use client'
+import { useDiscoverProjectStore } from "./storeProvider"
 import Project from "./project"
+import { Suspense, useEffect } from "react";
 
 export default async function page({ params }: { params: { projectID: string } }) {
-    const elements = JSON.parse((await getProjectData(params.projectID))?.content ?? "[]")
-
+    const projectID = params.projectID;
+    const fetch = useDiscoverProjectStore((state) => state.fetchElements);
+    useEffect(() => {
+        fetch(projectID);
+    }, [projectID, fetch]);
     return (
-        <ProjectStoreProvider>
-            <Project elements={elements} />
-        </ProjectStoreProvider>
+        <Suspense fallback={<p>Loading...</p>}>
+            <Project />
+        </Suspense>
     )
 }

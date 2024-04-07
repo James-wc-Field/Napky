@@ -2,17 +2,21 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Suspense } from "react";
 import usePreventZoom from "@/project/[projectID]/hooks/usePreventZoom";
-import { useProjectStore } from "@/project/[projectID]/storeProvider";
+import { useDiscoverProjectStore } from "./storeProvider";
 import CanvasControls from "@/project/[projectID]/CanvasControls";
 import CanvasBackground from "@/project/[projectID]/CanvasBackground";
 import { ProjectElementInstance, ProjectElements } from "./blocks/Block";
-export default function Project({ elements }: { elements: ProjectElementInstance[] }) {
-    const updateScrollLeft = useProjectStore((state) => state.updateScrollLeft);
-    const updateScrollTop = useProjectStore((state) => state.updateScrollTop);
-    const updateZoomLevel = useProjectStore((state) => state.updateZoomLevel);
-    const scrollLeft = useProjectStore((state) => state.scrollLeft);
-    const scrollTop = useProjectStore((state) => state.scrollTop);
-    const zoomLevel = useProjectStore((state) => state.zoomLevel);
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { MinusIcon, PlusIcon } from "@heroicons/react/24/solid";
+export default function Project() {
+    const elements = useDiscoverProjectStore((state) => state.elements);
+    const updateScrollLeft = useDiscoverProjectStore((state) => state.updateScrollLeft);
+    const updateScrollTop = useDiscoverProjectStore((state) => state.updateScrollTop);
+    const updateZoomLevel = useDiscoverProjectStore((state) => state.updateZoomLevel);
+    const scrollLeft = useDiscoverProjectStore((state) => state.scrollLeft);
+    const scrollTop = useDiscoverProjectStore((state) => state.scrollTop);
+    const zoomLevel = useDiscoverProjectStore((state) => state.zoomLevel);
     useEffect(() => {
         const html = document.querySelector("html");
         if (html) {
@@ -21,15 +25,15 @@ export default function Project({ elements }: { elements: ProjectElementInstance
     }, []);
     usePreventZoom();
     const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false)
-
     const handleMouseDown = (e: React.MouseEvent) => {
         if (e.button === 1) {
             setMiddleMouseIsDown(true);
         }
     };
-
     const handleMouseMove = useCallback((e: MouseEvent) => {
+        console.log(e)
         if (middleMouseIsDown) {
+            console.log(e.movementX, e.movementY)
             updateScrollLeft(-e.movementX);
             updateScrollTop(-e.movementY);
         }
@@ -58,9 +62,9 @@ export default function Project({ elements }: { elements: ProjectElementInstance
             document.removeEventListener("mouseup", handleMouseUp);
         };
     }, [handleMouseMove, handleMouseUp]);
-
+    const BASE_SIZE = 24;
     return (
-        <Suspense fallback={<p>Loading...</p>}>
+        <>
             <div
                 id="canvas-renderer"
                 className="absolute w-full h-full top-0 left-0"
@@ -82,10 +86,57 @@ export default function Project({ elements }: { elements: ProjectElementInstance
                     })}
                 </div>
             </div>
-            <CanvasControls />
+            <Card
+                className="flex flex-col absolute top-4 right-4 gap-2 p-2"
+                style={{ zIndex: 5 }}
+            >
+                <Button
+                    variant={"outline"}
+                    className="p-2"
+                    onClick={() => updateZoomLevel(true, 1.2)}
+                >
+                    <PlusIcon className="w-6" />
+                </Button>
+                <Button
+                    variant={"outline"}
+                    className="p-2"
+                    onClick={() => updateZoomLevel(false, 1.2)}
+                >
+                    <MinusIcon className="w-6" />
+                </Button>
+            </Card>
             {/* <MiniMap /> */}
-            <CanvasBackground />
-        </Suspense >
+            <svg
+                className="absolute w-full h-full top-0 left-0"
+                style={{
+                    visibility: zoomLevel < 0.5 ? "hidden" : "visible",
+                }}
+            >
+                <pattern
+                    id="background"
+                    x={scrollLeft % (BASE_SIZE * zoomLevel)}
+                    y={scrollTop % (BASE_SIZE * zoomLevel)}
+                    width={BASE_SIZE * zoomLevel}
+                    height={BASE_SIZE * zoomLevel}
+                    patternUnits="userSpaceOnUse"
+                    patternTransform={`translate(${zoomLevel}, ${zoomLevel})`}
+                >
+                    <circle
+                        cx={zoomLevel}
+                        cy={zoomLevel}
+                        r={zoomLevel}
+                        fill="#91919a"
+                    ></circle>
+                </pattern>
+                <rect
+                    x="0"
+                    y="0"
+                    width="100%"
+                    height="100%"
+                    fill="url(#background)"
+                ></rect>
+            </svg>
+        </>
     )
 }
 function CanvasElementWrapper({
@@ -107,8 +158,7 @@ function CanvasElementWrapper({
 
 
     return (
-        <div style={style}
-        >
+        <div style={style}>
             <div className="relative">
                 <CanvasElement elementInstance={element} />
             </div>

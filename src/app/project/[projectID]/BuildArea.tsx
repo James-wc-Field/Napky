@@ -1,6 +1,6 @@
 import Canvas from "@/project/[projectID]/Canvas";
 import { useDndMonitor } from "@dnd-kit/core";
-import { ElementsType, ProjectElements } from "@/project/[projectID]/ProjectElements";
+import { ElementsType, ProjectElements } from "@/components/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
 import { useExternalDrop } from "@/project/[projectID]/hooks/useExternalDrop";
 import { useProjectStore } from "./storeProvider";
