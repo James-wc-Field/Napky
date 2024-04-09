@@ -2,22 +2,16 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateProjectInput = {
+export type CreateCommentsInput = {
   id?: string | null,
-  userId: string,
-  name: string,
-  description?: string | null,
-  content?: string | null,
+  comment?: string | null,
 };
 
-export type ModelProjectConditionInput = {
-  userId?: ModelStringInput | null,
-  name?: ModelStringInput | null,
-  description?: ModelStringInput | null,
-  content?: ModelStringInput | null,
-  and?: Array< ModelProjectConditionInput | null > | null,
-  or?: Array< ModelProjectConditionInput | null > | null,
-  not?: ModelProjectConditionInput | null,
+export type ModelCommentsConditionInput = {
+  comment?: ModelStringInput | null,
+  and?: Array< ModelCommentsConditionInput | null > | null,
+  or?: Array< ModelCommentsConditionInput | null > | null,
+  not?: ModelCommentsConditionInput | null,
 };
 
 export type ModelStringInput = {
@@ -60,6 +54,41 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
+export type Comments = {
+  __typename: "Comments",
+  id: string,
+  comment?: string | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type UpdateCommentsInput = {
+  id: string,
+  comment?: string | null,
+};
+
+export type DeleteCommentsInput = {
+  id: string,
+};
+
+export type CreateProjectInput = {
+  id?: string | null,
+  userId: string,
+  name: string,
+  description?: string | null,
+  content?: string | null,
+};
+
+export type ModelProjectConditionInput = {
+  userId?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  content?: ModelStringInput | null,
+  and?: Array< ModelProjectConditionInput | null > | null,
+  or?: Array< ModelProjectConditionInput | null > | null,
+  not?: ModelProjectConditionInput | null,
+};
+
 export type Project = {
   __typename: "Project",
   id: string,
@@ -83,15 +112,12 @@ export type DeleteProjectInput = {
   id: string,
 };
 
-export type ModelProjectFilterInput = {
+export type ModelCommentsFilterInput = {
   id?: ModelIDInput | null,
-  userId?: ModelStringInput | null,
-  name?: ModelStringInput | null,
-  description?: ModelStringInput | null,
-  content?: ModelStringInput | null,
-  and?: Array< ModelProjectFilterInput | null > | null,
-  or?: Array< ModelProjectFilterInput | null > | null,
-  not?: ModelProjectFilterInput | null,
+  comment?: ModelStringInput | null,
+  and?: Array< ModelCommentsFilterInput | null > | null,
+  or?: Array< ModelCommentsFilterInput | null > | null,
+  not?: ModelCommentsFilterInput | null,
 };
 
 export type ModelIDInput = {
@@ -110,20 +136,34 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
+export type ModelCommentsConnection = {
+  __typename: "ModelCommentsConnection",
+  items:  Array<Comments | null >,
+  nextToken?: string | null,
+};
+
+export type ModelProjectFilterInput = {
+  id?: ModelIDInput | null,
+  userId?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  content?: ModelStringInput | null,
+  and?: Array< ModelProjectFilterInput | null > | null,
+  or?: Array< ModelProjectFilterInput | null > | null,
+  not?: ModelProjectFilterInput | null,
+};
+
 export type ModelProjectConnection = {
   __typename: "ModelProjectConnection",
   items:  Array<Project | null >,
   nextToken?: string | null,
 };
 
-export type ModelSubscriptionProjectFilterInput = {
+export type ModelSubscriptionCommentsFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  userId?: ModelSubscriptionStringInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  description?: ModelSubscriptionStringInput | null,
-  content?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionProjectFilterInput | null > | null,
-  or?: Array< ModelSubscriptionProjectFilterInput | null > | null,
+  comment?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionCommentsFilterInput | null > | null,
+  or?: Array< ModelSubscriptionCommentsFilterInput | null > | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -154,6 +194,61 @@ export type ModelSubscriptionStringInput = {
   beginsWith?: string | null,
   in?: Array< string | null > | null,
   notIn?: Array< string | null > | null,
+};
+
+export type ModelSubscriptionProjectFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  userId?: ModelSubscriptionStringInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  description?: ModelSubscriptionStringInput | null,
+  content?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionProjectFilterInput | null > | null,
+  or?: Array< ModelSubscriptionProjectFilterInput | null > | null,
+};
+
+export type CreateCommentsMutationVariables = {
+  input: CreateCommentsInput,
+  condition?: ModelCommentsConditionInput | null,
+};
+
+export type CreateCommentsMutation = {
+  createComments?:  {
+    __typename: "Comments",
+    id: string,
+    comment?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateCommentsMutationVariables = {
+  input: UpdateCommentsInput,
+  condition?: ModelCommentsConditionInput | null,
+};
+
+export type UpdateCommentsMutation = {
+  updateComments?:  {
+    __typename: "Comments",
+    id: string,
+    comment?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteCommentsMutationVariables = {
+  input: DeleteCommentsInput,
+  condition?: ModelCommentsConditionInput | null,
+};
+
+export type DeleteCommentsMutation = {
+  deleteComments?:  {
+    __typename: "Comments",
+    id: string,
+    comment?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
 };
 
 export type CreateProjectMutationVariables = {
@@ -210,6 +305,40 @@ export type DeleteProjectMutation = {
   } | null,
 };
 
+export type GetCommentsQueryVariables = {
+  id: string,
+};
+
+export type GetCommentsQuery = {
+  getComments?:  {
+    __typename: "Comments",
+    id: string,
+    comment?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListCommentsQueryVariables = {
+  filter?: ModelCommentsFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListCommentsQuery = {
+  listComments?:  {
+    __typename: "ModelCommentsConnection",
+    items:  Array< {
+      __typename: "Comments",
+      id: string,
+      comment?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type GetProjectQueryVariables = {
   id: string,
 };
@@ -247,6 +376,48 @@ export type ListProjectsQuery = {
       updatedAt: string,
     } | null >,
     nextToken?: string | null,
+  } | null,
+};
+
+export type OnCreateCommentsSubscriptionVariables = {
+  filter?: ModelSubscriptionCommentsFilterInput | null,
+};
+
+export type OnCreateCommentsSubscription = {
+  onCreateComments?:  {
+    __typename: "Comments",
+    id: string,
+    comment?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateCommentsSubscriptionVariables = {
+  filter?: ModelSubscriptionCommentsFilterInput | null,
+};
+
+export type OnUpdateCommentsSubscription = {
+  onUpdateComments?:  {
+    __typename: "Comments",
+    id: string,
+    comment?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteCommentsSubscriptionVariables = {
+  filter?: ModelSubscriptionCommentsFilterInput | null,
+};
+
+export type OnDeleteCommentsSubscription = {
+  onDeleteComments?:  {
+    __typename: "Comments",
+    id: string,
+    comment?: string | null,
+    createdAt: string,
+    updatedAt: string,
   } | null,
 };
 
