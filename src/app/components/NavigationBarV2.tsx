@@ -5,7 +5,6 @@
 import Link from "next/link";
 import Image from 'next/image';
 import { currentAuthenticatedUser } from "@/lib/auth";
-import { AuthUser } from "aws-amplify/auth";
 import { Button } from "./ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 
