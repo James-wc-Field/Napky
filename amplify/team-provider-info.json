@@ -1,25 +1,22 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-korkbo-dev-145707-authRole",
-      "UnauthRoleArn": "arn:aws:iam::533267380325:role/amplify-korkbo-dev-145707-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::533267380325:role/amplify-korkbo-dev-145707-authRole",
-      "Region": "us-west-1",
-      "DeploymentBucketName": "amplify-korkbo-dev-145707-deployment",
-      "UnauthRoleName": "amplify-korkbo-dev-145707-unauthRole",
-      "StackName": "amplify-korkbo-dev-145707",
-      "StackId": "arn:aws:cloudformation:us-west-1:533267380325:stack/amplify-korkbo-dev-145707/90898cb0-f5ea-11ee-af6d-06db92831eb3",
-      "AmplifyAppId": "d3mnuqmgsy6518"
+      "AuthRoleName": "amplify-korkbo-dev-195551-authRole",
+      "UnauthRoleArn": "arn:aws:iam::533267380325:role/amplify-korkbo-dev-195551-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::533267380325:role/amplify-korkbo-dev-195551-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-korkbo-dev-195551-deployment",
+      "UnauthRoleName": "amplify-korkbo-dev-195551-unauthRole",
+      "StackName": "amplify-korkbo-dev-195551",
+      "StackId": "arn:aws:cloudformation:us-west-2:533267380325:stack/amplify-korkbo-dev-195551/4c72b9f0-f614-11ee-9da0-0629d5adf4cd",
+      "AmplifyAppId": "doz67l0r3z3ww"
     },
     "categories": {
       "api": {
         "korkbo": {}
       },
       "auth": {
-        "korkbo39ee6db5": {}
-      },
-      "storage": {
-        "KorkBoProjectImages": {}
+        "korkbo1bba4b61": {}
       }
     }
   }
