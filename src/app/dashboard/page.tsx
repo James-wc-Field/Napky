@@ -5,6 +5,28 @@ import { Button } from "@ui/button";
 import Link from "next/link";
 import { Project } from "@src/API";
 import { currentAuthenticatedUser } from "@/lib/auth";
+import og_image from '../../../public/images/Project Sample.png';
+
+export const metadata = {
+  openGraph: {
+    title: 'Korkbo',
+    url: 'https://www.korkbo.com/',
+    type: 'website',
+    description: 'A modern project organization tool.',
+    images: [
+      {
+        url: og_image.src
+      }
+    ],
+    siteName: 'Korkbo.com',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Korkbo.com',
+    description: 'A modern project organization tool.',
+    images: [og_image.src],
+  },
+}
 
 export default async function Page() {
   const currentUser = await currentAuthenticatedUser();

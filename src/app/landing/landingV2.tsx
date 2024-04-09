@@ -1,10 +1,3 @@
-import { ProjectCardDetails } from '@/components/cards/ProjectCardDetails';
-import { Project } from '../../API';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Suspense } from 'react';
-import { Dialog } from '@/components/ui/dialog';
-import { DialogContent, DialogTrigger } from '@radix-ui/react-dialog';
-import { Button } from '@/components/ui/button';
 import Image from 'next/image'
 import { NavigationBarV2 } from '@/components/NavigationBarV2';
 

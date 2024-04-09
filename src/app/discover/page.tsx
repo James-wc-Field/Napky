@@ -4,6 +4,28 @@ import { getAllProjects } from "@/discover/api";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ProjectCard } from "@/components/cards/ProjectCard";
 import { LoadingSpinner } from "@/components/ui/spinner";
+import og_image from '../../../public/images/Project Sample.png';
+
+export const metadata = {
+  openGraph: {
+    title: 'Korkbo',
+    url: 'https://www.korkbo.com/discover',
+    type: 'website',
+    description: 'A modern project organization tool. Browse projects.',
+    images: [
+      {
+        url: og_image.src
+      }
+    ],
+    siteName: 'Korkbo.com',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Korkbo.com',
+    description: 'A modern project organization tool. Browse projects.',
+    images: [og_image.src],
+  },
+}
 
 export default function Page() {
   return (
