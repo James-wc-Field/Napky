@@ -12,6 +12,7 @@ export function useExternalDrop() {
      * @param e Dragevent
      * @returns 
      */
+    // 
     async function externalDropHandler(e: React.DragEvent<HTMLDivElement>) {
         e.preventDefault();
         if (!e.dataTransfer?.items) return;
