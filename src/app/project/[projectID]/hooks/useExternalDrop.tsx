@@ -11,7 +11,6 @@ export function useExternalDrop() {
     const scrollTop = useProjectStore((state) => state.scrollTop);
     const zoomLevel = useProjectStore((state) => state.zoomLevel);
     const key = useProjectStore((state) => state.key);
-
     /**
      * External drop handler
      * Handler for external file drop
@@ -67,7 +66,7 @@ export function useExternalDrop() {
                 // reader.readAsDataURL(file);
             }
         }
-        else if (isValidUrl(confirmUrl(e.dataTransfer.getData("text/plain")))) {
+        else if (isValidUrl(e.dataTransfer.getData("text/plain"))) {
             const url = confirmUrl(e.dataTransfer.getData("text/plain"))
             const xPos = e.clientX - left;
             const yPos = e.clientY - top;
