@@ -10,6 +10,8 @@ export function useExternalDrop() {
     const scrollTop = useProjectStore((state) => state.scrollTop);
     const zoomLevel = useProjectStore((state) => state.zoomLevel);
     const key = useProjectStore((state) => state.key);
+import { uploadImage } from '@/project/[projectID]/clientSideapi'
+
     /**
      * External drop handler
      * Handler for external file drop
@@ -27,39 +29,42 @@ export function useExternalDrop() {
         // If the dropped item is a file, create an image block
         if (e.dataTransfer.files.length > 0) {
             for (const file of Array.from(e.dataTransfer.files)) {
-                console.log("FILE:", file);
-                const reader = new FileReader();
-                const xPos = e.clientX - left;
-                const yPos = e.clientY - top;
-                if (
-                    yPos < 0 ||
-                    xPos < 0 ||
-                    yPos > canvasRect.height ||
-                    xPos > canvasRect.width
-                )
-                    continue;
+                uploadImage(file, "image")
+                // const reader = new FileReader();
+                // const xPos = e.clientX - left;
+                // const yPos = e.clientY - top;
+                // if (
+                //     yPos < 0 ||
+                //     xPos < 0 ||
+                //     yPos > canvasRect.height ||
+                //     xPos > canvasRect.width
+                // )
+                //     continue;
+                // reader.onload = (event) => {
+                //     const src = event.target?.result as string;
+                //     const type = "ImageBlock";
+                //     let newElement = ProjectElements[type as ElementsType].construct(
+                //         idGenerator(),
+                //         "root"
+                //     );
+                //     console.log("NEW ELEMENT:", newElement);
+                //     console.log(src)
+                //     newElement = {
+                //         ...newElement,
+                //         extraAttributes: {
+                //             ...newElement.extraAttributes,
+                //             src: src,
+                //         },
+                //     };
 
-                reader.onload = (event) => {
-                    const src = event.target?.result as string;
-                    const type = "ImageBlock";
-                    let newElement = ProjectElements[type as ElementsType].construct(
-                        idGenerator(),
-                        "root"
-                    );
-                    addElement({
-                        ...newElement,
-                        position: {
-                            x: (xPos - scrollLeft) / zoomLevel,
-                            y: (yPos - scrollTop) / zoomLevel,
-                        },
-                        extraAttributes: {
-                            ...newElement.extraAttributes,
-                            src: src,
-                        },
-                    });
-                };
+                //     addElement(
+                //         newElement,
+                //         (xPos - scrollLeft) / zoomLevel,
+                //         (yPos - scrollTop) / zoomLevel
+                //     );
+                // };
 
-                reader.readAsDataURL(file);
+                // reader.readAsDataURL(file);
             }
         }
         else if (isValidUrl(confirmUrl(e.dataTransfer.getData("text/plain")))) {
