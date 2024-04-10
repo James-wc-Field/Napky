@@ -4,7 +4,7 @@ import { ProjectElements } from "@/project/[projectID]/types/ProjectElements";
 import { Card } from "@ui/card";
 import { useDroppable } from "@dnd-kit/core";
 import { Button } from "../../components/ui/button";
-import { Save} from "lucide-react";
+import { Save } from "lucide-react";
 
 export default function CanvasToolbar() {
   const { setNodeRef } = useDroppable({
