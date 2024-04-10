@@ -7,12 +7,7 @@ import { cookieBasedClient } from '@/lib/amplifyServerUtils';
 import puppeteer from 'puppeteer';
 import { parse } from 'node-html-parser';
 import OpenAI from 'openai'
-import { runWithAmplifyServerContext } from '@/lib/amplifyServerUtils';
-import { getCurrentUser } from "aws-amplify/auth/server";
-import { cookies } from 'next/headers';
-import * as htmlToImage from "html-to-image";
 import { currentAuthenticatedUser } from "@/lib/auth";
-import { uploadData } from 'aws-amplify/storage';
 
 
 export async function getOpenGraphTags(url: string) {
@@ -73,28 +68,6 @@ async function getURLDom(url: string) {
   await browser.close();
   return html;
 
-}
-
-export async function uploadImage(projectId: string, ref: any) {
-  console.log("running!")
-  try {
-    htmlToImage.toJpeg(ref.current!).then(async (dataUrl) => {
-      try {
-        const result = await uploadData({
-          key: projectId + '.jpeg',
-          data: dataUrl,
-          options: {
-            accessLevel: 'guest', // defaults to `guest` but can be 'private' | 'protected' | 'guest' // Optional progress callback.
-          }
-        }).result;
-        console.log('Succeeded: ', result);
-      } catch (error) {
-        console.log('Error : ', error);
-      }
-    });
-  } catch (error) {
-    console.log(error)
-  }
 }
 
 

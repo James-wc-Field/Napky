@@ -4,7 +4,7 @@ import { idGenerator } from "@/lib/idGenerator";
 import { generateSummary, getOpenGraphTags } from '@/project/[projectID]/api'
 
 export function useExternalDrop() {
-    const { addElement, scrollLeft, scrollTop, zoomLevel, key, updateElement} = useProject();
+    const { addElement, scrollLeft, scrollTop, zoomLevel, key, updateElement } = useProject();
     /**
      * External drop handler
      * Handler for external file drop
@@ -22,7 +22,6 @@ export function useExternalDrop() {
         // If the dropped item is a file, create an image block
         if (e.dataTransfer.files.length > 0) {
             for (const file of Array.from(e.dataTransfer.files)) {
-                console.log("FILE:", file);
                 const reader = new FileReader();
                 const xPos = e.clientX - left;
                 const yPos = e.clientY - top;

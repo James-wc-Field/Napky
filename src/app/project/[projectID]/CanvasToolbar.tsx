@@ -7,7 +7,7 @@ import { Button } from "../../components/ui/button";
 import { Save } from "lucide-react";
 import * as htmlToImage from "html-to-image";
 import useProject from "./hooks/useProject";
-import { uploadImage } from "./api";
+import { uploadImage } from "./clientapi";
 
 export const CanvasToolbar = forwardRef(function (props, ref: any) {
   const { projectId } = useProject();
