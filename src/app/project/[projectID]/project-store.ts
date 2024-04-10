@@ -32,6 +32,8 @@ export type ProjectActions = {
     updateSelectedElements: (selectedElements: ProjectElementInstance[]) => void
     removeSelectedElements: () => void
     updateKey: (key: string) => void
+    deleteElement: (id: string) => void
+    deleteSelectedElements: () => void
 }
 
 export type ElementsActions = {
@@ -205,6 +207,12 @@ export const createProjectStore = (
         })),
         updateKey: (key: string) => set({
             key
-        })
+        }),
+        deleteElement: (id: string) => set((state) => ({
+            elements: state.elements.filter((el) => el.id !== id)
+        })),
+        deleteSelectedElements: () => set((state) => ({
+            elements: state.elements.filter((el) => !el.selected)
+        }))
     }))
 }
