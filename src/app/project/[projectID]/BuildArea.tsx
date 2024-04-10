@@ -14,6 +14,7 @@ export default function BuildArea() {
   const scrollTop = useProjectStore(useShallow((state) => state.scrollTop));
   const zoomLevel = useProjectStore(useShallow((state) => state.zoomLevel));
   const updateSelectedElements = useProjectStore((state) => state.updateSelectedElements);
+  const deleteElement = useProjectStore((state) => state.deleteElement);
 
   useDndMonitor({
     onDragStart: (event) => {
@@ -30,10 +31,14 @@ export default function BuildArea() {
       const isToolbarBtnElement = active.data?.current?.isToolbarBtnElement;
       const isCanvasElement = active.data?.current?.isCanvasElement;
       const isListElement = active.data?.current?.isListElement;
+      const isTrashCan = over.data?.current?.isTrash;
 
       const isCanvasDropArea = over.data?.current?.isCanvasDropArea;
       const isListDroppable = over.data?.current?.isListDroppable;
 
+      if (isTrashCan) {
+        deleteElement(active.data?.current?.elementId as string);
+      }
       // Drag new element from toolbar onto canvas
       if (isToolbarBtnElement) {
         const type = active.data?.current?.type;
