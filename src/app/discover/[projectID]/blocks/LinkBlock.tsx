@@ -111,6 +111,7 @@ function CanvasComponent({
               <div className="flex items-center">
                 <LinkIcon className="text-zinc-500 h-6 w-6 mr-1" />
                 <Input
+                  disabled
                   className="grow disabled:bg-gray-100"
                   placeholder={placeHolder}
                   value={text}
