@@ -11,7 +11,7 @@ import { createServerRunner } from "@aws-amplify/adapter-nextjs";
 import { generateServerClientUsingCookies } from "@aws-amplify/adapter-nextjs/api";
 import { generateServerClientUsingReqRes } from "@aws-amplify/adapter-nextjs/api";
 import { cookies } from "next/headers";
-import amplifyConfig from "@src/amplifyconfiguration.json";
+import amplifyConfig from "../../../src/amplifyconfiguration.json";
 
 /**
  * Used for providing necessary server context to Amplify's Auth, REST APIs, and Storage category APIs.
