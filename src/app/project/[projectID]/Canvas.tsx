@@ -46,7 +46,7 @@ export default function Canvas() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [removeSelectedElements]);
+  }, [removeSelectedElements, setAllElementsSelected]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === 1) {
