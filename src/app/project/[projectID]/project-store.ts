@@ -33,6 +33,8 @@ export type ProjectActions = {
     removeSelectedElements: () => void
     updateKey: (key: string) => void
     setAllElementsSelected: () => void
+    deleteElement: (id: string) => void
+    deleteSelectedElements: () => void
 }
 
 export type ElementsActions = {
@@ -210,5 +212,11 @@ export const createProjectStore = (
         setAllElementsSelected: () => set((state) => ({
             elements: state.elements.map((el) => ({ ...el, selected: true }))
         })),
+        deleteElement: (id: string) => set((state) => ({
+            elements: state.elements.filter((el) => el.id !== id)
+        })),
+        deleteSelectedElements: () => set((state) => ({
+            elements: state.elements.filter((el) => !el.selected)
+        }))
     }))
 }
