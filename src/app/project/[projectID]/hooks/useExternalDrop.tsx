@@ -11,6 +11,7 @@ export function useExternalDrop() {
     const scrollTop = useProjectStore((state) => state.scrollTop);
     const zoomLevel = useProjectStore((state) => state.zoomLevel);
     const key = useProjectStore((state) => state.key);
+
     /**
      * External drop handler
      * Handler for external file drop
