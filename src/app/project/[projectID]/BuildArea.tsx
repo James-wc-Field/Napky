@@ -267,7 +267,7 @@ export default function BuildArea() {
   });
 
 
-const { externalDropHandler } = useExternalDrop();
+  const { externalDropHandler } = useExternalDrop();
   return (
     <div
       id="canvas-wrapper"
