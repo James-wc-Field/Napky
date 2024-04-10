@@ -48,8 +48,6 @@ function CanvasComponent({
     minHeight: element.size.height,
   };
 
-  const ListElement = ProjectElements[element.type].canvasComponent;
-
   return (
     <Card style={style} className="flex flex-col gap-2 p-2">
       <p>{label}</p>
@@ -57,14 +55,26 @@ function CanvasComponent({
         className="flex-1 flex flex-col items-center justify-center gap-1 border-0">
         {children.length > 0 ? (
           children.map((childId) => {
+            console.log("CHILDREN:", children)
             const child = elements.find((e) => e.id === childId);
+            console.log("CHILD:", child)
+            // debugger;
             if (!child) return null;
-            <ListElement elementInstance={element} />
+            return <ListElementWrapper element={child} key={childId} />
           })
         ) : (
           <p>{placeHolder}</p>
         )}
       </Card>
     </Card >
+  );
+}
+
+
+function ListElementWrapper({ element }: { element: ProjectElementInstance }) {
+
+  const ListElement = ProjectElements[element.type].canvasComponent;
+  return (
+    <ListElement elementInstance={element} />
   );
 }
