@@ -20,20 +20,27 @@ export default function Canvas() {
   const scrollLeft = useProjectStore((state) => state.scrollLeft);
   const scrollTop = useProjectStore((state) => state.scrollTop);
   const zoomLevel = useProjectStore((state) => state.zoomLevel);
+  const removeSelectedElements = useProjectStore((state) => state.removeSelectedElements);
+  const setAllElementsSelected = useProjectStore((state) => state.setAllElementsSelected);
   const deleteSelectedElements = useProjectStore((state) => state.deleteSelectedElements);
   const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false)
   const selectableRef = useRef<SelectableRef>(null);
-  const { isOver, setNodeRef } = useDroppable({
+  const { setNodeRef } = useDroppable({
     id: "canvas-droppable",
     data: {
       isCanvasDropArea: true,
     },
   });
 
+  console.log(elements)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
+      if (e.key === "a" && e.ctrlKey) {
+        e.preventDefault();
+        console.log("ctrl+a")
+        setAllElementsSelected();
+      }
       if (e.key === "Delete") {
-        console.log(e.key)
         deleteSelectedElements();
       }
     }
@@ -41,7 +48,7 @@ export default function Canvas() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [deleteSelectedElements]);
+  }, [removeSelectedElements, setAllElementsSelected]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === 1) {
@@ -205,19 +212,17 @@ function CanvasElementWrapper({
       setSelectRef(ref);
     }}
     >
-      <div className="relative">
-        <div onMouseDown={(e) => {
-          if (e.ctrlKey) {
+      <div onMouseDown={(e) => {
+        if (e.ctrlKey) {
+          updateSelectedElements([element])
+        } else {            // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
+          if (selectedElements.length == 1) {
             updateSelectedElements([element])
-          } else {            // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
-            if (selectedElements.length == 1) {
-              updateSelectedElements([element])
-            }
           }
-        }}>
-          <div {...listeners} {...attributes}>
-            <CanvasElement elementInstance={element} />
-          </div>
+        }
+      }} className="relative">
+        <div {...listeners} {...attributes}>
+          <CanvasElement elementInstance={element} />
         </div>
         <div className="absolute"
           ref={resizeHandle}
