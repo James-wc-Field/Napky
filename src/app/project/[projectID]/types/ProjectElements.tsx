@@ -36,6 +36,7 @@ export type Position = {
 export type ProjectElementInstance = {
   id: string;
   type: ElementsType;
+  selected: boolean;
   position: {
     x: number;
     y: number;

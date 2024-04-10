@@ -8,12 +8,12 @@ import {
 } from "@/project/[projectID]/types/ProjectElements";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@ui/card";
 import { Input } from "@ui/input";
-import useProject from "@/project/[projectID]/hooks/useProject";
 import Image from "next/image";
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton"
 import { generateSummary, getOpenGraphTags } from "@/project/[projectID]/api"
 import Link from "next/link"
+import { useProjectStore } from "../storeProvider";
 
 const type: ElementsType = "LinkBlock";
 const extraAttributes = {
@@ -30,6 +30,7 @@ export const LinkBlockProjectElement: ProjectElement = {
   construct: (id: string, parentId: string) => ({
     id,
     type,
+    selected: false,
     position: { x: 0, y: 0 },
     size: { width: 300, height: 75 },
     parentId,
@@ -71,7 +72,9 @@ function CanvasComponent({
 }: {
   elementInstance: ProjectElementInstance;
 }) {
-  const { updateElement, key } = useProject();
+  // const { updateElement, key } = useProject();
+  const updateElement = useProjectStore((state) => state.updateElement);
+  const key = useProjectStore((state) => state.key);
   const element = elementInstance as CustomInstance;
   const { placeHolder, text } = element.extraAttributes;
   const style = {

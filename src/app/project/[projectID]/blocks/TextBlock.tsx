@@ -8,7 +8,7 @@ import {
 } from "@/project/[projectID]/types/ProjectElements";
 import { Card } from "@ui/card";
 import { Textarea } from "@ui/textarea";
-import useProject from "@/project/[projectID]/hooks/useProject";
+import { useProjectStore } from "../storeProvider";
 
 const type: ElementsType = "TextBlock";
 
@@ -22,6 +22,7 @@ export const TextBlockProjectElement: ProjectElement = {
   construct: (id: string, parentId: string) => ({
     id,
     type,
+    selected: false,
     position: { x: 0, y: 0 },
     size: { width: 300, height: 75 },
     parentId,
@@ -46,7 +47,7 @@ function CanvasComponent({
 }: {
   elementInstance: ProjectElementInstance;
 }) {
-  const { updateElement } = useProject();
+  const updateElement = useProjectStore((state) => state.updateElement);
   const element = elementInstance as CustomInstance;
   const { text, placeHolder } = element.extraAttributes;
 

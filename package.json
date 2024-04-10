@@ -42,9 +42,11 @@
     "react-dom": "^18",
     "react-hook-form": "^7.51.0",
     "react-selectable-box": "^1.9.0",
+    "sharp": "^0.33.3",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/node": "^20",
