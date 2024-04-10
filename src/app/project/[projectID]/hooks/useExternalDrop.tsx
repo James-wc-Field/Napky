@@ -2,6 +2,7 @@ import { ElementsType, ProjectElements } from "@/project/[projectID]/types/Proje
 import { idGenerator } from "@/lib/idGenerator";
 import { generateSummary, getOpenGraphTags } from '@/project/[projectID]/api'
 import { useProjectStore } from '../storeProvider';
+import { uploadImage } from '@/project/[projectID]/clientSideapi'
 
 export function useExternalDrop() {
     const updateElement = useProjectStore((state) => state.updateElement);
@@ -10,7 +11,6 @@ export function useExternalDrop() {
     const scrollTop = useProjectStore((state) => state.scrollTop);
     const zoomLevel = useProjectStore((state) => state.zoomLevel);
     const key = useProjectStore((state) => state.key);
-import { uploadImage } from '@/project/[projectID]/clientSideapi'
     /**
      * External drop handler
      * Handler for external file drop
