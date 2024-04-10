@@ -9,7 +9,7 @@ import {
 } from "@/project/[projectID]/types/ProjectElements";
 import { Card } from "@ui/card";
 import { useDroppable, useDraggable } from "@dnd-kit/core";
-import useProject from "@/project/[projectID]/hooks/useProject";
+import { useProjectStore } from "../storeProvider";
 
 const type: ElementsType = "ListBlock";
 
@@ -23,6 +23,7 @@ export const ListBlockProjectElement: ProjectElement = {
   type,
   construct: (id: string, parentId: string) => ({
     id,
+    selected: false,
     type,
     position: { x: 0, y: 0 },
     size: { width: 300, height: 100 },
@@ -54,7 +55,8 @@ function CanvasComponent({
     maxWidth: element.size.width,
     minHeight: element.size.height,
   };
-  const { elements } = useProject();
+
+  const elements = useProjectStore((state) => state.elements);
 
   return (
     <Card style={style} className="flex flex-col gap-2 p-2">
