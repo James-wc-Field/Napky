@@ -1,10 +1,7 @@
 'use client'
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Suspense } from "react";
 import usePreventZoom from "@/project/[projectID]/hooks/usePreventZoom";
 import { useDiscoverProjectStore } from "./storeProvider";
-import CanvasControls from "@/project/[projectID]/CanvasControls";
-import CanvasBackground from "@/project/[projectID]/CanvasBackground";
 import { ProjectElementInstance, ProjectElements } from "./blocks/Block";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -31,7 +28,6 @@ export default function Project() {
         }
     };
     const handleMouseMove = useCallback((e: MouseEvent) => {
-        console.log(e)
         if (middleMouseIsDown) {
             console.log(e.movementX, e.movementY)
             updateScrollLeft(-e.movementX);
@@ -87,7 +83,7 @@ export default function Project() {
                 </div>
             </div>
             <Card
-                className="flex flex-col absolute top-4 right-4 gap-2 p-2"
+                className="flex flex-col absolute top-20 right-4 gap-2 p-2"
                 style={{ zIndex: 5 }}
             >
                 <Button

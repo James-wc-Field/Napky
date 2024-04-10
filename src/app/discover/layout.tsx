@@ -12,7 +12,7 @@ import { ReactNode } from "react";
 
 export default function Layout({ children }: { children: ReactNode }) {
     return (
-        <>
+        <div className="z-10">
             <NavigationBar>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -47,6 +47,6 @@ export default function Layout({ children }: { children: ReactNode }) {
                 </Button>
             </NavigationBar>
             {children}
-        </>
+        </div>
     )
 }

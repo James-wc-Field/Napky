@@ -45,7 +45,7 @@ function CanvasComponent({
   };
 
   return (
-    <Card style={style} className="p-2">
+    <Card style={style} className="p-2 read-only">
       <Textarea
         placeholder={placeHolder}
         value={text}
