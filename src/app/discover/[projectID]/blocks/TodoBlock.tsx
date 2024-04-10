@@ -1,6 +1,5 @@
 "use client";
 
-import { ListBulletIcon } from "@heroicons/react/24/solid";
 import {
   ElementsType,
   ProjectElement,
@@ -50,9 +49,11 @@ function CanvasComponent({
       {items.map((item, index) => (
         <div key={index} className="flex flex-row items-center gap-2">
           <Checkbox
+            disabled
             checked={checked[index]}
           />
           <Textarea
+            disabled
             id={`${element.id}-todo-item-${index}`}
             value={item}
             rows={1} // Need a way to dynamically grow/shrink based on content like NextUI did it
