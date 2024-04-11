@@ -7,6 +7,7 @@ import { Project } from "@src/API";
 import { currentAuthenticatedUser } from "@/lib/auth";
 import { Metadata } from "next";
 
+
 export const metadata: Metadata = {
   openGraph: {
     title: 'Korkbo',
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
     description: 'A modern project organization tool.',
     images: [
       {
-        url: og_image.src
+        url: "images/Project Sample.png"
       }
     ],
     siteName: 'Korkbo.com',
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Korkbo.com',
     description: 'A modern project organization tool.',
-    images: [og_image.src],
+    images: ["images/Project Sample.png"],
   },
 }
 

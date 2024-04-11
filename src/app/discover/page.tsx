@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     description: 'A modern project organization tool. Browse projects.',
     images: [
       {
-        url: og_image.src
+        url: "images/Project Sample.png"
       }
     ],
     siteName: 'Korkbo.com',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Korkbo.com',
     description: 'A modern project organization tool. Browse projects.',
-    images: [og_image.src],
+    images: ["images/Project Sample.png"],
   },
 }
 
