@@ -1,9 +1,5 @@
 // From https://docs.amplify.aws/javascript/build-a-backend/server-side-rendering/nextjs/#manage-auth-session-with-the-nextjs-middleware
 
-/**
- * THIS FILE IS NOT USED FOR NOW, AS DENOTED BY THE '-' PREFIX (-middleware.ts)
- */
-
 import { fetchAuthSession } from 'aws-amplify/auth/server';
 import { NextRequest, NextResponse } from 'next/server';
 import { runWithAmplifyServerContext } from '@/lib/amplifyServerUtils';
