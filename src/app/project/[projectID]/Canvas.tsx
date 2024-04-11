@@ -20,7 +20,6 @@ export default function Canvas() {
   const scrollLeft = useProjectStore((state) => state.scrollLeft);
   const scrollTop = useProjectStore((state) => state.scrollTop);
   const zoomLevel = useProjectStore((state) => state.zoomLevel);
-  const removeSelectedElements = useProjectStore((state) => state.removeSelectedElements);
   const setAllElementsSelected = useProjectStore((state) => state.setAllElementsSelected);
   const deleteSelectedElements = useProjectStore((state) => state.deleteSelectedElements);
   const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false)
@@ -48,7 +47,7 @@ export default function Canvas() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [removeSelectedElements, setAllElementsSelected]);
+  }, [setAllElementsSelected, deleteSelectedElements]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === 1) {
