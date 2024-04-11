@@ -1,0 +1,16 @@
+{
+  "resourceName": "KorkBoProjectImages",
+  "policyUUID": "99136959",
+  "bucketName": "korkbof3b8f9ace4cc4641b7954058899ccc71",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}
