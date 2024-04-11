@@ -52,10 +52,12 @@ export async function saveProject(
  * @param projectID the id of the project to get
  */
 export async function getProjectData(projectID: string) {
-  return (await cookieBasedClient.graphql({
+  const data = (await cookieBasedClient.graphql({
     query: getProject,
     variables: { id: projectID }
   })).data.getProject;
+  console.log(data)
+  return data;
 }
 
 
