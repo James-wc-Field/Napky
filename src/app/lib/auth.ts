@@ -1,6 +1,6 @@
 "use server";
 
-import { getCurrentUser } from "aws-amplify/auth/server";
+import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth/server";
 import { runWithAmplifyServerContext } from "./amplifyServerUtils";
 import { cookies } from "next/headers";
 
@@ -10,8 +10,16 @@ import { cookies } from "next/headers";
  */
 export async function currentAuthenticatedUser() {
   const cookieStore = cookies;
-  return await runWithAmplifyServerContext({
-    nextServerContext: { cookies:cookieStore },
-    operation: (contextSpec) => getCurrentUser(contextSpec),
+  const authenticated = await runWithAmplifyServerContext({
+    nextServerContext: { cookies: cookieStore },
+    operation: async (contextSpec) => {
+      try {
+        return await getCurrentUser(contextSpec);
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
+    },
   });
+  return authenticated;
 }
