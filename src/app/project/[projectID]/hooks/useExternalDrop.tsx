@@ -1,6 +1,7 @@
 import { ElementsType, ProjectElements } from "@/components/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
 import { generateSummary, getOpenGraphTags } from '@/project/[projectID]/api'
+import { uploadImage } from '../clientSideapi';
 import { useProjectStore } from '../storeProvider';
 
 export function useExternalDrop() {
@@ -16,6 +17,7 @@ export function useExternalDrop() {
      * @param e Dragevent
      * @returns 
      */
+    // 
     async function externalDropHandler(e: React.DragEvent<HTMLDivElement>) {
         e.preventDefault();
         if (!e.dataTransfer?.items) return;
@@ -27,7 +29,6 @@ export function useExternalDrop() {
         // If the dropped item is a file, create an image block
         if (e.dataTransfer.files.length > 0) {
             for (const file of Array.from(e.dataTransfer.files)) {
-                console.log("FILE:", file);
                 const reader = new FileReader();
                 const xPos = e.clientX - left;
                 const yPos = e.clientY - top;
@@ -46,23 +47,47 @@ export function useExternalDrop() {
                         idGenerator(),
                         "root"
                     );
-                    addElement({
-                        ...newElement,
-                        position: {
-                            x: (xPos - scrollLeft) / zoomLevel,
-                            y: (yPos - scrollTop) / zoomLevel,
-                        },
-                        extraAttributes: {
-                            ...newElement.extraAttributes,
-                            src: src,
-                        },
-                    });
+                    console.log("NEW ELEMENT:", newElement);
+                    console.log(src)
+
+                    addElement(
+                        {
+                            ...newElement,
+                            position: {
+                                x: (xPos - scrollLeft) / zoomLevel,
+                                y: (yPos - scrollTop) / zoomLevel,
+                            },
+                            extraAttributes: {
+                                ...newElement.extraAttributes,
+                                src: src,
+                            },
+                        }
+                    );
                 };
 
-                reader.readAsDataURL(file);
+                // Get hash of the image as the key
+                const hash = await window.crypto.subtle.digest(
+                    "SHA-256",
+                    new TextEncoder().encode(file.name)
+                );
+                let key = Array.from(new Uint8Array(hash))
+                    .map((x) => x.toString(16).padStart(2, "0"))
+                    .join("");
+
+                // Add timestamp to the key
+                key += "-" + Date.now();
+                console.log(key);
+
+                uploadImage(file, key).then((result) => {
+                    if (!result)
+                        return;
+
+                    console.log("Image uploaded successfully");
+                    // reader.readAsDataURL(file);
+                });
             }
         }
-        else if (isValidUrl(confirmUrl(e.dataTransfer.getData("text/plain")))) {
+        else if (isValidUrl(e.dataTransfer.getData("text/plain"))) {
             const url = confirmUrl(e.dataTransfer.getData("text/plain"))
             const xPos = e.clientX - left;
             const yPos = e.clientY - top;

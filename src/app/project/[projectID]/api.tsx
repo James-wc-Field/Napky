@@ -1,5 +1,4 @@
-"use server";
-
+"use server"
 import { getProject } from "../../../graphql/queries";
 import { updateProject } from "../../../graphql/mutations";
 import { ProjectElementInstance } from "@/components/ProjectElements";

@@ -1,6 +1,6 @@
 projects:
-  napky:
-    schemaPath: amplify/backend/api/napky/build/schema.graphql
+  korkbo:
+    schemaPath: amplify/backend/api/korkbo/build/schema.graphql
     includes:
       - src/graphql/**/*.ts
     excludes:
@@ -11,9 +11,6 @@ projects:
         codeGenTarget: typescript
         generatedFileName: src/API.ts
         docsFilePath: src/graphql
-        region: us-east-2
+        region: us-west-1
         apiId: null
         maxDepth: 2
-extensions:
-  amplify:
-    version: 3
