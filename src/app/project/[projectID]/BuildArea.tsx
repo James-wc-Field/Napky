@@ -1,30 +1,28 @@
-import { DragEvent, use } from "react";
 import Canvas from "@/project/[projectID]/Canvas";
 import { useDndMonitor } from "@dnd-kit/core";
 import { ElementsType, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
-import useProject from "@/project/[projectID]/hooks/useProject";
-import { ProjectElementInstance } from "@/project/[projectID]/types/ProjectElements";
 import { useExternalDrop } from "@/project/[projectID]/hooks/useExternalDrop";
+import { useProjectStore } from "./storeProvider";
+import { useShallow } from "zustand/react/shallow";
 export default function BuildArea() {
+  const elements = useProjectStore((state) => state.elements);
+  const addElement = useProjectStore((state) => state.addElement);
+  const updateElement = useProjectStore((state) => state.updateElement);
+  const selectedElements = useProjectStore((state) => state.selectedElements);
+  const scrollLeft = useProjectStore(useShallow((state) => state.scrollLeft));
+  const scrollTop = useProjectStore(useShallow((state) => state.scrollTop));
+  const zoomLevel = useProjectStore(useShallow((state) => state.zoomLevel));
+  const updateSelectedElements = useProjectStore((state) => state.updateSelectedElements);
+  const deleteElement = useProjectStore((state) => state.deleteElement);
 
-  const {
-    elements,
-    addElement,
-    updateElement,
-    scrollLeft,
-    scrollTop,
-    zoomLevel,
-    selectedElements,
-    changeSelectedElements
-  } = useProject();
   useDndMonitor({
     onDragStart: (event) => {
-      const elementId = event.active.data.current?.elementId;
-      if (!selectedElements.find((element) => element.id == elementId)) {
-        const selected = [elements.find((element) => element.id == elementId)]
-        changeSelectedElements(selected as ProjectElementInstance[])
-      }
+      // if (event.active.data?.current?.isCanvasElement) return
+      // const elementId = event.active.data.current?.elementId;
+      // if (!(selectedElements().find((element) => element.id == elementId))) {
+      //   updateSelectedElements([elements.find((element) => element.id == elementId)!])
+      // }
     },
     onDragEnd: (event) => {
       const { active, over, delta } = event;
@@ -33,10 +31,14 @@ export default function BuildArea() {
       const isToolbarBtnElement = active.data?.current?.isToolbarBtnElement;
       const isCanvasElement = active.data?.current?.isCanvasElement;
       const isListElement = active.data?.current?.isListElement;
+      const isTrashCan = over.data?.current?.isTrash;
 
       const isCanvasDropArea = over.data?.current?.isCanvasDropArea;
       const isListDroppable = over.data?.current?.isListDroppable;
 
+      if (isTrashCan) {
+        deleteElement(active.data?.current?.elementId as string);
+      }
       // Drag new element from toolbar onto canvas
       if (isToolbarBtnElement) {
         const type = active.data?.current?.type;
@@ -53,18 +55,24 @@ export default function BuildArea() {
         const diffY = overTop - initialTop;
 
         addElement(
-          newElement,
-          (delta.x - diffX - scrollLeft) / zoomLevel,
-          (delta.y - diffY - scrollTop) / zoomLevel
+          {
+            ...newElement,
+            position: {
+              x: (delta.x - diffX - scrollLeft) / zoomLevel,
+              y: (delta.y - diffY - scrollTop) / zoomLevel,
+            },
+            extraAttributes: {
+              ...newElement.extraAttributes,
+            },
+          }
         );
-        console.log("NEW ELEMENT:", newElement);
       }
 
       // Drag existing CanvasElement to new position
       if (isCanvasElement && isCanvasDropArea) {
         const elementId = active.data?.current?.elementId;
         const dragged = elements.find((element) => element.id == elementId);
-        const wasDraggedSelected = selectedElements.includes(dragged!)
+        const wasDraggedSelected = selectedElements().includes(dragged!)
         if (!dragged) return;
         if (!wasDraggedSelected) {
           updateElement(dragged.id, {
@@ -78,7 +86,7 @@ export default function BuildArea() {
             },
           });
         } else {
-          selectedElements.forEach((element) => {
+          selectedElements().forEach((element) => {
             updateElement(element.id, {
               ...element,
               position: {
@@ -93,7 +101,6 @@ export default function BuildArea() {
           );
 
         }
-        console.log("DRAGGED:", dragged);
       }
 
       // Drag list element onto canvas
@@ -198,9 +205,7 @@ export default function BuildArea() {
           listId as string
         );
 
-        addElement(newElement, 0, 0);
-        console.log("NEW ELEMENT:", newElement);
-
+        addElement(newElement);
         const list = elements.find((element) => element.id == listId);
         if (!list || !over.data.current?.accepts.includes(type)) return;
 
@@ -267,7 +272,7 @@ export default function BuildArea() {
   });
 
 
-const { externalDropHandler } = useExternalDrop();
+  const { externalDropHandler } = useExternalDrop();
   return (
     <div
       id="canvas-wrapper"
@@ -275,7 +280,7 @@ const { externalDropHandler } = useExternalDrop();
       onDragOver={(e) => e.preventDefault()}
       className="relative overflow-hidden z-0 w-full h-full"
     >
-      <Canvas elements={elements} />
+      <Canvas />
     </div>
   );
 }

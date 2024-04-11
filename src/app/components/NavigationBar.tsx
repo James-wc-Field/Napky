@@ -4,13 +4,13 @@ import { currentAuthenticatedUser } from "@/lib/auth";
 import { Button } from "./ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 
-export async function NavigationBar({children}: {children: React.ReactNode}) {
+export async function NavigationBar({ children }: { children: React.ReactNode }) {
   const currentUser = await currentAuthenticatedUser();
 
   return (
     <>
       <nav className="bg-navbar text-navbar-foreground flex p-2 items-center font-main px-10 h-nav">
-        <a href="/discover" className="flex justify-center items-center ml-2 min-w-fit">
+        <Link href="/discover" className="flex justify-center items-center ml-2 min-w-fit">
           <Image
             className="min-w-12"
             width={48}
@@ -21,7 +21,7 @@ export async function NavigationBar({children}: {children: React.ReactNode}) {
           <p className="mx-2 text-xl">
             KorkBo
           </p>
-        </a>
+        </Link>
         <div className="flex w-full justify-center mx-5">
           {children}
         </div>

@@ -4,10 +4,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import ConfigureAmplifyClientSide from "./lib/ConfigureAmplifyClientSIde";
 import { cn } from "@/lib/utils";
-import { NavigationBar } from "@/components/NavigationBar";
 import FeedbackToast from "./components/FeedbackToast";
-import { Button } from "./components/ui/button";
-import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,9 +24,8 @@ export default function RootLayout({
       <body className={cn("min-h-screen", inter.className)}>
         <Providers>
           <ConfigureAmplifyClientSide />
-          <div className="h-screen overflow-hidden">
+          <div> {/* className="h-screen overflow-hidden"> */}
             <main>{children}</main>
-            {/* Site Footer */}
           </div>
           <FeedbackToast />
         </Providers>

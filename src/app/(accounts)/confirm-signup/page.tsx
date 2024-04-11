@@ -1,5 +1,5 @@
 import React from "react";
-import { ConfirmSignUpCard } from "@/components/ConfirmSignUp";
+import { ConfirmSignUpCard } from "./ConfirmSignUp";
 
 export default function Page() {
   return (

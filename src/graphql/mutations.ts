@@ -8,6 +8,54 @@ type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationOutput: OutputType;
 };
 
+export const createComments = /* GraphQL */ `mutation CreateComments(
+  $input: CreateCommentsInput!
+  $condition: ModelCommentsConditionInput
+) {
+  createComments(input: $input, condition: $condition) {
+    id
+    comment
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateCommentsMutationVariables,
+  APITypes.CreateCommentsMutation
+>;
+export const updateComments = /* GraphQL */ `mutation UpdateComments(
+  $input: UpdateCommentsInput!
+  $condition: ModelCommentsConditionInput
+) {
+  updateComments(input: $input, condition: $condition) {
+    id
+    comment
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateCommentsMutationVariables,
+  APITypes.UpdateCommentsMutation
+>;
+export const deleteComments = /* GraphQL */ `mutation DeleteComments(
+  $input: DeleteCommentsInput!
+  $condition: ModelCommentsConditionInput
+) {
+  deleteComments(input: $input, condition: $condition) {
+    id
+    comment
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteCommentsMutationVariables,
+  APITypes.DeleteCommentsMutation
+>;
 export const createProject = /* GraphQL */ `mutation CreateProject(
   $input: CreateProjectInput!
   $condition: ModelProjectConditionInput
