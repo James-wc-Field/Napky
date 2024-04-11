@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "korkbo",
+    "serviceName": "AppSync",
+    "defaultAuthType": {
+      "mode": "API_KEY",
+      "expirationTime": 21,
+      "apiKeyExpirationDate": "2024-04-29T20:58:07.939Z",
+      "keyDescription": ""
+    }
+  }
+}

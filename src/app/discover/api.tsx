@@ -9,7 +9,18 @@ import { currentAuthenticatedUser } from "@/lib/auth";
  * @returns an array of all projects not created by the user
  */
 export async function getAllProjects() {
+
   const user = await currentAuthenticatedUser();
+  if (!user) {
+    return (
+      await cookieBasedClient.graphql({
+        query: listProjects,
+        variables: {
+          limit: 1000,
+        },
+      })
+    ).data.listProjects.items;
+  }
   return (
     await cookieBasedClient.graphql({
       query: listProjects,

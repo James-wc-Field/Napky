@@ -1,16 +1,23 @@
-import useProject from './useProject'
 import { ElementsType, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
 import { generateSummary, getOpenGraphTags } from '@/project/[projectID]/api'
+import { uploadImage } from '../clientSideapi';
+import { useProjectStore } from '../storeProvider';
 
 export function useExternalDrop() {
-    const { addElement, scrollLeft, scrollTop, zoomLevel, key, updateElement} = useProject();
+    const updateElement = useProjectStore((state) => state.updateElement);
+    const addElement = useProjectStore((state) => state.addElement);
+    const scrollLeft = useProjectStore((state) => state.scrollLeft);
+    const scrollTop = useProjectStore((state) => state.scrollTop);
+    const zoomLevel = useProjectStore((state) => state.zoomLevel);
+    const key = useProjectStore((state) => state.key);
     /**
      * External drop handler
      * Handler for external file drop
      * @param e Dragevent
      * @returns 
      */
+    // 
     async function externalDropHandler(e: React.DragEvent<HTMLDivElement>) {
         e.preventDefault();
         if (!e.dataTransfer?.items) return;
@@ -22,7 +29,6 @@ export function useExternalDrop() {
         // If the dropped item is a file, create an image block
         if (e.dataTransfer.files.length > 0) {
             for (const file of Array.from(e.dataTransfer.files)) {
-                console.log("FILE:", file);
                 const reader = new FileReader();
                 const xPos = e.clientX - left;
                 const yPos = e.clientY - top;
@@ -43,25 +49,45 @@ export function useExternalDrop() {
                     );
                     console.log("NEW ELEMENT:", newElement);
                     console.log(src)
-                    newElement = {
-                        ...newElement,
-                        extraAttributes: {
-                            ...newElement.extraAttributes,
-                            src: src,
-                        },
-                    };
 
                     addElement(
-                        newElement,
-                        (xPos - scrollLeft) / zoomLevel,
-                        (yPos - scrollTop) / zoomLevel
+                        {
+                            ...newElement,
+                            position: {
+                                x: (xPos - scrollLeft) / zoomLevel,
+                                y: (yPos - scrollTop) / zoomLevel,
+                            },
+                            extraAttributes: {
+                                ...newElement.extraAttributes,
+                                src: src,
+                            },
+                        }
                     );
                 };
 
-                reader.readAsDataURL(file);
+                // Get hash of the image as the key
+                const hash = await window.crypto.subtle.digest(
+                    "SHA-256",
+                    new TextEncoder().encode(file.name)
+                );
+                let key = Array.from(new Uint8Array(hash))
+                    .map((x) => x.toString(16).padStart(2, "0"))
+                    .join("");
+
+                // Add timestamp to the key
+                key += "-" + Date.now();
+                console.log(key);
+
+                uploadImage(file, key).then((result) => {
+                    if (!result)
+                        return;
+
+                    console.log("Image uploaded successfully");
+                    // reader.readAsDataURL(file);
+                });
             }
         }
-        else if (isValidUrl(confirmUrl(e.dataTransfer.getData("text/plain")))) {
+        else if (isValidUrl(e.dataTransfer.getData("text/plain"))) {
             const url = confirmUrl(e.dataTransfer.getData("text/plain"))
             const xPos = e.clientX - left;
             const yPos = e.clientY - top;
@@ -75,20 +101,18 @@ export function useExternalDrop() {
                 idGenerator(),
                 "root"
             );
-            console.log("NEW ELEMENT:", newElement);
-            newElement = {
+            addElement({
                 ...newElement,
+                position: {
+                    x: (xPos - scrollLeft) / zoomLevel,
+                    y: (yPos - scrollTop) / zoomLevel,
+                },
                 extraAttributes: {
                     ...newElement.extraAttributes,
                     isRenderingBackup: true,
                     text: e.dataTransfer.getData("text/plain")
                 },
-            };
-            addElement(
-                newElement,
-                (xPos - scrollLeft) / zoomLevel,
-                (yPos - scrollTop) / zoomLevel
-            );
+            });
             updateElement(newElement.id, {
                 ...newElement,
                 extraAttributes: {
@@ -113,19 +137,17 @@ export function useExternalDrop() {
                 idGenerator(),
                 "root"
             );
-            console.log("NEW ELEMENT:", newElement);
-            newElement = {
+            addElement({
                 ...newElement,
+                position: {
+                    x: (xPos - scrollLeft) / zoomLevel,
+                    y: (yPos - scrollTop) / zoomLevel,
+                },
                 extraAttributes: {
                     ...newElement.extraAttributes,
                     text: e.dataTransfer.getData("text/plain"),
                 },
-            };
-            addElement(
-                newElement,
-                (xPos - scrollLeft) / zoomLevel,
-                (yPos - scrollTop) / zoomLevel
-            );
+            });
         };
     }
     return { externalDropHandler }

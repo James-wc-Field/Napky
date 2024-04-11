@@ -1,41 +1,79 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { ProjectElementInstance, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
-import useProject from "@/project/[projectID]/hooks/useProject";
-import MiniMap from "@/project/[projectID]/MiniMap";
+// import MiniMap from "@/project/[projectID]/MiniMap";
 import CanvasControls from "@/project/[projectID]/CanvasControls";
 import CanvasBackground from "@/project/[projectID]/CanvasBackground";
 import CanvasToolbar from "@/project/[projectID]/CanvasToolbar";
 import Selectable, { SelectableRef, useSelectable } from 'react-selectable-box';
+import { useCallback } from "react";
+import { useProjectStore } from "./storeProvider";
+import { useShallow } from "zustand/react/shallow";
 
-export default function Canvas({
-  elements,
-}: {
-  elements: ProjectElementInstance[];
-}) {
+export default function Canvas() {
+  const updateZoomLevel = useProjectStore((state) => state.updateZoomLevel);
+  const updateScrollLeft = useProjectStore((state) => state.updateScrollLeft);
+  const updateScrollTop = useProjectStore((state) => state.updateScrollTop);
+  const elements = useProjectStore((state) => state.elements);
+  const selectedElements = useProjectStore((state) => state.selectedElements);
+  const updateSelectedElements = useProjectStore((state) => state.updateSelectedElements);
+  const scrollLeft = useProjectStore((state) => state.scrollLeft);
+  const scrollTop = useProjectStore((state) => state.scrollTop);
+  const zoomLevel = useProjectStore((state) => state.zoomLevel);
+  const setAllElementsSelected = useProjectStore((state) => state.setAllElementsSelected);
+  const deleteSelectedElements = useProjectStore((state) => state.deleteSelectedElements);
+  const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false)
   const selectableRef = useRef<SelectableRef>(null);
-  const { isOver, setNodeRef } = useDroppable({
+  const { setNodeRef } = useDroppable({
     id: "canvas-droppable",
     data: {
       isCanvasDropArea: true,
     },
   });
 
-  const {
-    updateZoomLevel,
-    zoomLevel,
-    scrollTop,
-    scrollLeft,
-    updateScrollLeft,
-    updateScrollTop,
-    useWindowResize,
-    selectedElements,
-    changeSelectedElements,
-    updateMiddleMouseIsDown,
-    useMouseMove,
-    middleMouseIsDown,
-    useKeyDown,
-  } = useProject();
+  console.log(elements)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
+      if (e.key === "a" && e.ctrlKey) {
+        e.preventDefault();
+        console.log("ctrl+a")
+        setAllElementsSelected();
+      }
+      if (e.key === "Delete") {
+        deleteSelectedElements();
+      }
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [setAllElementsSelected, deleteSelectedElements]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button === 1) {
+      setMiddleMouseIsDown(true);
+    }
+  };
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (middleMouseIsDown) {
+      selectableRef?.current?.cancel();
+      updateScrollLeft(-e.movementX);
+      updateScrollTop(-e.movementY);
+    }
+  }, [selectableRef, updateScrollLeft, updateScrollTop, middleMouseIsDown])
+  const handleMouseUp = useCallback(() => {
+    setMiddleMouseIsDown(false);
+  }, [])
+  useEffect(() => {
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      // Cleanup event listeners when component unmounts
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [handleMouseMove, handleMouseUp]);
 
   const handleScroll = (e: React.WheelEvent) => {
     const { deltaX, deltaY } = e;
@@ -51,33 +89,20 @@ export default function Canvas({
   };
 
   const canvasRef = useRef<HTMLDivElement>(null);
-  const curr = useMemo(() => {
-    return canvasRef.current
-  }, [canvasRef])
-  useWindowResize(curr)
-  useMouseMove(selectableRef, middleMouseIsDown)
-  useKeyDown(selectedElements)
-
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    console.log(e)
-    if (e.button === 1) {
-      updateMiddleMouseIsDown(true);
-    }
-  };
+  // const curr = useMemo(() => {
+  //   return canvasRef.current
+  // }, [canvasRef])
+  // useWindowResize(curr)
 
   return (
     <>
-      <Selectable ref={selectableRef} value={selectedElements} onStart={(e) => {
-        console.log(e.target)
-        console.log(elements)
+      <Selectable ref={selectableRef} value={selectedElements()} onStart={(e) => {
         if ((e.target as HTMLElement).id !== "canvas-pane-droppable" && (e.target as HTMLElement).id !== "canvas-viewport") {
           selectableRef.current?.cancel();
         }
       }}
         onEnd={(value) => {
-          console.log(value)
-          changeSelectedElements(value as ProjectElementInstance[])
+          updateSelectedElements(value as ProjectElementInstance[])
         }}>
         <div
           id="canvas-renderer"
@@ -131,7 +156,7 @@ function CanvasElementWrapper({
       isCanvasElement: true,
     },
   });
-  const { updateElement, addSelectedElement, elements} = useProject()
+  const { elements, updateElement, updateSelectedElements } = useProjectStore(useShallow((state) => state));
   const [isResizing, setIsResizing] = useState(false)
   type Position = {
     x: number | null;
@@ -195,7 +220,7 @@ function CanvasElementWrapper({
   }, [element]);
   const parentRef = useRef<HTMLDivElement>(null)
   return (
-    <div className={`left-${element.position.x} top-${element.position.y}`}style={style} ref={(ref) => {
+    <div className={`left-${element.position.x} top-${element.position.y}`} style={style} ref={(ref) => {
       setDragRef(ref);
       setSelectRef(ref);
     }}
@@ -203,7 +228,7 @@ function CanvasElementWrapper({
       <div className="relative">
         <div onMouseDown={(e) => {
           if (e.ctrlKey) {
-            addSelectedElement(element)
+            updateSelectedElements([element])
           } else {
             // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
           }

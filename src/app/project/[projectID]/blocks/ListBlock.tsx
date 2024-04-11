@@ -14,7 +14,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown } from "lucide-react";
 import { useState } from "react"
-import useProject from "@/project/[projectID]/hooks/useProject";
+import { useProjectStore } from "../storeProvider";
 
 const type: ElementsType = "ListBlock";
 
@@ -27,6 +27,7 @@ export const ListBlockProjectElement: ProjectElement = {
   type,
   construct: (id: string, parentId: string) => ({
     id,
+    selected: false,
     type,
     position: { x: 0, y: 0 },
     size: { width: 300, height: 100 },
@@ -62,14 +63,16 @@ function CanvasComponent({
     from: { height: 0 },
     to: { height: 200 },
   }))
-  const { elements } = useProject();
   const [isOpen, setIsOpen] = useState(true)
+
+  const elements = useProjectStore((state) => state.elements);
+
   return (
     <Collapsible
       open={isOpen}
-      onOpenChange={()=> {
+      onOpenChange={() => {
         setIsOpen(!isOpen)
-        api.start({from: { height: isOpen ? element.size.height : 200 }, to: { height: isOpen ? 200 : element.size.height}})
+        api.start({ from: { height: isOpen ? element.size.height : 200 }, to: { height: isOpen ? 200 : element.size.height } })
       }}>
       <animated.div style={springs}>
         <Card style={style} className="flex flex-col gap-2 p-2">
