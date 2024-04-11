@@ -12,8 +12,6 @@ export type ModelCommentsConditionInput = {
   and?: Array< ModelCommentsConditionInput | null > | null,
   or?: Array< ModelCommentsConditionInput | null > | null,
   not?: ModelCommentsConditionInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
 };
 
 export type ModelStringInput = {
@@ -89,8 +87,6 @@ export type ModelProjectConditionInput = {
   and?: Array< ModelProjectConditionInput | null > | null,
   or?: Array< ModelProjectConditionInput | null > | null,
   not?: ModelProjectConditionInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
 };
 
 export type Project = {
@@ -119,8 +115,6 @@ export type DeleteProjectInput = {
 export type ModelCommentsFilterInput = {
   id?: ModelIDInput | null,
   comment?: ModelStringInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
   and?: Array< ModelCommentsFilterInput | null > | null,
   or?: Array< ModelCommentsFilterInput | null > | null,
   not?: ModelCommentsFilterInput | null,
@@ -154,8 +148,6 @@ export type ModelProjectFilterInput = {
   name?: ModelStringInput | null,
   description?: ModelStringInput | null,
   content?: ModelStringInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
   and?: Array< ModelProjectFilterInput | null > | null,
   or?: Array< ModelProjectFilterInput | null > | null,
   not?: ModelProjectFilterInput | null,
@@ -170,8 +162,6 @@ export type ModelProjectConnection = {
 export type ModelSubscriptionCommentsFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   comment?: ModelSubscriptionStringInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionCommentsFilterInput | null > | null,
   or?: Array< ModelSubscriptionCommentsFilterInput | null > | null,
 };
@@ -212,8 +202,6 @@ export type ModelSubscriptionProjectFilterInput = {
   name?: ModelSubscriptionStringInput | null,
   description?: ModelSubscriptionStringInput | null,
   content?: ModelSubscriptionStringInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionProjectFilterInput | null > | null,
   or?: Array< ModelSubscriptionProjectFilterInput | null > | null,
 };
