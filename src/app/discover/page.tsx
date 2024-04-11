@@ -4,7 +4,7 @@ import { getAllProjects } from "@/discover/api";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ProjectCard } from "@/components/cards/ProjectCard";
 import { LoadingSpinner } from "@/components/ui/spinner";
-import og_image from '../../../public/images/Project Sample.png';
+import og_image from '@/public/images/Project Sample.png';
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

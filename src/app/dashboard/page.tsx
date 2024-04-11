@@ -5,7 +5,6 @@ import { Button } from "@ui/button";
 import Link from "next/link";
 import { Project } from "@src/API";
 import { currentAuthenticatedUser } from "@/lib/auth";
-import og_image from '../../../public/images/Project Sample.png';
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

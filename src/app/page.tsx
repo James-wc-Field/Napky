@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { NavigationBar } from './components/NavigationBar';
 import { Button } from './components/ui/button';
 import Link from 'next/link';
-import og_image from '../../public/images/Project Sample.png';
+import og_image from '@/public/images/Project Sample.png';
 
 export const metadata = {
   openGraph: {
