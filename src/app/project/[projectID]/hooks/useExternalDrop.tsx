@@ -49,18 +49,19 @@ export function useExternalDrop() {
                     );
                     console.log("NEW ELEMENT:", newElement);
                     console.log(src)
-                    newElement = {
-                        ...newElement,
-                        extraAttributes: {
-                            ...newElement.extraAttributes,
-                            src: src,
-                        },
-                    };
 
                     addElement(
-                        newElement,
-                        (xPos - scrollLeft) / zoomLevel,
-                        (yPos - scrollTop) / zoomLevel
+                        {
+                            ...newElement,
+                            position: {
+                                x: (xPos - scrollLeft) / zoomLevel,
+                                y: (yPos - scrollTop) / zoomLevel,
+                            },
+                            extraAttributes: {
+                                ...newElement.extraAttributes,
+                                src: src,
+                            },
+                        }
                     );
                 };
 
