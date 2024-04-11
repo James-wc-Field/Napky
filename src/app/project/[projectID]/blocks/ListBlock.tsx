@@ -13,7 +13,7 @@ import { useDroppable, useDraggable } from "@dnd-kit/core";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown } from "lucide-react";
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useProjectStore } from "../storeProvider";
 
 const type: ElementsType = "ListBlock";
@@ -59,22 +59,23 @@ function CanvasComponent({
     maxWidth: element.size.width,
     minHeight: element.size.height
   };
+  const collapsibleRef = useRef<HTMLDivElement>(null)
   const [springs, api] = useSpring(() => ({
-    from: { height: 0 },
-    to: { height: 200 },
+    from: { height: collapsibleRef.current?.clientHeight },
+    to: { height: 500 },
   }))
   const [isOpen, setIsOpen] = useState(true)
 
   const elements = useProjectStore((state) => state.elements);
-
   return (
     <Collapsible
+      ref={collapsibleRef}
       open={isOpen}
       onOpenChange={() => {
         setIsOpen(!isOpen)
         api.start({ from: { height: isOpen ? element.size.height : 200 }, to: { height: isOpen ? 200 : element.size.height } })
       }}>
-      <animated.div style={springs}>
+      <div>
         <Card style={style} className="flex flex-col gap-2 p-2">
           <div className="flex flex-row justify-between">
             <p className="content-center">{label}</p>
@@ -102,7 +103,7 @@ function CanvasComponent({
             </ListDroppable>
           </CollapsibleContent>
         </Card>
-      </animated.div>
+      </div>
     </Collapsible >
   );
 }
