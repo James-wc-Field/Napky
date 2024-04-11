@@ -9,7 +9,7 @@ export async function uploadImage(projectId: string, ref: any) {
                     key: projectId + '.jpeg',
                     data: dataUrl,
                     options: {
-                        accessLevel: 'guest', // defaults to `guest` but can be 'private' | 'protected' | 'guest' // Optional progress callback.
+                        accessLevel: 'protected', // defaults to `guest` but can be 'private' | 'protected' | 'guest' // Optional progress callback.
                     }
                 }).result;
                 console.log('Succeeded: ', result);
