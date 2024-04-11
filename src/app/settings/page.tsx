@@ -1,12 +1,12 @@
 import React from "react";
 import { Suspense } from "react";
 import { LoadingSpinner } from "@/components/ui/spinner";
-import LoginCard from "./_loginUI/LoginCard";
+import LoginCard from "./LoginCard";
 
 export default function Page() {
   return (
     <Suspense fallback={<Loading />}>
-      <LoginCard></LoginCard>
+      <LoginCard />
     </Suspense>
   );
 }
