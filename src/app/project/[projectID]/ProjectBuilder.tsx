@@ -1,5 +1,5 @@
 "use client";
-import React, { useId, useMemo, useRef } from "react";
+import React, { useId, useMemo, useState } from "react";
 import {
   DndContext,
   TouchSensor,
@@ -9,9 +9,7 @@ import {
   PointerSensor,
 } from "@dnd-kit/core";
 
-import { Project } from "@src/API";
 import { Save } from "lucide-react";
-import useProject from "./hooks/useProject";
 import { useEffect } from "react";
 import BuildArea from "@/project/[projectID]/BuildArea";
 import DragOverlayWrapper from "@/project/[projectID]/DragOverlayWrapper";
@@ -26,14 +24,14 @@ import {
 } from "@/components/ui/popover"
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-
-export default function ProjectBuilder({ project }: { project: Project }) {
-  const { useLoadElements, updateKey } = useProject();
-  useLoadElements(project)
-  // This stops the scrolling ability
-  // document.body.style.overflow = "hidden";
-  // Remove this if it causes issues with scrolling on the other pages. 
+import { useProjectStore } from "./storeProvider";
+import { shallow } from "zustand/shallow";
+export default function ProjectBuilder() {
+  const elements = useProjectStore((state) => state.elements);
+  const updateProjectName = useProjectStore((state) => state.updateProjectName);
+  const projectName = useProjectStore((state) => state.projectName);
+  const projectId = useProjectStore((state) => state.projectId);
+  const updateKey = useProjectStore((state) => state.updateKey);
   useEffect(() => {
     const html = document.querySelector("html");
     if (html) {
@@ -41,7 +39,6 @@ export default function ProjectBuilder({ project }: { project: Project }) {
     }
   }, []);
   const id = useId();
-  const { elements, updateProjectName, projectName } = useProject();
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 2 } }),
     useSensor(TouchSensor, {
@@ -59,14 +56,13 @@ export default function ProjectBuilder({ project }: { project: Project }) {
           <p className="truncate font-medium">Project</p>
           <span className="mr-2">
             <Input
-              placeholder={project.name}
+              placeholder={projectName}
               onChange={(e) => updateProjectName(e.target.value)}
             />
           </span>
           <Button
             className="gap-1"
-            onClick={() => saveProject(project.id, projectName, elements)
-            }
+            onClick={() => saveProject(projectId, projectName, elements)}
           >
             <Save className="h-5 w-6" />
           </Button>
