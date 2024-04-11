@@ -1,14 +1,10 @@
-// import { NavDiscover } from "./NavDiscover";
-// import { NavDashboard } from "./NavDashboard";
-// import { ThemeToggle } from "../ThemeToggle";
-// import { Button } from "../ui/button";
 import Link from "next/link";
 import Image from 'next/image';
 import { currentAuthenticatedUser } from "@/lib/auth";
 import { Button } from "./ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 
-export async function NavigationBar({children}: {children: React.ReactNode}) {
+export async function NavigationBar({ children }: { children: React.ReactNode }) {
   const currentUser = await currentAuthenticatedUser();
 
   return (
