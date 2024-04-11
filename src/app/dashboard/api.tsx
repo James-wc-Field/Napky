@@ -1,5 +1,6 @@
 "use server";
 
+import { getUrl } from 'aws-amplify/storage';
 import { cookieBasedClient } from "@/lib/amplifyServerUtils";
 import { listProjects } from "@src/graphql/queries";
 import { createProject } from "@src/graphql/mutations";
@@ -25,6 +26,14 @@ export async function getAllUserProjects() {
       },
     })
   ).data.listProjects.items;
+}
+
+export async function getPreviewUrl(projectId: string) {
+  const storageUrl = await getUrl({ key: `${projectId}.png`, options: { accessLevel: "protected" } });
+  if (!storageUrl) {
+    return null;
+  }
+  return storageUrl.url;
 }
 
 /**

@@ -12,6 +12,8 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ProjectCardDetails } from "./ProjectCardDetails";
+import { use, useEffect } from "react";
+import { getPreviewUrl } from "@/dashboard/api";
 
 interface ProjectsProps {
   project: Project;
@@ -22,6 +24,8 @@ export function ProjectCard(props: ProjectsProps) {
   function buttonPress() {
     console.log("button press: " + project.id);
   }
+  const url = use(getPreviewUrl(project.id))
+  console.log(url)
 
   return (
     <>
@@ -34,6 +38,7 @@ export function ProjectCard(props: ProjectsProps) {
           </CardHeader>
           <CardContent className="p-0">
             <div className="container px-0">
+              {/* {url ? } */}
               <Image
                 src={"/images/placeholder.jpg"}
                 width={300}
