@@ -26,7 +26,6 @@ export default function RootLayout({
           <ConfigureAmplifyClientSide />
           <div> {/* className="h-screen overflow-hidden"> */}
             <main>{children}</main>
-            {/* Site Footer */}
           </div>
           <FeedbackToast />
         </Providers>
