@@ -1,10 +1,16 @@
-import useProject from './useProject'
 import { ElementsType, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
 import { generateSummary, getOpenGraphTags } from '@/project/[projectID]/api'
+import { useProjectStore } from '../storeProvider';
+import { uploadImage } from '@/project/[projectID]/clientSideapi'
 
 export function useExternalDrop() {
-    const { addElement, scrollLeft, scrollTop, zoomLevel, key, updateElement } = useProject();
+    const updateElement = useProjectStore((state) => state.updateElement);
+    const addElement = useProjectStore((state) => state.addElement);
+    const scrollLeft = useProjectStore((state) => state.scrollLeft);
+    const scrollTop = useProjectStore((state) => state.scrollTop);
+    const zoomLevel = useProjectStore((state) => state.zoomLevel);
+    const key = useProjectStore((state) => state.key);
     /**
      * External drop handler
      * Handler for external file drop
@@ -22,45 +28,45 @@ export function useExternalDrop() {
         // If the dropped item is a file, create an image block
         if (e.dataTransfer.files.length > 0) {
             for (const file of Array.from(e.dataTransfer.files)) {
-                const reader = new FileReader();
-                const xPos = e.clientX - left;
-                const yPos = e.clientY - top;
-                if (
-                    yPos < 0 ||
-                    xPos < 0 ||
-                    yPos > canvasRect.height ||
-                    xPos > canvasRect.width
-                )
-                    continue;
+                uploadImage(file, "image")
+                // const reader = new FileReader();
+                // const xPos = e.clientX - left;
+                // const yPos = e.clientY - top;
+                // if (
+                //     yPos < 0 ||
+                //     xPos < 0 ||
+                //     yPos > canvasRect.height ||
+                //     xPos > canvasRect.width
+                // )
+                //     continue;
+                // reader.onload = (event) => {
+                //     const src = event.target?.result as string;
+                //     const type = "ImageBlock";
+                //     let newElement = ProjectElements[type as ElementsType].construct(
+                //         idGenerator(),
+                //         "root"
+                //     );
+                //     console.log("NEW ELEMENT:", newElement);
+                //     console.log(src)
+                //     newElement = {
+                //         ...newElement,
+                //         extraAttributes: {
+                //             ...newElement.extraAttributes,
+                //             src: src,
+                //         },
+                //     };
 
-                reader.onload = (event) => {
-                    const src = event.target?.result as string;
-                    const type = "ImageBlock";
-                    let newElement = ProjectElements[type as ElementsType].construct(
-                        idGenerator(),
-                        "root"
-                    );
-                    console.log("NEW ELEMENT:", newElement);
-                    console.log(src)
-                    newElement = {
-                        ...newElement,
-                        extraAttributes: {
-                            ...newElement.extraAttributes,
-                            src: src,
-                        },
-                    };
+                //     addElement(
+                //         newElement,
+                //         (xPos - scrollLeft) / zoomLevel,
+                //         (yPos - scrollTop) / zoomLevel
+                //     );
+                // };
 
-                    addElement(
-                        newElement,
-                        (xPos - scrollLeft) / zoomLevel,
-                        (yPos - scrollTop) / zoomLevel
-                    );
-                };
-
-                reader.readAsDataURL(file);
+                // reader.readAsDataURL(file);
             }
         }
-        else if (isValidUrl(confirmUrl(e.dataTransfer.getData("text/plain")))) {
+        else if (isValidUrl(e.dataTransfer.getData("text/plain"))) {
             const url = confirmUrl(e.dataTransfer.getData("text/plain"))
             const xPos = e.clientX - left;
             const yPos = e.clientY - top;
@@ -74,20 +80,18 @@ export function useExternalDrop() {
                 idGenerator(),
                 "root"
             );
-            console.log("NEW ELEMENT:", newElement);
-            newElement = {
+            addElement({
                 ...newElement,
+                position: {
+                    x: (xPos - scrollLeft) / zoomLevel,
+                    y: (yPos - scrollTop) / zoomLevel,
+                },
                 extraAttributes: {
                     ...newElement.extraAttributes,
                     isRenderingBackup: true,
                     text: e.dataTransfer.getData("text/plain")
                 },
-            };
-            addElement(
-                newElement,
-                (xPos - scrollLeft) / zoomLevel,
-                (yPos - scrollTop) / zoomLevel
-            );
+            });
             updateElement(newElement.id, {
                 ...newElement,
                 extraAttributes: {
@@ -112,19 +116,17 @@ export function useExternalDrop() {
                 idGenerator(),
                 "root"
             );
-            console.log("NEW ELEMENT:", newElement);
-            newElement = {
+            addElement({
                 ...newElement,
+                position: {
+                    x: (xPos - scrollLeft) / zoomLevel,
+                    y: (yPos - scrollTop) / zoomLevel,
+                },
                 extraAttributes: {
                     ...newElement.extraAttributes,
                     text: e.dataTransfer.getData("text/plain"),
                 },
-            };
-            addElement(
-                newElement,
-                (xPos - scrollLeft) / zoomLevel,
-                (yPos - scrollTop) / zoomLevel
-            );
+            });
         };
     }
     return { externalDropHandler }

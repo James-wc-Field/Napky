@@ -6,11 +6,10 @@ import { useDroppable } from "@dnd-kit/core";
 import { Button } from "../../components/ui/button";
 import { Save } from "lucide-react";
 import * as htmlToImage from "html-to-image";
-import useProject from "./hooks/useProject";
 import { uploadImage } from "./clientapi";
+import { TrashIcon } from "@heroicons/react/24/solid";
 
 export const CanvasToolbar = forwardRef(function (props, ref: any) {
-  const { projectId } = useProject();
   const { setNodeRef } = useDroppable({
     id: "toolbar-area",
     data: { isToolbar: true },
@@ -25,12 +24,20 @@ export const CanvasToolbar = forwardRef(function (props, ref: any) {
       <ToolbarBtnElement projectElement={ProjectElements.LinkBlock} />
       <ToolbarBtnElement projectElement={ProjectElements.ListBlock} />
       <ToolbarBtnElement projectElement={ProjectElements.TodoBlock} />
-      <Button onClick={() => {
-        uploadImage(projectId, ref);
-      }
-      } className="gap-1">
-        <Save className="h-5 w-6" />
-      </Button>
+      <Trash />
     </Card>
   );
-});
+})
+
+
+export function Trash() {
+  const { isOver, setNodeRef } = useDroppable({
+    id: "trash-list-droppable",
+    data: { isTrash: true },
+  });
+  return (
+    <Button ref={setNodeRef} className={`gap-1 ${isOver ? "bg-red-200" : ""}`}>
+      <TrashIcon className="h-6 w-6" />
+    </Button>
+  )
+}
