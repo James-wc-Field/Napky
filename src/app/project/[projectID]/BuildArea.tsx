@@ -5,7 +5,8 @@ import { idGenerator } from "@/lib/idGenerator";
 import { useExternalDrop } from "@/project/[projectID]/hooks/useExternalDrop";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
-export default function BuildArea() {
+import { RefObject } from "react";
+export default function BuildArea({ imageRef }: { imageRef: RefObject<HTMLDivElement> }) {
   const elements = useProjectStore((state) => state.elements);
   const addElement = useProjectStore((state) => state.addElement);
   const updateElement = useProjectStore((state) => state.updateElement);
@@ -280,7 +281,7 @@ export default function BuildArea() {
       onDragOver={(e) => e.preventDefault()}
       className="relative overflow-hidden z-0 w-full h-full"
     >
-      <Canvas />
+      <Canvas imageRef={imageRef} />
     </div>
   );
 }

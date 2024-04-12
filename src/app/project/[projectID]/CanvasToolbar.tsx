@@ -5,15 +5,10 @@ import { Card } from "@ui/card";
 import { useDroppable } from "@dnd-kit/core";
 import { Button } from "../../components/ui/button";
 import { Save } from "lucide-react";
-<<<<<<< Updated upstream
-import * as htmlToImage from "html-to-image";
-=======
-import useProject from "./hooks/useProject";
->>>>>>> Stashed changes
 import { uploadImage } from "./clientapi";
 import { TrashIcon } from "@heroicons/react/24/solid";
 
-export const CanvasToolbar = forwardRef(function (props, ref: any) {
+export default function CanvasToolbar() {
   const { setNodeRef } = useDroppable({
     id: "toolbar-area",
     data: { isToolbar: true },
@@ -31,7 +26,7 @@ export const CanvasToolbar = forwardRef(function (props, ref: any) {
       <Trash />
     </Card>
   );
-})
+}
 
 
 export function Trash() {

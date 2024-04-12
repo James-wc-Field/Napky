@@ -2,7 +2,7 @@ import { ElementsType, ProjectElements } from "@/project/[projectID]/types/Proje
 import { idGenerator } from "@/lib/idGenerator";
 import { generateSummary, getOpenGraphTags } from '@/project/[projectID]/api'
 import { useProjectStore } from '../storeProvider';
-import { uploadImage } from '@/project/[projectID]/clientSideapi'
+import { uploadImage } from '@/project/[projectID]/clientapi'
 
 export function useExternalDrop() {
     const updateElement = useProjectStore((state) => state.updateElement);

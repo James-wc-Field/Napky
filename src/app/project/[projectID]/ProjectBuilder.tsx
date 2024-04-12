@@ -1,5 +1,5 @@
 "use client";
-import React, { useId, useMemo, useState } from "react";
+import React, { useId, useMemo, useRef, useState } from "react";
 import {
   DndContext,
   TouchSensor,
@@ -15,7 +15,6 @@ import BuildArea from "@/project/[projectID]/BuildArea";
 import DragOverlayWrapper from "@/project/[projectID]/DragOverlayWrapper";
 import usePreventZoom from "@/project/[projectID]/hooks/usePreventZoom";
 import { ThemeToggle } from "@components/ThemeToggle";
-import * as htmlToImage from "html-to-image";
 import { saveProject } from "@/project/[projectID]/api";
 import {
   Popover,
@@ -25,7 +24,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useProjectStore } from "./storeProvider";
-import { shallow } from "zustand/shallow";
+import { createProjectImage } from "./clientapi";
 export default function ProjectBuilder() {
   const elements = useProjectStore((state) => state.elements);
   const updateProjectName = useProjectStore((state) => state.updateProjectName);
@@ -39,6 +38,7 @@ export default function ProjectBuilder() {
     }
   }, []);
   const id = useId();
+  const imageRef = useRef<HTMLDivElement>(null);
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 2 } }),
     useSensor(TouchSensor, {
@@ -62,12 +62,16 @@ export default function ProjectBuilder() {
           </span>
           <Button
             className="gap-1"
-            onClick={() => saveProject(projectId, projectName, elements)}
+            onClick={() => {
+              saveProject(projectId, projectName, elements)
+              createProjectImage(projectId, imageRef.current)
+            }
+            }
           >
             <Save className="h-5 w-6" />
           </Button>
         </div>
-        <BuildArea />
+        <BuildArea imageRef={imageRef} />
         <Popover>
           <PopoverTrigger asChild style={{ top: '95%', left: '50%', transform: 'translate(-50%, -50%)' }} className="absolute">
             <Button variant="outline">AI Summary</Button>
