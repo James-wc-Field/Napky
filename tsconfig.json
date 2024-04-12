@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,13 +23,30 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/app/*"],
-      "@src/*": ["./src/*"],
-      "@components/*": ["./src/app/components/*"],
-      "@canvas/*": ["./src/app/components/canvas/*"],
-      "@ui/*": ["./src/app/components/ui/*"],
+      "@/*": [
+        "./src/app/*"
+      ],
+      "@src/*": [
+        "./src/*"
+      ],
+      "@components/*": [
+        "./src/app/components/*"
+      ],
+      "@canvas/*": [
+        "./src/app/components/canvas/*"
+      ],
+      "@ui/*": [
+        "./src/app/components/ui/*"
+      ],
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

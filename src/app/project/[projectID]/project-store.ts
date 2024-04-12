@@ -3,8 +3,6 @@ import { Project } from '@src/API'
 import { createStore } from 'zustand/vanilla'
 import { ProjectElementInstance } from './types/ProjectElements'
 import { getProjectData } from './api'
-import { init } from 'next/dist/compiled/webpack/webpack'
-import { useEffect, useState } from 'react'
 
 export type ProjectState = {
     projectId: string
@@ -15,9 +13,6 @@ export type ProjectState = {
     scrollTop: number
     elements: ProjectElementInstance[]
     key: string
-}
-
-export type ElementsState = {
 }
 
 export type ProjectActions = {
@@ -37,12 +32,8 @@ export type ProjectActions = {
     deleteSelectedElements: () => void
 }
 
-export type ElementsActions = {
-}
-
 
 export type ProjectStore = ProjectState & ProjectActions
-export type ElementsStore = ElementsState & ElementsActions
 
 export const defaultInitState: ProjectState = {
     projectId: "",
@@ -69,14 +60,6 @@ const updateZoomLevel = (zoomLevel: number, zoomIn: boolean, multiplier: number)
 
 const updateSelectedElements = (elements: ProjectElementInstance[], selectedElements: ProjectElementInstance[]) => {
     return elements.map((el) => selectedElements.find((sel) => sel.id === el.id) ? { ...el, selected: true } : { ...el, selected: false })
-}
-
-export const createElementsStore = (
-    initState: ElementsState = { elements: [] }) => {
-    return createStore<ElementsStore>((set) => ({
-        ...initState,
-
-    }))
 }
 
 // export const useWindowResize = (canvas: HTMLDivElement | null) => {
