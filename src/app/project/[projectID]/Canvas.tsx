@@ -31,7 +31,6 @@ export default function Canvas() {
     },
   });
 
-  console.log(elements)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
       if (e.key === "a" && e.ctrlKey) {

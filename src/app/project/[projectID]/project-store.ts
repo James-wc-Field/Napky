@@ -1,66 +1,77 @@
 // src/stores/counter-store.ts
-import { Project } from '@src/API'
-import { createStore } from 'zustand/vanilla'
-import { ProjectElementInstance } from './types/ProjectElements'
-import { getProjectData } from './api'
+import { createStore } from "zustand/vanilla";
+import { ProjectElementInstance } from "./types/ProjectElements";
+import { getProjectData } from "./api";
 
 export type ProjectState = {
-    projectId: string
-    projectName: string
-    projectDescription: string
-    zoomLevel: number
-    scrollLeft: number
-    scrollTop: number
-    elements: ProjectElementInstance[]
-    key: string
-}
+  fetched: boolean;
+  projectId: string;
+  projectName: string;
+  projectDescription: string;
+  zoomLevel: number;
+  scrollLeft: number;
+  scrollTop: number;
+  elements: ProjectElementInstance[];
+  key: string;
+};
 
 export type ProjectActions = {
-    fetch: (projectId: string) => void
-    updateProjectName: (name: string) => void
-    updateZoomLevel: (zoomin: boolean, multiplier: number) => void
-    updateScrollLeft: (scrollLeft: number) => void
-    updateScrollTop: (scrollTop: number) => void
-    addElement: (element: ProjectElementInstance) => void
-    updateElement: (id: string, element: ProjectElementInstance) => void
-    selectedElements: () => ProjectElementInstance[]
-    updateSelectedElements: (selectedElements: ProjectElementInstance[]) => void
-    removeSelectedElements: () => void
-    updateKey: (key: string) => void
-    setAllElementsSelected: () => void
-    deleteElement: (id: string) => void
-    deleteSelectedElements: () => void
-}
+  fetch: (projectId: string) => void;
+  updateProjectName: (name: string) => void;
+  updateZoomLevel: (zoomin: boolean, multiplier: number) => void;
+  updateScrollLeft: (scrollLeft: number) => void;
+  updateScrollTop: (scrollTop: number) => void;
+  addElement: (element: ProjectElementInstance) => void;
+  updateElement: (id: string, element: ProjectElementInstance) => void;
+  selectedElements: () => ProjectElementInstance[];
+  updateSelectedElements: (selectedElements: ProjectElementInstance[]) => void;
+  removeSelectedElements: () => void;
+  updateKey: (key: string) => void;
+  setAllElementsSelected: () => void;
+  deleteElement: (id: string) => void;
+  deleteSelectedElements: () => void;
+};
 
-
-export type ProjectStore = ProjectState & ProjectActions
+export type ProjectStore = ProjectState & ProjectActions;
 
 export const defaultInitState: ProjectState = {
-    projectId: "",
-    projectName: "",
-    projectDescription: "",
-    zoomLevel: 1,
-    scrollLeft: 0,
-    scrollTop: 0,
-    elements: [] as ProjectElementInstance[],
-    key: "",
-}
-const updateZoomLevel = (zoomLevel: number, zoomIn: boolean, multiplier: number) => {
-    const MIN_ZOOM = 0.05;
-    const MAX_ZOOM = 5;
-    if ((zoomLevel * multiplier >= MAX_ZOOM && zoomIn) ||
-        (zoomLevel / multiplier <= MIN_ZOOM && !zoomIn)
-    ) {
-        return zoomLevel;
-    }
-    if (zoomIn) return zoomLevel * multiplier;
-    return zoomLevel / multiplier;
-}
+  fetched: false,
+  projectId: "",
+  projectName: "",
+  projectDescription: "",
+  zoomLevel: 1,
+  scrollLeft: 0,
+  scrollTop: 0,
+  elements: [] as ProjectElementInstance[],
+  key: "",
+};
+const updateZoomLevel = (
+  zoomLevel: number,
+  zoomIn: boolean,
+  multiplier: number
+) => {
+  const MIN_ZOOM = 0.05;
+  const MAX_ZOOM = 5;
+  if (
+    (zoomLevel * multiplier >= MAX_ZOOM && zoomIn) ||
+    (zoomLevel / multiplier <= MIN_ZOOM && !zoomIn)
+  ) {
+    return zoomLevel;
+  }
+  if (zoomIn) return zoomLevel * multiplier;
+  return zoomLevel / multiplier;
+};
 
-
-const updateSelectedElements = (elements: ProjectElementInstance[], selectedElements: ProjectElementInstance[]) => {
-    return elements.map((el) => selectedElements.find((sel) => sel.id === el.id) ? { ...el, selected: true } : { ...el, selected: false })
-}
+const updateSelectedElements = (
+  elements: ProjectElementInstance[],
+  selectedElements: ProjectElementInstance[]
+) => {
+  return elements.map((el) =>
+    selectedElements.find((sel) => sel.id === el.id)
+      ? { ...el, selected: true }
+      : { ...el, selected: false }
+  );
+};
 
 // export const useWindowResize = (canvas: HTMLDivElement | null) => {
 //     useEffect(() => {
@@ -99,7 +110,6 @@ const updateSelectedElements = (elements: ProjectElementInstance[], selectedElem
 //     height: 0,
 // });
 
-
 //   const useResize = (element: ProjectElementInstance, startPos:Position) => {
 //   //   useEffect(() => {
 //   //   const handleMouseMove =
@@ -128,8 +138,6 @@ const updateSelectedElements = (elements: ProjectElementInstance[], selectedElem
 //   // }, [isResizing,startPos])
 // }
 
-
-
 //   useEffect(() => {
 //     let top: ProjectElementInstance | null = null;
 //     let left: ProjectElementInstance | null = null;
@@ -155,51 +163,70 @@ const updateSelectedElements = (elements: ProjectElementInstance[], selectedElem
 //   }, [elements]);
 
 export const createProjectStore = (
-    initState: ProjectState = defaultInitState,
+  initState: ProjectState = defaultInitState
 ) => {
-    return createStore<ProjectStore>()((set, get) => ({
-        ...initState,
-        fetch: async (projectId: string) => {
-            const project = await getProjectData(projectId)
-            if (!project) return
-            set({ projectId, projectName: project.name, projectDescription: project.description ?? "", elements: JSON.parse(project.content ?? "[]") })
-        },
-        updateProjectName: (name: string) => set({ projectName: name }),
-        updateZoomLevel(zoomin, multiplier) {
-            set((state) => ({ zoomLevel: updateZoomLevel(state.zoomLevel, zoomin, multiplier) }))
-        },
-        updateScrollLeft: (scrollLeft: number) => set((state) => ({ scrollLeft: state.scrollLeft - scrollLeft })),
-        updateScrollTop: (scrollTop: number) => set((state) => ({ scrollTop: state.scrollTop - scrollTop })),
-        addElement: (element: ProjectElementInstance) => set((state) => ({
-            elements: [...state.elements, element]
-        })),
-        updateElement: (id: string, element: ProjectElementInstance) => set((state) => ({
-            elements: state.elements.map((el) => el.id === id ? element : el)
-        })),
-        selectedElements: () => {
-            return get().elements.filter((el) => el.selected)
-        },
-        updateSelectedElements: (selectedElements: ProjectElementInstance[]) => {
-            set((state) => ({
-                ...state,
-                elements: updateSelectedElements(state.elements, selectedElements)
-            }))
-        },
-        removeSelectedElements: () => set((state) => ({
-            ...state,
-            elements: state.elements.map((el) => el.selected ? { ...el, selected: false } : el)
-        })),
-        updateKey: (key: string) => set({
-            key
-        }),
-        setAllElementsSelected: () => set((state) => ({
-            elements: state.elements.map((el) => ({ ...el, selected: true }))
-        })),
-        deleteElement: (id: string) => set((state) => ({
-            elements: state.elements.filter((el) => el.id !== id)
-        })),
-        deleteSelectedElements: () => set((state) => ({
-            elements: state.elements.filter((el) => !el.selected)
-        }))
-    }))
-}
+  return createStore<ProjectStore>()((set, get) => ({
+    ...initState,
+    fetch: async (projectId: string) => {
+      const project = await getProjectData(projectId);
+      if (!project) return;
+      set({
+				fetched: true,
+        projectId,
+        projectName: project.name,
+        projectDescription: project.description ?? "",
+        elements: JSON.parse(project.content ?? "[]"),
+      });
+    },
+    updateProjectName: (name: string) => set({ projectName: name }),
+    updateZoomLevel(zoomin, multiplier) {
+      set((state) => ({
+        zoomLevel: updateZoomLevel(state.zoomLevel, zoomin, multiplier),
+      }));
+    },
+    updateScrollLeft: (scrollLeft: number) =>
+      set((state) => ({ scrollLeft: state.scrollLeft - scrollLeft })),
+    updateScrollTop: (scrollTop: number) =>
+      set((state) => ({ scrollTop: state.scrollTop - scrollTop })),
+    addElement: (element: ProjectElementInstance) =>
+      set((state) => ({
+        elements: [...state.elements, element],
+      })),
+    updateElement: (id: string, element: ProjectElementInstance) =>
+      set((state) => ({
+        elements: state.elements.map((el) => (el.id === id ? element : el)),
+      })),
+    selectedElements: () => {
+      return get().elements.filter((el) => el.selected);
+    },
+    updateSelectedElements: (selectedElements: ProjectElementInstance[]) => {
+      set((state) => ({
+        ...state,
+        elements: updateSelectedElements(state.elements, selectedElements),
+      }));
+    },
+    removeSelectedElements: () =>
+      set((state) => ({
+        ...state,
+        elements: state.elements.map((el) =>
+          el.selected ? { ...el, selected: false } : el
+        ),
+      })),
+    updateKey: (key: string) =>
+      set({
+        key,
+      }),
+    setAllElementsSelected: () =>
+      set((state) => ({
+        elements: state.elements.map((el) => ({ ...el, selected: true })),
+      })),
+    deleteElement: (id: string) =>
+      set((state) => ({
+        elements: state.elements.filter((el) => el.id !== id),
+      })),
+    deleteSelectedElements: () =>
+      set((state) => ({
+        elements: state.elements.filter((el) => !el.selected),
+      })),
+  }));
+};
