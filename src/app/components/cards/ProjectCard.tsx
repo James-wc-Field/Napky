@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Card,
   CardContent,
@@ -12,20 +10,20 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ProjectCardDetails } from "./ProjectCardDetails";
-import { use, useEffect } from "react";
-import { getPreviewUrl } from "@/dashboard/api";
+import { use } from "react";
+import { getPreviewUrl } from "@/dashboard/clientapi";
 
 interface ProjectsProps {
   project: Project;
 }
 
-export function ProjectCard(props: ProjectsProps) {
+export async function ProjectCard(props: ProjectsProps) {
   const { project } = props;
   function buttonPress() {
     console.log("button press: " + project.id);
   }
-  const url = use(getPreviewUrl(project.id))
-  console.log(url)
+  // const url = await getPreviewUrl(project.id)
+  // console.log(url)
 
   return (
     <>

@@ -1,15 +1,20 @@
 import { uploadData } from "aws-amplify/storage";
-import htmlToImage from "html-to-image";
+import { toJpeg } from "html-to-image";
 
-export async function createProjectImage(projectId: string, ref: any) {
+export async function createProjectImage(projectId: string, ref: HTMLDivElement | null) {
+    console.log(ref)
+    if (!ref) return;
     try {
-        htmlToImage.toJpeg(ref.current!).then(async (dataUrl) => {
+        toJpeg(ref).then(async (dataUrl) => {
             try {
+                const blob = await fetch(dataUrl).then(res => res.blob());
+                const file = new File([blob], 'filename.jpg', { type: 'image/jpeg' });
                 const result = await uploadData({
-                    key: projectId + '.jpeg',
-                    data: dataUrl,
+                    key: projectId + '.jpg',
+                    data: file,
                     options: {
-                        accessLevel: 'protected', // defaults to `guest` but can be 'private' | 'protected' | 'guest' // Optional progress callback.
+                        accessLevel: 'guest', // defaults to `guest` but can be 'private' | 'protected' | 'guest' // Optional progress callback.
+
                     }
                 }).result;
                 console.log('Succeeded: ', result);

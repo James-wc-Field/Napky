@@ -31,6 +31,7 @@ export default function ProjectBuilder() {
   const projectName = useProjectStore((state) => state.projectName);
   const projectId = useProjectStore((state) => state.projectId);
   const updateKey = useProjectStore((state) => state.updateKey);
+  const imageRef = useProjectStore((state) => state.imageRef);
   useEffect(() => {
     const html = document.querySelector("html");
     if (html) {
@@ -38,7 +39,6 @@ export default function ProjectBuilder() {
     }
   }, []);
   const id = useId();
-  const imageRef = useRef<HTMLDivElement>(null);
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 2 } }),
     useSensor(TouchSensor, {
@@ -71,7 +71,7 @@ export default function ProjectBuilder() {
             <Save className="h-5 w-6" />
           </Button>
         </div>
-        <BuildArea imageRef={imageRef} />
+        <BuildArea />
         <Popover>
           <PopoverTrigger asChild style={{ top: '95%', left: '50%', transform: 'translate(-50%, -50%)' }} className="absolute">
             <Button variant="outline">AI Summary</Button>
