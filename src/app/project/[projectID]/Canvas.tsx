@@ -10,7 +10,7 @@ import { useCallback } from "react";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
 
-export default function Canvas({ imageRef }: { imageRef: React.RefObject<HTMLDivElement> }) {
+export default function Canvas() {
   const updateZoomLevel = useProjectStore((state) => state.updateZoomLevel);
   const updateScrollLeft = useProjectStore((state) => state.updateScrollLeft);
   const updateScrollTop = useProjectStore((state) => state.updateScrollTop);
@@ -24,6 +24,7 @@ export default function Canvas({ imageRef }: { imageRef: React.RefObject<HTMLDiv
   const deleteSelectedElements = useProjectStore((state) => state.deleteSelectedElements);
   const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false)
   const selectableRef = useRef<SelectableRef>(null);
+  const imageRef = useProjectStore((state) => state.imageRef);
   const { setNodeRef } = useDroppable({
     id: "canvas-droppable",
     data: {
@@ -31,7 +32,6 @@ export default function Canvas({ imageRef }: { imageRef: React.RefObject<HTMLDiv
     },
   });
 
-  console.log(elements)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
       if (e.key === "a" && e.ctrlKey) {

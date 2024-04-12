@@ -17,7 +17,8 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Suspense } from 'react';
 import { Project } from "@src/API";
-import { createNewProject, getPreviewUrl } from "./api";
+import { createNewProject } from "./api";
+import { getPreviewUrl } from "./clientapi";
 import { useRouter } from "next/navigation";
 import { ProjectCard } from "@/components/cards/ProjectCard";
 

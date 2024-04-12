@@ -29,7 +29,16 @@ export async function getAllUserProjects() {
 }
 
 export async function getPreviewUrl(projectId: string) {
-  const storageUrl = await getUrl({ key: `${projectId}.png`, options: { accessLevel: "protected" } });
+  const user = await currentAuthenticatedUser();
+  if (!user) {
+    return null;
+  }
+  const storageUrl = await getUrl({
+    key: `${projectId}.png`,
+    options: {
+      accessLevel: 'guest'
+    }
+  });
   if (!storageUrl) {
     return null;
   }

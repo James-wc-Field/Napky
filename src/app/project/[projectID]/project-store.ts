@@ -3,6 +3,7 @@ import { Project } from '@src/API'
 import { createStore } from 'zustand/vanilla'
 import { ProjectElementInstance } from './types/ProjectElements'
 import { getProjectData } from './api'
+import { Ref, RefObject } from 'react'
 
 export type ProjectState = {
     projectId: string
@@ -13,6 +14,7 @@ export type ProjectState = {
     scrollTop: number
     elements: ProjectElementInstance[]
     key: string
+    imageRef: RefObject<HTMLImageElement>
 }
 
 export type ProjectActions = {
@@ -44,6 +46,7 @@ export const defaultInitState: ProjectState = {
     scrollTop: 0,
     elements: [] as ProjectElementInstance[],
     key: "",
+    imageRef: { current: null }
 }
 const updateZoomLevel = (zoomLevel: number, zoomIn: boolean, multiplier: number) => {
     const MIN_ZOOM = 0.05;
