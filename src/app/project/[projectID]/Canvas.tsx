@@ -4,13 +4,13 @@ import { ProjectElementInstance, ProjectElements } from "@/project/[projectID]/t
 // import MiniMap from "@/project/[projectID]/MiniMap";
 import CanvasControls from "@/project/[projectID]/CanvasControls";
 import CanvasBackground from "@/project/[projectID]/CanvasBackground";
-import { CanvasToolbar } from "@/project/[projectID]/CanvasToolbar";
+import CanvasToolbar from "@/project/[projectID]/CanvasToolbar";
 import Selectable, { SelectableRef, useSelectable } from 'react-selectable-box';
 import { useCallback } from "react";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
 
-export default function Canvas() {
+export default function Canvas({ imageRef }: { imageRef: React.RefObject<HTMLDivElement> }) {
   const updateZoomLevel = useProjectStore((state) => state.updateZoomLevel);
   const updateScrollLeft = useProjectStore((state) => state.updateScrollLeft);
   const updateScrollTop = useProjectStore((state) => state.updateScrollTop);
@@ -88,7 +88,6 @@ export default function Canvas() {
     updateScrollTop(deltaY);
   };
 
-  const canvasRef = useRef<HTMLDivElement>(null);
   // const curr = useMemo(() => {
   //   return canvasRef.current
   // }, [canvasRef])
@@ -110,7 +109,7 @@ export default function Canvas() {
           style={{ zIndex: 4 }}
           onWheel={handleScroll}
           onMouseDown={handleMouseDown}
-          ref={canvasRef}
+          ref={imageRef}
         >
           <div
             id="canvas-pane-droppable"
@@ -136,7 +135,7 @@ export default function Canvas() {
           <CanvasBackground />
         </div>
       </Selectable>
-      <CanvasToolbar ref={canvasRef} />
+      <CanvasToolbar />
       <CanvasControls />
       {/* <MiniMap /> */}
     </>
