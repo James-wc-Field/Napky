@@ -48,12 +48,9 @@ function Page() {
 }
 
 function App({ signOut, user }: WithAuthenticatorProps) {
-  return (
-    <>
-      <h1>Hello {user?.username}</h1>
-      <button onClick={signOut}>Sign out</button>
-    </>
-  );
+  const router = useRouter()
+  router.push('/dashboard')
+  return <></>
 }
 
 export default withAuthenticator(App);
