@@ -6,7 +6,7 @@ import {
   ProjectElement,
   ProjectElementInstance,
   ProjectElements,
-} from "@/project/[projectID]/types/ProjectElements";
+} from "@/components/ProjectElements";
 import { Card } from "@ui/card";
 import { useDroppable, useDraggable } from "@dnd-kit/core";
 import { useProjectStore } from "../storeProvider";
@@ -49,6 +49,7 @@ function CanvasComponent({
 }: {
   elementInstance: ProjectElementInstance;
 }) {
+  console.log(elementInstance as CustomInstance);
   const element = elementInstance as CustomInstance;
   const { label, placeHolder, children: children } = element.extraAttributes;
   const style = {

@@ -41,7 +41,7 @@ import og_image from '../../../../public/images/Project Sample.png';
 
 function BuilderPage({ params }: { params: { projectID: string } }) {
   const projectID = params.projectID;
-  const { fetch } = useProjectStore(useShallow((state) => state));
+  const fetch = useProjectStore((state) => state.fetch);
   useEffect(() => {
     fetch(projectID);
   }, [projectID, fetch]);

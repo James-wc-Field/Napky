@@ -1,7 +1,5 @@
-// src/stores/counter-store.ts
-import { Project } from '@src/API'
 import { createStore } from 'zustand/vanilla'
-import { ProjectElementInstance } from './types/ProjectElements'
+import { ProjectElementInstance } from '../../components/ProjectElements'
 import { getProjectData } from './api'
 
 export type ProjectState = {
@@ -14,6 +12,7 @@ export type ProjectState = {
     elements: ProjectElementInstance[]
     key: string
 }
+
 
 export type ProjectActions = {
     fetch: (projectId: string) => void
@@ -61,6 +60,7 @@ const updateZoomLevel = (zoomLevel: number, zoomIn: boolean, multiplier: number)
 const updateSelectedElements = (elements: ProjectElementInstance[], selectedElements: ProjectElementInstance[]) => {
     return elements.map((el) => selectedElements.find((sel) => sel.id === el.id) ? { ...el, selected: true } : { ...el, selected: false })
 }
+
 
 // export const useWindowResize = (canvas: HTMLDivElement | null) => {
 //     useEffect(() => {

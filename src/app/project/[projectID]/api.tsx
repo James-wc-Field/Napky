@@ -1,7 +1,7 @@
 "use server"
 import { getProject } from "../../../graphql/queries";
 import { updateProject } from "../../../graphql/mutations";
-import { ProjectElementInstance } from "@/project/[projectID]/types/ProjectElements";
+import { ProjectElementInstance } from "@/components/ProjectElements";
 import { cookieBasedClient } from '@/lib/amplifyServerUtils';
 import puppeteer from 'puppeteer';
 import { parse } from 'node-html-parser';
@@ -33,6 +33,10 @@ export async function saveProject(
   if (!user) {
     throw new Error("User not found");
   }
+  console.log("user", user)
+  console.log("elements", elements)
+  console.log("projectId", projectId)
+  console.log("name", name)
   await cookieBasedClient.graphql({
     query: updateProject,
     variables: {

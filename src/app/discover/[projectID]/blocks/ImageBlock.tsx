@@ -1,11 +1,10 @@
 "use client";
 
-import { PhotoIcon } from "@heroicons/react/24/solid";
 import {
   ElementsType,
   ProjectElement,
   ProjectElementInstance,
-} from "@/components/ProjectElements";
+} from "./Block";
 import Image from "next/image";
 
 const type: ElementsType = "ImageBlock";
@@ -21,19 +20,12 @@ export const ImageBlockProjectElement: ProjectElement = {
     id,
     type,
     position: { x: 0, y: 0 },
-    selected: false,
     size: { width: 300, height: 200 },
     parentId,
     extraAttributes,
   }),
 
-  toolbarElement: {
-    icon: PhotoIcon,
-    label: "Image",
-  },
-
   canvasComponent: CanvasComponent,
-  toolbarPropertiesComponent: () => <div>Toolbar properties</div>,
 };
 
 type CustomInstance = ProjectElementInstance & {

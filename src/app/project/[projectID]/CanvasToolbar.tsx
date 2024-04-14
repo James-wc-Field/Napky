@@ -1,6 +1,6 @@
 import React from "react";
 import ToolbarBtnElement from "@/project/[projectID]/ToolbarBtnElement";
-import { ProjectElements } from "@/project/[projectID]/types/ProjectElements";
+import { ProjectElements } from "@/components/ProjectElements";
 import { Card } from "@ui/card";
 import { useDroppable } from "@dnd-kit/core";
 import { Button } from "../../components/ui/button";

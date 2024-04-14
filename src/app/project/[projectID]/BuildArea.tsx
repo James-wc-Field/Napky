@@ -1,6 +1,6 @@
 import Canvas from "@/project/[projectID]/Canvas";
 import { useDndMonitor } from "@dnd-kit/core";
-import { ElementsType, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
+import { ElementsType, ProjectElements } from "@/components/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
 import { useExternalDrop } from "@/project/[projectID]/hooks/useExternalDrop";
 import { useProjectStore } from "./storeProvider";
@@ -13,7 +13,6 @@ export default function BuildArea() {
   const scrollLeft = useProjectStore(useShallow((state) => state.scrollLeft));
   const scrollTop = useProjectStore(useShallow((state) => state.scrollTop));
   const zoomLevel = useProjectStore(useShallow((state) => state.zoomLevel));
-  const updateSelectedElements = useProjectStore((state) => state.updateSelectedElements);
   const deleteElement = useProjectStore((state) => state.deleteElement);
 
   useDndMonitor({
