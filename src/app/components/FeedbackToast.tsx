@@ -7,14 +7,20 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@ui/dialog";
-import { Label } from "@ui/label";
 import { Textarea } from "@ui/textarea";
-
+import { useForm } from "react-hook-form";
+import { FeedbackCommentsField } from "@components/FormFields";
+import { Form } from "@ui/form";
 import { useEffect, useState } from "react";
+import { createNewFeedback } from "./api";
+import { LoadingSpinner } from "./ui/spinner";
+
+export type FeedbackInput = {
+  feedback: string;
+};
 
 /**
  * A toast that displays a prompt for user feedback on the site
@@ -30,6 +36,7 @@ export default function Page() {
         title: "How are we doing?",
         variant: "default",
         description: "Please take a moment to provide feedback on our site.",
+        duration: 120000, // Go away after 2 minutes
         action: (
           <ToastAction altText="Give Feedback" asChild>
             <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
@@ -38,25 +45,32 @@ export default function Page() {
           </ToastAction>
         ),
       });
-    }, 300000); // show up every 5 minutes
+    }, 6000); // show up every 10 minutes
 
     return () => clearInterval(interval);
   }, [toast, isDialogOpen]);
 
-  const [commentRows, setCommentRows] = useState(2);
-  const handleOnCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    let numRows = 0;
-    let rows = e.target.value.split("\n");
+  const form = useForm<FeedbackInput>({
+    defaultValues: {
+      feedback: "",
+    },
+  });
+  const [waiting, setWaiting] = useState(false);
 
-    // let cols = e.target.cols; // TODO: Increase row count if text wrapped to next line
-    for (let i = 0; i < rows.length; i++) {
-      numRows++;
-    }
+  async function onSubmit(data: FeedbackInput) {
+    setWaiting(true);
 
-    // Clamp rows from 2 to 15
-    if (numRows < 2) numRows = 2;
-    if (numRows > 15) numRows = 15;
-    setCommentRows(numRows);
+    createNewFeedback(data.feedback).then(() => {
+      setWaiting(false);
+      setIsDialogOpen(false);
+      form.reset();
+      toast({
+        title: "Successfully submitted feedback",
+        description:
+          "Thank you for your feedback! We'll use it to improve our site.",
+        duration: 10000,
+      });
+    });
   }
 
   return (
@@ -66,17 +80,19 @@ export default function Page() {
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Give Us Feedback</DialogTitle>
-              <DialogDescription className="flex flex-col gap-3">
-                {/* TODO: Implement form similar to that of SignInForm.tsx */}
-
-                <Label htmlFor="feedback">Your comments</Label>
-                <Textarea id="feedback" rows={commentRows} onChange={handleOnCommentChange} />
-                <p>Your feedback helps us improve our site. Thank you!</p>
-              </DialogDescription>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="flex flex-col gap-3"
+                >
+                  <FeedbackCommentsField form={form} />
+                  <Button type="submit">
+                    Submit
+                    {waiting && <LoadingSpinner className="ml-2" />}
+                  </Button>
+                </form>
+              </Form>
             </DialogHeader>
-            <DialogFooter>
-              <Button type="submit">Save changes</Button>
-            </DialogFooter>
           </DialogContent>
         </Dialog>
       )}

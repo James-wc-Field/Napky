@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { SignInInput } from "aws-amplify/auth";
 
@@ -6,6 +6,7 @@ import { Input } from "@ui/input";
 import { Button } from "@ui/button";
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,6 +16,8 @@ import {
 import { EyeIcon } from "@heroicons/react/16/solid";
 import { EyeSlashIcon } from "@heroicons/react/16/solid";
 import { SignUpInputExtended } from "@/(accounts)/sign-in/SignUpForm";
+import { FeedbackInput } from "./FeedbackToast";
+import { Textarea } from "./ui/textarea";
 
 export function EmailField({
   form,
@@ -147,6 +150,36 @@ export function PasswordConfirmField({
               </Button>
             </div>
           </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+export function FeedbackCommentsField({
+  form,
+}: {
+  form: UseFormReturn<FeedbackInput | any>;
+}) {
+  return (
+    <FormField
+      control={form.control}
+      name="feedback"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel htmlFor="feedback">Your feedback</FormLabel>
+          <FormControl>
+            <Textarea
+              id="feedback"
+              placeholder="Enter your feedback here"
+              rows={5}
+              {...field}
+            />
+          </FormControl>
+          <FormDescription>
+            Your feedback helps us improve our site. Thank you!
+          </FormDescription>
           <FormMessage />
         </FormItem>
       )}
