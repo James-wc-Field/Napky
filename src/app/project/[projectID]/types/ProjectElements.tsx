@@ -4,13 +4,15 @@ import { ImageBlockProjectElement } from "../blocks/ImageBlock";
 import { LinkBlockProjectElement } from "..//blocks/LinkBlock";
 import { ListBlockProjectElement } from "../blocks/ListBlock";
 import { TodoBlockProjectElement } from "../blocks/TodoBlock";
+import { LoadingBlockProjectElement } from "../blocks/LoadingBlock";
 
 export type ElementsType =
   | "TextBlock"
   | "ImageBlock"
   | "LinkBlock"
   | "ListBlock"
-  | "TodoBlock";
+  | "TodoBlock"
+  | "LoadingBlock";
 
 export type ProjectElement = {
   type: ElementsType;
@@ -31,7 +33,7 @@ export type ProjectElement = {
 export type Position = {
   x: number | null;
   y: number | null;
-}
+};
 
 export type ProjectElementInstance = {
   id: string;
@@ -59,4 +61,5 @@ export const ProjectElements: ProjectElementsType = {
   LinkBlock: LinkBlockProjectElement,
   ListBlock: ListBlockProjectElement,
   TodoBlock: TodoBlockProjectElement,
+  LoadingBlock: LoadingBlockProjectElement,
 };

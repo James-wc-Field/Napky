@@ -55,6 +55,8 @@ function CanvasComponent({
       height={element.size.height}
       alt={alt}
       className="rounded-md select-none"
+      unoptimized
+      priority
     />
   );
 }
