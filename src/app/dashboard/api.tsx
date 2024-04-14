@@ -28,23 +28,6 @@ export async function getAllUserProjects() {
   ).data.listProjects.items;
 }
 
-export async function getPreviewUrl(projectId: string) {
-  const user = await currentAuthenticatedUser();
-  if (!user) {
-    return null;
-  }
-  const storageUrl = await getUrl({
-    key: `${projectId}.png`,
-    options: {
-      accessLevel: 'guest'
-    }
-  });
-  if (!storageUrl) {
-    return null;
-  }
-  return storageUrl.url;
-}
-
 /**
  * Create a new project
  * @returns the id of the new project
