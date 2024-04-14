@@ -45,7 +45,7 @@ export default function Page() {
           </ToastAction>
         ),
       });
-    }, 6000); // show up every 10 minutes
+    }, 600000); // show up every 10 minutes
 
     return () => clearInterval(interval);
   }, [toast, isDialogOpen]);
