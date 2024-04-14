@@ -1,9 +1,5 @@
-'use client'
-import React, { useEffect } from "react";
+import React from "react";
 import ProjectBuilder from "@/project/[projectID]/ProjectBuilder";
-import { Suspense } from "react";
-import { useProjectStore } from "./storeProvider";
-import { useShallow } from "zustand/react/shallow";
 import { Project } from "@src/API";
 import { saveProject, getProjectData, generateSummary } from './api';
 import og_image from '../../../../public/images/Project Sample.png';
@@ -39,18 +35,6 @@ import og_image from '../../../../public/images/Project Sample.png';
 //   }
 // }
 
-function BuilderPage({ params }: { params: { projectID: string } }) {
-  const projectID = params.projectID;
-  const { fetch } = useProjectStore(useShallow((state) => state));
-  useEffect(() => {
-    fetch(projectID);
-  }, [projectID, fetch]);
-
-  return (
-    <Suspense fallback={<p>Loading...</p>}>
-      <ProjectBuilder />
-    </Suspense>
-  )
+export default function BuilderPage({ params }: { params: { projectID: string } }) {
+  return <ProjectBuilder projectID={params.projectID}/>;
 }
-
-export default BuilderPage;

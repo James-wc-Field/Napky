@@ -11,6 +11,7 @@ import { Ref, RefObject } from "react";
 import { getImageURL } from "./clientapi";
 
 export type ProjectState = {
+  fetched: boolean;
   projectId: string;
   projectName: string;
   projectDescription: string;
@@ -42,6 +43,7 @@ export type ProjectActions = {
 export type ProjectStore = ProjectState & ProjectActions;
 
 export const defaultInitState: ProjectState = {
+  fetched: false,
   projectId: "",
   projectName: "",
   projectDescription: "",
