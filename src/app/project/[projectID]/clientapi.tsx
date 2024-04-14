@@ -5,28 +5,24 @@ export async function createProjectImage(
   projectId: string,
   ref: HTMLDivElement | null
 ) {
-  console.log(ref);
   if (!ref) return;
-  try {
-    toJpeg(ref).then(async (dataUrl) => {
-      try {
-        const blob = await fetch(dataUrl).then((res) => res.blob());
-        const file = new File([blob], "filename.jpg", { type: "image/jpeg" });
-        const result = await uploadData({
-          key: projectId + ".jpg",
-          data: file,
-          options: {
-            accessLevel: "guest", // defaults to `guest` but can be 'private' | 'protected' | 'guest' // Optional progress callback.
-          },
-        }).result;
-        console.log("Succeeded: ", result);
-      } catch (error) {
-        console.log("Error : ", error);
-      }
+  toJpeg(ref, 
+  )
+    .then(async (dataUrl) => {
+      const blob = await fetch(dataUrl).then((res) => res.blob());
+      const file = new File([blob], "filename.jpg", { type: "image/jpeg" });
+      const result = await uploadData({
+        key: projectId + ".jpg",
+        data: file,
+        options: {
+          accessLevel: "guest", // defaults to `guest` but can be 'private' | 'protected' | 'guest' // Optional progress callback.
+        },
+      }).result;
+      console.log("Succeeded: ", result);
+    })
+    .catch((error) => {
+      console.error("Error: ", error);
     });
-  } catch (error) {
-    console.log(error);
-  }
 }
 
 export function uploadImage(file: File, filename: string) {

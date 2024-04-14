@@ -26,9 +26,10 @@ export async function getAllProjects() {
       query: listProjects,
       variables: {
         limit: 1000,
-        filter: {
-          userId: { ne: user?.userId },
-        },
+        // Remove this functionality for debugging purposes
+        // filter: {
+        //   userId: { ne: user?.userId },
+        // },
       },
     })
   ).data.listProjects.items;
