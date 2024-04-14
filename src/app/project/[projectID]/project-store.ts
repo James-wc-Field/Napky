@@ -248,27 +248,37 @@ export const createProjectStore = (
   }));
 };
 
+/**
+ * Adds unstored attributes to elements after retrieving them from the database
+ * Also generates a temporary URL for each image block
+ * @param elements
+ * @returns
+ */
 async function prepareElements(elements: ProjectElementInstance[]) {
   return await Promise.all(
     elements.map(async (element: ProjectElementInstance) => {
-      const elementType = element.type as ElementsType;
       element =
-        ProjectElements[elementType].addUnstoredAttributes?.(element) ??
-        element;
+        ProjectElements[element.type as ElementsType].addUnstoredAttributes?.(
+          element
+        ) ?? element;
 
-      if (elementType === "ImageBlock") {
-        const url = await getImageURL(element.extraAttributes?.key);
-        if (!url) return element;
-        element = {
-          ...element,
-          unstoredAttributes: {
-            ...element.unstoredAttributes,
-            src: url.href,
-          },
-        };
-      }
+      element = await refreshImageURL(element);
 
       return element;
     })
   );
+}
+
+async function refreshImageURL(element: ProjectElementInstance) {
+  if (element.type !== "ImageBlock") return element;
+
+  const url = await getImageURL(element.extraAttributes?.key);
+  if (!url) return element;
+  return {
+    ...element,
+    unstoredAttributes: {
+      ...element.unstoredAttributes,
+      src: url.href,
+    },
+  };
 }

@@ -72,6 +72,7 @@ function CanvasComponent({
       className="rounded-md select-none"
       unoptimized
       priority
+      crossOrigin="anonymous"
     />
   );
 }

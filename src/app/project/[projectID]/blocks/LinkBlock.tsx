@@ -162,10 +162,11 @@ function CanvasComponent({
               </div>
               <div className="flex items-center">
                 <Image
-                  src="/images/placeholder.jpg"
+                  src={metaTags["og:image"]}
                   alt={metaTags["og:title"]}
                   width={300}
                   height={200}
+                  unoptimized
                 ></Image>
                 <CardDescription>
                   {metaTags["og:description"] || ""}
