@@ -128,8 +128,8 @@ function CanvasComponent({
         extraAttributes: {
           ...element.extraAttributes,
           isRenderingBackup: false,
-          metaTags: metaTags,
-          summary: summary,
+          metaTags,
+          summary,
         },
       });
     }
@@ -162,12 +162,13 @@ function CanvasComponent({
               </div>
               <div className="flex items-center">
                 <Image
-                  src={metaTags["og:image"]}
-                  alt={metaTags["og:title"]}
+                  src="/images/placeholder.webp" // TODO: Use og:image and try to fix CORS errors upon html-to-image extraction
+                  alt={metaTags["og:title"] || "img"}
                   width={300}
                   height={200}
                   unoptimized
-                ></Image>
+                  priority
+                />
                 <CardDescription>
                   {metaTags["og:description"] || ""}
                 </CardDescription>
