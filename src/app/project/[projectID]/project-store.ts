@@ -192,6 +192,7 @@ export const createProjectStore = (
         projectName: project.name,
         projectDescription: project.description ?? "",
         elements,
+        fetched: true,
       });
     },
     updateProjectName: (name: string) => set({ projectName: name }),
