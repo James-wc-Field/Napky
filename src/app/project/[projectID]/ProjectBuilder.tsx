@@ -36,7 +36,6 @@ export default function ProjectBuilder({ projectID }: { projectID: string }) {
 
   const fetched = useProjectStore((state) => state.fetched);
   const elements = useProjectStore((state) => state.elements);
-  console.log(elements);
   const updateProjectName = useProjectStore((state) => state.updateProjectName);
   const projectName = useProjectStore((state) => state.projectName);
   const projectId = useProjectStore((state) => state.projectId);
