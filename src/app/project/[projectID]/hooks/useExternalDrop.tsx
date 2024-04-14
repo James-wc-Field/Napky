@@ -35,7 +35,6 @@ export function useExternalDrop() {
     // If the dropped item is a file, create an image block
     if (e.dataTransfer.files.length > 0) {
       for (const file of Array.from(e.dataTransfer.files)) {
-        const reader = new FileReader();
         const xPos = e.clientX - left;
         const yPos = e.clientY - top;
         if (
@@ -45,29 +44,6 @@ export function useExternalDrop() {
           xPos > canvasRect.width
         )
           continue;
-
-        reader.onload = (event) => {
-          const src = event.target?.result as string;
-          const type = "ImageBlock";
-          let newElement = ProjectElements[type as ElementsType].construct(
-            idGenerator(),
-            "root"
-          );
-          console.log("NEW ELEMENT:", newElement);
-          console.log(src);
-
-          addElement({
-            ...newElement,
-            position: {
-              x: (xPos - scrollLeft) / zoomLevel,
-              y: (yPos - scrollTop) / zoomLevel,
-            },
-            extraAttributes: {
-              ...newElement.extraAttributes,
-              src: src,
-            },
-          });
-        };
 
         // Get hash of the image as the key
         const hash = await window.crypto.subtle.digest(
@@ -100,33 +76,41 @@ export function useExternalDrop() {
           },
         });
 
-        uploadDataOutput.result.then((result) => {
-          if (uploadDataOutput.state === "SUCCESS") {
-            console.log("RESULT:", result);
-
-            let newElement = ProjectElements[
-              "ImageBlock" as ElementsType
-            ].construct(idGenerator(), "root");
-
-            getImageURL(result.key).then((url) => {
-              if (!url) return;
-
-              console.log("URL:", url);
-              console.log("NEW ELEMENT:", newElement);
-              addElement({
-                ...newElement,
-                position: {
-                  x: (xPos - scrollLeft) / zoomLevel,
-                  y: (yPos - scrollTop) / zoomLevel,
-                },
-                extraAttributes: {
-                  ...newElement.extraAttributes,
-                  src: url.href,
-                },
-              });
-              deleteElement(loadingElement.id);
-            });
+        uploadDataOutput.result.then(async (result) => {
+          if (uploadDataOutput.state !== "SUCCESS") {
+            console.log("Upload failed: ", uploadDataOutput.state);
+            return;
           }
+
+          console.log("RESULT:", result);
+
+          let newElement = ProjectElements[
+            "ImageBlock" as ElementsType
+          ].construct(idGenerator(), "root");
+
+          const url = await getImageURL(key);
+          if (!url) {
+            console.log("No URL returned.");
+            return;
+          }
+
+          console.log("NEW ELEMENT:", newElement);
+          addElement({
+            ...newElement,
+            position: {
+              x: (xPos - scrollLeft) / zoomLevel,
+              y: (yPos - scrollTop) / zoomLevel,
+            },
+            extraAttributes: {
+              ...newElement.extraAttributes,
+              key,
+            },
+            unstoredAttributes: {
+              ...newElement.unstoredAttributes,
+              src: url.href
+            },
+          });
+          deleteElement(loadingElement.id);
         });
       }
     } else if (isValidUrl(e.dataTransfer.getData("text/plain"))) {
