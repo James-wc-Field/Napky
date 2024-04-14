@@ -11,8 +11,13 @@ import Image from "next/image";
 const type: ElementsType = "ImageBlock";
 
 const extraAttributes = {
-  src: "/images/placeholder.jpg",
+  key: "",
   alt: "Image",
+};
+
+const unstoredAttributes = {
+  src: "",
+  placeholder: "/images/placeholder.jpg",
 };
 
 export const ImageBlockProjectElement: ProjectElement = {
@@ -25,7 +30,15 @@ export const ImageBlockProjectElement: ProjectElement = {
     size: { width: 300, height: 200 },
     parentId,
     extraAttributes,
+    unstoredAttributes,
   }),
+
+  addUnstoredAttributes: (elementInstance) => {
+    return {
+      ...elementInstance,
+      unstoredAttributes,
+    };
+  },
 
   toolbarElement: {
     icon: PhotoIcon,
@@ -38,6 +51,7 @@ export const ImageBlockProjectElement: ProjectElement = {
 
 type CustomInstance = ProjectElementInstance & {
   extraAttributes: typeof extraAttributes;
+  unstoredAttributes: typeof unstoredAttributes;
 };
 
 function CanvasComponent({
@@ -46,11 +60,12 @@ function CanvasComponent({
   elementInstance: ProjectElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
-  const { src, alt } = element.extraAttributes;
+  const { alt } = element.extraAttributes;
+  const { src, placeholder } = element.unstoredAttributes;
 
   return (
     <Image
-      src={src}
+      src={src || placeholder}
       width={element.size.width}
       height={element.size.height}
       alt={alt}

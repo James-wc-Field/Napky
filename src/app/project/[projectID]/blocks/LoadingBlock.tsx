@@ -11,8 +11,6 @@ import { Loader } from "lucide-react";
 
 const type: ElementsType = "LoadingBlock";
 
-const extraAttributes = {};
-
 export const LoadingBlockProjectElement: ProjectElement = {
   type,
   construct: (id: string, parentId: string) => ({
@@ -22,7 +20,6 @@ export const LoadingBlockProjectElement: ProjectElement = {
     selected: false,
     size: { width: 20, height: 20 },
     parentId,
-    extraAttributes,
   }),
 
   toolbarElement: {
@@ -34,17 +31,11 @@ export const LoadingBlockProjectElement: ProjectElement = {
   toolbarPropertiesComponent: () => null,
 };
 
-type CustomInstance = ProjectElementInstance & {
-  extraAttributes: typeof extraAttributes;
-};
-
 function CanvasComponent({
   elementInstance,
 }: {
   elementInstance: ProjectElementInstance;
 }) {
-  const element = elementInstance as CustomInstance;
-
   return (
     <Card className="p-2 w-fit">
       <LoadingSpinner />

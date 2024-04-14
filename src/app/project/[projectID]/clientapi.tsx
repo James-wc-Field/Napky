@@ -46,14 +46,15 @@ export function uploadImage(file: File, filename: string) {
 }
 
 export async function getImageURL(key: string) {
-    const storageUrl = await getUrl({
-        key,
-        options: {
-            accessLevel: 'guest'
-        }
-    });
-    if (!storageUrl) {
-        return null;
-    }
-    return storageUrl.url;
+  const storageUrl = await getUrl({
+    key,
+    options: {
+      accessLevel: "guest",
+      expiresIn: 10, // We don't really need the URL for long
+    },
+  });
+  if (!storageUrl) {
+    return null;
+  }
+  return storageUrl.url;
 }
