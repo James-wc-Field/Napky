@@ -1,9 +1,8 @@
-import { Tools, ToolsType } from "../../types";
+import { Tools, ToolsType } from "./NinjaSketchTypes";
 
 import { LuPencil } from "react-icons/lu";
 import { FiMinus, FiMousePointer, FiSquare } from "react-icons/fi";
 import { IoHandRightOutline, IoText } from "react-icons/io5";
-import "./action-bar-style.css";
 
 type ActionBarProps = {
   tool: ToolsType;

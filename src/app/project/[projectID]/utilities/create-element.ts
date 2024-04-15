@@ -1,5 +1,5 @@
 import rough from "roughjs";
-import { Tools, ElementType, ToolsType } from "../types";
+import { Tools, ElementType, ToolsType } from "../NinjaSketchTypes";
 
 export const createElement = (
   id: number,

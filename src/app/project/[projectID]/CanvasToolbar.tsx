@@ -6,6 +6,7 @@ import { useDroppable } from "@dnd-kit/core";
 import { Button } from "../../components/ui/button";
 import { TrashIcon } from "@heroicons/react/24/solid";
 
+
 export default function CanvasToolbar() {
   const { setNodeRef } = useDroppable({
     id: "toolbar-area",

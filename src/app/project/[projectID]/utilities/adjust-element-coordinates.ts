@@ -1,4 +1,4 @@
-import { ElementType, Tools } from "../types";
+import { ElementType, Tools } from "../NinjaSketchTypes";
 
 export const adjustElementCoordinates = (element: ElementType) => {
   const { type, x1, y1, x2, y2 } = element;
