@@ -5,6 +5,7 @@ import { idGenerator } from "@/lib/idGenerator";
 import { useExternalDrop } from "@/project/[projectID]/hooks/useExternalDrop";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
+import AppCanvas from "./AppCanvas";
 export default function BuildArea() {
   const elements = useProjectStore((state) => state.elements);
   const addElement = useProjectStore((state) => state.addElement);
@@ -280,7 +281,7 @@ export default function BuildArea() {
       onDragOver={(e) => e.preventDefault()}
       className="relative overflow-hidden z-0 w-full h-full"
     >
-      <Canvas />
+      <AppCanvas />
     </div>
   );
 }
