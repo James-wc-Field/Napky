@@ -9,8 +9,13 @@ import Selectable, { SelectableRef, useSelectable } from 'react-selectable-box';
 import { useCallback } from "react";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
+type AppCanvasProps = {
+  handleMouseDown: React.MouseEventHandler<HTMLCanvasElement> | undefined;
+  handleMouseMove: React.MouseEventHandler<HTMLCanvasElement> | undefined;
+  handleMouseUp: React.MouseEventHandler<HTMLCanvasElement> | undefined;
+};
 
-export default function Canvas() {
+export default function Canvas({ handleMouseDown, handleMouseMove, handleMouseUp }: AppCanvasProps) {
   const updateZoomLevel = useProjectStore((state) => state.updateZoomLevel);
   const updateScrollLeft = useProjectStore((state) => state.updateScrollLeft);
   const updateScrollTop = useProjectStore((state) => state.updateScrollTop);
@@ -48,31 +53,31 @@ export default function Canvas() {
     };
   }, [setAllElementsSelected, deleteSelectedElements]);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMiddleDown = (e: React.MouseEvent) => {
     if (e.button === 1) {
       setMiddleMouseIsDown(true);
     }
   };
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (middleMouseIsDown) {
-      selectableRef?.current?.cancel();
-      updateScrollLeft(-e.movementX);
-      updateScrollTop(-e.movementY);
-    }
-  }, [selectableRef, updateScrollLeft, updateScrollTop, middleMouseIsDown])
-  const handleMouseUp = useCallback(() => {
-    setMiddleMouseIsDown(false);
-  }, [])
-  useEffect(() => {
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-    return () => {
-      // Cleanup event listeners when component unmounts
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [handleMouseMove, handleMouseUp]);
+  // const handleMouseMove = useCallback((e: MouseEvent) => {
+  //   if (middleMouseIsDown) {
+  //     selectableRef?.current?.cancel();
+  //     updateScrollLeft(-e.movementX);
+  //     updateScrollTop(-e.movementY);
+  //   }
+  // }, [selectableRef, updateScrollLeft, updateScrollTop, middleMouseIsDown])
+  // const handleMouseUp = useCallback(() => {
+  //   setMiddleMouseIsDown(false);
+  // }, [])
+  // useEffect(() => {
+  //   document.addEventListener("mousemove", handleMouseMove);
+  //   document.addEventListener("mouseup", handleMouseUp);
+  //   return () => {
+  //     // Cleanup event listeners when component unmounts
+  //     document.removeEventListener("mousemove", handleMouseMove);
+  //     document.removeEventListener("mouseup", handleMouseUp);
+  //   };
+  // }, [handleMouseMove, handleMouseUp]);
 
   const handleScroll = (e: React.WheelEvent) => {
     const { deltaX, deltaY } = e;
@@ -104,7 +109,7 @@ export default function Canvas() {
           className="absolute w-full h-full top-0 left-0"
           style={{ zIndex: 4 }}
           onWheel={handleScroll}
-          onMouseDown={handleMouseDown}
+          onMouseDown={handleMiddleDown}
           ref={canvasRef}
         >
           <div
@@ -122,6 +127,15 @@ export default function Canvas() {
                 zIndex: 2,
               }}
             >
+              <canvas
+                id="canvas"
+                width={window.innerWidth}
+                height={window.innerHeight}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                style={{ position: "absolute", zIndex: 1 }}
+              />
               {elements.map((element) => {
                 if (element.parentId !== "root") return null;
                 return <CanvasElementWrapper key={element.id} element={element} />;
