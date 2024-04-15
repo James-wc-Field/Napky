@@ -1,5 +1,5 @@
 import getStroke from "perfect-freehand";
-import { ElementType } from "../types";
+import { ElementType } from "../NinjaSketchTypes";
 
 export const drawElement = (
   // TODO: add type

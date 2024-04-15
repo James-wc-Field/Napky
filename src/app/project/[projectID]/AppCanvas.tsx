@@ -3,6 +3,7 @@ import {
     MouseEvent,
     useEffect,
     useLayoutEffect,
+    useMemo,
     useRef,
     useState,
 } from "react";
@@ -17,11 +18,28 @@ import { usePressedKeys } from "./hooks/usePressedKeys";
 import { adjustElementCoordinates, adjustmentRequired, createElement, cursorForPosition, drawElement, getElementAtPosition, resizedCoordinates } from "./utilities";
 import { ControlPanel } from "./control-panel";
 import { ActionBar } from "./action-bar";
+import CanvasControls from "./CanvasControls";
+import CanvasToolbar from "./CanvasToolbar";
+import { ProjectElementInstance, ProjectElements } from "./types/ProjectElements";
+import { useDraggable, useDroppable } from "@dnd-kit/core";
+import { useProjectStore } from "./storeProvider";
+import { useSelectable } from "react-selectable-box";
 
 export default function AppCanvas() {
     const initialTool: ToolsType = Tools.selection;
-
-    const { elements, setElements, undo, redo } = useHistory([]);
+    const elements = useProjectStore((state) => state.elements);
+    const updateScrollLeft = useProjectStore((state) => state.updateScrollLeft);
+    const updateScrollTop = useProjectStore((state) => state.updateScrollTop);
+    const zoomLevel = useProjectStore((state) => state.zoomLevel);
+    const scrollTop = useProjectStore((state) => state.scrollTop);
+    const scrollLeft = useProjectStore((state) => state.scrollLeft);
+    const { setNodeRef } = useDroppable({
+        id: "canvas-droppable",
+        data: {
+            isCanvasDropArea: true,
+        },
+    });
+    const { canvasElements, setCanvasElements, undo, redo } = useHistory([]);
     const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
     const [startPanMousePosition, setStartPanMousePosition] = useState({
         x: 0,
@@ -55,7 +73,7 @@ export default function AppCanvas() {
         );
         context.scale(scale, scale);
 
-        elements.forEach((element) => {
+        canvasElements.forEach((element) => {
             if (
                 action === "writing" &&
                 selectedElement &&
@@ -65,7 +83,7 @@ export default function AppCanvas() {
             drawElement(roughCanvas, context, element);
         });
         context.restore();
-    }, [elements, action, selectedElement, panOffset, scale]);
+    }, [canvasElements, action, selectedElement, panOffset, scale]);
 
     useEffect(() => {
         const undoRedoFunction = (event: KeyboardEvent) => {
@@ -91,7 +109,7 @@ export default function AppCanvas() {
     useEffect(() => {
         const panOrZoomFunction = (event: WheelEvent) => {
             if (pressedKeys.has("Meta") || pressedKeys.has("Control")) {
-                onZoom(event.deltaY * -0.01);
+                onZoom(event.deltaY > 0, 1.05);
             } else {
                 setPanOffset((prevState) => ({
                     x: prevState.x - event.deltaX,
@@ -125,7 +143,7 @@ export default function AppCanvas() {
         type: ToolsType,
         options?: { text: string }
     ) => {
-        const elementsCopy = [...elements];
+        const elementsCopy = [...canvasElements];
         switch (type) {
             case Tools.line:
             case Tools.rectangle: {
@@ -160,7 +178,7 @@ export default function AppCanvas() {
             default:
                 throw new Error(`Type not recognised: ${type}`);
         }
-        setElements(elementsCopy, true);
+        setCanvasElements(elementsCopy, true);
     };
 
     const getMouseCoordinates = (event: MouseEvent) => {
@@ -177,6 +195,7 @@ export default function AppCanvas() {
         const { clientX, clientY } = getMouseCoordinates(event);
 
         if (tool === Tools.pan || event.button === 1 || pressedKeys.has(" ")) {
+            console.log("panning");
             setAction("panning");
             setStartPanMousePosition({ x: clientX, y: clientY });
             document.body.style.cursor = "grabbing";
@@ -191,7 +210,7 @@ export default function AppCanvas() {
         }
 
         if (tool === Tools.selection) {
-            const element = getElementAtPosition(clientX, clientY, elements);
+            const element = getElementAtPosition(clientX, clientY, canvasElements);
 
             if (element) {
                 let selectedElement: SelectedElementType = { ...element };
@@ -207,7 +226,7 @@ export default function AppCanvas() {
                 }
 
                 setSelectedElement(selectedElement);
-                setElements((prevState) => prevState);
+                setCanvasElements((prevState) => prevState);
 
                 if (element.position === "inside") {
                     setAction("moving");
@@ -216,7 +235,7 @@ export default function AppCanvas() {
                 }
             }
         } else {
-            const id = elements.length;
+            const id = canvasElements.length;
             const newElement = createElement(
                 id,
                 clientX,
@@ -225,7 +244,7 @@ export default function AppCanvas() {
                 clientY,
                 tool
             );
-            setElements((prevState) => [...prevState, newElement]);
+            setCanvasElements((prevState) => [...prevState, newElement]);
             setSelectedElement(newElement);
             setAction(tool === "text" ? "writing" : "drawing");
         }
@@ -241,11 +260,13 @@ export default function AppCanvas() {
                 x: panOffset.x + deltaX,
                 y: panOffset.y + deltaY,
             });
+            updateScrollLeft(panOffset.x + deltaX);
+            updateScrollTop(panOffset.y + deltaY);
             return;
         }
 
         if (tool === Tools.selection) {
-            const element = getElementAtPosition(clientX, clientY, elements);
+            const element = getElementAtPosition(clientX, clientY, canvasElements);
 
             if (element && element.position) {
                 (event.target as HTMLElement).style.cursor = cursorForPosition(
@@ -257,8 +278,8 @@ export default function AppCanvas() {
         }
 
         if (action === "drawing") {
-            const index = elements.length - 1;
-            const { x1, y1 } = elements[index];
+            const index = canvasElements.length - 1;
+            const { x1, y1 } = canvasElements[index];
             updateElement(index, x1, y1, clientX, clientY, tool);
         } else if (action === "moving" && selectedElement) {
             if (
@@ -272,12 +293,12 @@ export default function AppCanvas() {
                     x: clientX - extendedElement.xOffsets![index],
                     y: clientY - extendedElement.yOffsets![index],
                 }));
-                const elementsCopy = [...elements];
+                const elementsCopy = [...canvasElements];
                 elementsCopy[extendedElement.id] = {
                     ...elementsCopy[extendedElement.id],
                     points: newPoints,
                 };
-                setElements(elementsCopy, true);
+                setCanvasElements(elementsCopy, true);
             } else {
                 const { id, x1, x2, y1, y2, type, offsetX, offsetY } =
                     selectedElement as ExtendedElementType;
@@ -319,12 +340,12 @@ export default function AppCanvas() {
 
         if (selectedElement) {
             const index = selectedElement.id;
-            const { id, type } = elements[index];
+            const { id, type } = canvasElements[index];
             if (
                 (action === "drawing" || action === "resizing") &&
                 adjustmentRequired(type)
             ) {
-                const { x1, y1, x2, y2 } = adjustElementCoordinates(elements[index]);
+                const { x1, y1, x2, y2 } = adjustElementCoordinates(canvasElements[index]);
                 updateElement(id, x1, y1, x2, y2, type);
             }
 
@@ -368,11 +389,14 @@ export default function AppCanvas() {
         }
     };
 
-    const onZoom = (delta: number) => {
-        setScale((prevState) => Math.min(Math.max(prevState + delta, 0.1), 20));
+    const onZoom = (zoomIn: boolean, delta: number) => {
+        if (zoomIn) setScale((prevState) => Math.min(Math.max(prevState * delta, 0.05), 5));
+        else setScale((prevState) => Math.max(prevState / delta, 0.05));
     };
     return (
         <div>
+            <CanvasControls />
+            <CanvasToolbar />
             <ActionBar tool={tool} setTool={setTool} />
             <ControlPanel
                 undo={undo}
@@ -400,7 +424,135 @@ export default function AppCanvas() {
                 />
             ) : null}
 
-            <Canvas handleMouseMove={handleMouseMove} handleMouseDown={handleMouseDown} handleMouseUp={handleMouseUp} />
+            <canvas
+                id="canvas"
+                className="absolute w-full h-full top-0 left-0 bg-white/20"
+                width={window.innerWidth}
+                height={window.innerHeight}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                ref={setNodeRef}
+                style={{ position: "absolute", zIndex: 2 }}
+            />
+            <div
+                id="canvas-viewport"
+                className="absolute top-0 left-0 w-full h-full"
+                style={{
+                    transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
+                    transformOrigin: "top left",
+                    zIndex: 1,
+                }}
+            >
+                {elements.map((element) => {
+                    if (element.parentId !== "root") return null;
+                    return <CanvasElementWrapper key={element.id} element={element} />;
+                })}
+            </div>
+        </div>
+    );
+}
+
+function CanvasElementWrapper({
+    element,
+}: {
+    element: ProjectElementInstance;
+}) {
+    const { attributes, listeners, isDragging, setNodeRef: setDragRef } = useDraggable({
+        id: element.id + "-drag-handler",
+        data: {
+            type: element.type,
+            elementId: element.id,
+            isCanvasElement: true,
+        },
+    });
+    const selectedElements = useProjectStore((state) => state.selectedElements)
+    const updateElement = useProjectStore((state) => state.updateElement)
+    const updateSelectedElements = useProjectStore((state) => state.updateSelectedElements)
+
+    const [isResizing, setIsResizing] = useState(false)
+    type Position = {
+        x: number | null;
+        y: number | null;
+    }
+    const [startPos, setStartPos] = useState<Position>({ x: null, y: null })
+    const { setNodeRef: setSelectRef, isSelected } = useSelectable({ value: element });
+    const style: React.CSSProperties = {
+        position: "absolute",
+        left: element.position.x,
+        top: element.position.y,
+        visibility: isDragging ? "hidden" : undefined,
+        width: element.size.width,
+        height: element.size.height,
+        cursor: isSelected ? "move" : "default",
+        border: isSelected ? '1px solid #1677ff' : undefined,
+        zIndex: 5
+    };
+    const resizeHandle = useRef<HTMLDivElement>(null)
+
+    // useEffect(() => {
+    //     const handleMouseMove = (e: MouseEvent) => {
+    //         const newWidth = element.size.width + e.clientX - startPos.x!
+    //         const newHeight = element.size.height + e.clientY - startPos.y!
+    //         updateElement(element.id, {
+    //             ...element,
+    //             size: {
+    //                 width: newWidth,
+    //                 height: newHeight
+    //             }
+    //         })
+    //     }
+    //     const handleMouseUp = () => {
+    //         setIsResizing(false)
+    //     }
+    //     if (isResizing) {
+    //         window.addEventListener('mousemove', handleMouseMove)
+    //         window.addEventListener('mouseup', handleMouseUp)
+    //     }
+    //     return () => {
+    //         window.removeEventListener('mousemove', handleMouseMove)
+    //         window.removeEventListener('mouseup', handleMouseUp)
+    //     }
+    // }, [isResizing, startPos]) // eslint-disable-line react-hooks/exhaustive-deps
+    const CanvasElement = useMemo(() => {
+        return ProjectElements[element.type].canvasComponent;
+    }, [element]);
+    // useResize(element,startPos)
+
+    return (
+        <div style={style} ref={(ref) => {
+            setDragRef(ref);
+            setSelectRef(ref);
+        }}
+        >
+            <div onMouseDown={(e) => {
+                if (e.ctrlKey) {
+                    updateSelectedElements([element])
+                } else {            // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
+                    if (selectedElements.length == 1) {
+                        updateSelectedElements([element])
+                    }
+                }
+            }} className="relative">
+                <div {...listeners} {...attributes}>
+                    <CanvasElement elementInstance={element} />
+                </div>
+                <div className="absolute"
+                    ref={resizeHandle}
+                    onMouseDown={(e) => {
+                        setIsResizing(true)
+                        setStartPos({ x: e.clientX, y: e.clientY })
+                    }}
+                    style={{
+                        bottom: -10,
+                        right: -10,
+                        width: '10px',
+                        height: '10px',
+                        backgroundColor: 'grey',
+                        cursor: 'nwse-resize'
+                    }}
+                ></div>
+            </div>
         </div>
     );
 }

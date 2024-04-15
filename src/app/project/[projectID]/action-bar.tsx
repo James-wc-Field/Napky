@@ -3,6 +3,7 @@ import { Tools, ToolsType } from "./NinjaSketchTypes";
 import { LuPencil } from "react-icons/lu";
 import { FiMinus, FiMousePointer, FiSquare } from "react-icons/fi";
 import { IoHandRightOutline, IoText } from "react-icons/io5";
+import { Card } from "@/components/ui/card";
 
 type ActionBarProps = {
   tool: ToolsType;
@@ -11,7 +12,9 @@ type ActionBarProps = {
 
 export function ActionBar({ tool, setTool }: ActionBarProps) {
   return (
-    <div className="actionBar">
+    <Card
+      className="absolute top-4 left-80 flex flex-row p-2 gap-2"
+      style={{ zIndex: 5 }}>
       {Object.values(Tools).map((t, index) => (
         <div
           className={`inputWrapper ${tool === t ? "selected" : ""}`}
@@ -35,6 +38,6 @@ export function ActionBar({ tool, setTool }: ActionBarProps) {
           <span>{index + 1}</span>
         </div>
       ))}
-    </div>
+    </Card>
   );
 }
