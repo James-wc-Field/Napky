@@ -439,8 +439,7 @@ export default function AppCanvas() {
                 id="canvas-viewport"
                 className="absolute top-0 left-0 w-full h-full"
                 style={{
-                    transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
-                    transformOrigin: "top left",
+                    transform: `scale(${zoomLevel})`,
                     zIndex: 1,
                 }}
             >
