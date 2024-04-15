@@ -62,6 +62,7 @@ const updateZoomLevel = (zoomLevel: number, zoomIn: boolean, multiplier: number)
 }
 
 
+
 const updateSelectedElements = (elements: ProjectElementInstance[], selectedElements: ProjectElementInstance[]) => {
     return elements.map((el) => selectedElements.find((sel) => sel.id === el.id) ? { ...el, selected: true } : { ...el, selected: false })
 }
@@ -172,8 +173,8 @@ export const createProjectStore = (
         updateZoomLevel(zoomin, multiplier) {
             set((state) => ({ zoomLevel: updateZoomLevel(state.zoomLevel, zoomin, multiplier) }))
         },
-        updateScrollLeft: (scrollLeft: number) => set((state) => ({ scrollLeft: state.scrollLeft - scrollLeft })),
-        updateScrollTop: (scrollTop: number) => set((state) => ({ scrollTop: state.scrollTop - scrollTop })),
+        updateScrollLeft: (scrollLeft: number) => set((state) => ({ scrollLeft: state.scrollLeft + scrollLeft })),
+        updateScrollTop: (scrollTop: number) => set((state) => ({ scrollTop: state.scrollTop + scrollTop })),
         addElement: (element: ProjectElementInstance) => set((state) => ({
             elements: [...state.elements, element]
         })),
