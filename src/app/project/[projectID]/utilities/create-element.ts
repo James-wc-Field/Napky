@@ -1,5 +1,5 @@
 import rough from "roughjs";
-import { Tools, ElementType, ToolsType } from "../NinjaSketchTypes";
+import { Tools, CanvasElementType, ToolsType } from "../types/NinjaSketchTypes";
 
 export const createElement = (
   id: number,
@@ -8,7 +8,7 @@ export const createElement = (
   x2: number,
   y2: number,
   type: ToolsType
-): ElementType => {
+): CanvasElementType => {
   const generator = rough.generator();
 
   switch (type) {

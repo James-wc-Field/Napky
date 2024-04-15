@@ -1,6 +1,6 @@
-import { ElementType, Tools } from "../NinjaSketchTypes";
+import { CanvasElementType, Tools } from "../types/NinjaSketchTypes";
 
-export const adjustElementCoordinates = (element: ElementType) => {
+export const adjustElementCoordinates = (element: CanvasElementType) => {
   const { type, x1, y1, x2, y2 } = element;
 
   if (type === Tools.rectangle) {

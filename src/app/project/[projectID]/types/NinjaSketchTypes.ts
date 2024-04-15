@@ -1,16 +1,20 @@
-export type SelectedElementType = ElementType & {
+import { ProjectElementInstance } from "./ProjectElements";
+
+export type SelectedCanvasElementType = CanvasElementType & {
     xOffsets?: number[];
     yOffsets?: number[];
     offsetX?: number;
     offsetY?: number;
 };
 
-export interface ExtendedElementType extends ElementType {
+export interface ExtendedCanvasElementType extends CanvasElementType {
     xOffsets?: number[];
     yOffsets?: number[];
 }
 
-export type ElementType = {
+export type AllElementsType = (CanvasElementType | ProjectElementInstance);
+
+export type CanvasElementType = {
     id: number;
     x1: number;
     y1: number;
