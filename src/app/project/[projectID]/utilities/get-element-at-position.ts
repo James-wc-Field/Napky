@@ -1,10 +1,10 @@
 import { nearPoint } from ".";
-import { ElementType, PointType, Tools } from "../NinjaSketchTypes";
+import { CanvasElementType, PointType, Tools } from "../types/NinjaSketchTypes";
 
 export const getElementAtPosition = (
   x: number,
   y: number,
-  elements: ElementType[]
+  elements: CanvasElementType[]
 ) => {
   return elements
     .map((element) => ({
@@ -14,7 +14,7 @@ export const getElementAtPosition = (
     .find((element) => element.position !== null);
 };
 
-const positionWithinElement = (x: number, y: number, element: ElementType) => {
+const positionWithinElement = (x: number, y: number, element: CanvasElementType) => {
   const { type, x1, x2, y1, y2 } = element;
   switch (type) {
     case Tools.line: {

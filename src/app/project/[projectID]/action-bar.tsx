@@ -1,4 +1,4 @@
-import { Tools, ToolsType } from "./NinjaSketchTypes";
+import { Tools, ToolsType } from "./types/NinjaSketchTypes";
 
 import { LuPencil } from "react-icons/lu";
 import { FiMinus, FiMousePointer, FiSquare } from "react-icons/fi";

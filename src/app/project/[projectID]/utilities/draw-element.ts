@@ -1,12 +1,12 @@
 import getStroke from "perfect-freehand";
-import { ElementType } from "../NinjaSketchTypes";
+import { CanvasElementType } from "../types/NinjaSketchTypes";
 
 export const drawElement = (
   // TODO: add type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   roughCanvas: any,
   context: CanvasRenderingContext2D,
-  element: ElementType
+  element: CanvasElementType
 ) => {
   switch (element.type) {
     case "line":

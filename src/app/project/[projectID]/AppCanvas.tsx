@@ -13,7 +13,7 @@ import rough from "roughjs";
 import React from "react";
 import Canvas from "./Canvas";
 import { useHistory } from "./hooks/useHistory";
-import { ActionsType, ElementType, ExtendedElementType, SelectedElementType, Tools, ToolsType } from "./NinjaSketchTypes"
+import { ActionsType, CanvasElementType, ExtendedCanvasElementType, SelectedCanvasElementType, Tools, ToolsType } from "./types/NinjaSketchTypes"
 import { usePressedKeys } from "./hooks/usePressedKeys";
 import { adjustElementCoordinates, adjustmentRequired, createElement, cursorForPosition, drawElement, getElementAtPosition, resizedCoordinates } from "./utilities";
 import { ControlPanel } from "./control-panel";
@@ -40,7 +40,7 @@ export default function AppCanvas() {
             isCanvasDropArea: true,
         },
     });
-    const { canvasElements, setCanvasElements, undo, redo } = useHistory([]);
+    const { canvasElements, projectElements, setCanvasElements, undo, redo } = useHistory([]);
     const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
     const [startPanMousePosition, setStartPanMousePosition] = useState({
         x: 0,
@@ -48,7 +48,7 @@ export default function AppCanvas() {
     });
     const [action, setAction] = useState<ActionsType>("none");
     const [tool, setTool] = useState<ToolsType>(initialTool);
-    const [selectedElement, setSelectedElement] = useState<ElementType | null>();
+    const [selectedElement, setSelectedElement] = useState<CanvasElementType | null>();
     const [scale, setScale] = useState(1);
     const [scaleOffset, setScaleOffset] = useState({ x: 0, y: 0 });
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -185,7 +185,6 @@ export default function AppCanvas() {
     };
 
     const getMouseCoordinates = (event: MouseEvent) => {
-        // return { clientX: event.clientX, clientY: event.clientY };
         const clientX =
             (event.clientX - panOffset.x * scale + scaleOffset.x) / scale;
         const clientY =
@@ -199,7 +198,6 @@ export default function AppCanvas() {
         const { clientX, clientY } = getMouseCoordinates(event);
 
         if (tool === Tools.pan || event.button === 1 || pressedKeys.has(" ")) {
-            console.log("panning");
             setAction("panning");
             setStartPanMousePosition({ x: clientX, y: clientY });
             document.body.style.cursor = "grabbing";
@@ -217,7 +215,7 @@ export default function AppCanvas() {
             const element = getElementAtPosition(clientX, clientY, canvasElements);
 
             if (element) {
-                let selectedElement: SelectedElementType = { ...element };
+                let selectedElement: SelectedCanvasElementType = { ...element };
 
                 if (element.type === "pencil" && element.points) {
                     const xOffsets = element.points.map((point) => clientX - point.x);
@@ -292,7 +290,7 @@ export default function AppCanvas() {
                 "xOffsets" in selectedElement &&
                 "yOffsets" in selectedElement
             ) {
-                const extendedElement = selectedElement as ExtendedElementType;
+                const extendedElement = selectedElement as ExtendedCanvasElementType;
                 const newPoints = extendedElement.points!.map((_, index) => ({
                     x: clientX - extendedElement.xOffsets![index],
                     y: clientY - extendedElement.yOffsets![index],
@@ -305,7 +303,7 @@ export default function AppCanvas() {
                 setCanvasElements(elementsCopy, true);
             } else {
                 const { id, x1, x2, y1, y2, type, offsetX, offsetY } =
-                    selectedElement as ExtendedElementType;
+                    selectedElement as ExtendedCanvasElementType;
                 const safeOffsetX = offsetX ?? 0;
                 const safeOffsetY = offsetY ?? 0;
                 const newX1 = clientX - safeOffsetX;
@@ -325,7 +323,7 @@ export default function AppCanvas() {
             selectedElement.position
         ) {
             const { id, type, position, ...coordinates } =
-                selectedElement as ExtendedElementType;
+                selectedElement as ExtendedCanvasElementType;
 
             if (typeof position === "string") {
                 const { x1, y1, x2, y2 } = resizedCoordinates(
