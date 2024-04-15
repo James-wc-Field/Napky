@@ -50,6 +50,31 @@ export default function Page() {
     return () => clearInterval(interval);
   }, [toast, isDialogOpen]);
 
+  // TODO: Remove the following code for production
+  // For debugging, send toast upon keypress of '\'
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === "\\") {
+        toast({
+          title: "How are we doing?",
+          variant: "default",
+          description: "Please take a moment to provide feedback on our site.",
+          duration: 120000, // Go away after 2 minutes
+          action: (
+            <ToastAction altText="Give Feedback" asChild>
+              <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
+                Give Feedback
+              </Button>
+            </ToastAction>
+          ),
+        });
+      }
+    };
+
+    window.addEventListener("keypress", handleKeyPress);
+    return () => window.removeEventListener("keypress", handleKeyPress);
+  }, [toast]);
+
   const form = useForm<FeedbackInput>({
     defaultValues: {
       feedback: "",
