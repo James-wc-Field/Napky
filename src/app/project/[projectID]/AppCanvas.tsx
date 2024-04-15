@@ -24,6 +24,7 @@ import { ProjectElementInstance, ProjectElements } from "./types/ProjectElements
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { useProjectStore } from "./storeProvider";
 import { useSelectable } from "react-selectable-box";
+import CanvasBackground from "./CanvasBackground";
 
 export default function AppCanvas() {
     const initialTool: ToolsType = Tools.selection;
@@ -115,6 +116,8 @@ export default function AppCanvas() {
                     x: prevState.x - event.deltaX,
                     y: prevState.y - event.deltaY,
                 }));
+                updateScrollLeft(event.deltaX);
+                updateScrollTop(event.deltaY);
             }
         };
 
@@ -182,6 +185,7 @@ export default function AppCanvas() {
     };
 
     const getMouseCoordinates = (event: MouseEvent) => {
+        // return { clientX: event.clientX, clientY: event.clientY };
         const clientX =
             (event.clientX - panOffset.x * scale + scaleOffset.x) / scale;
         const clientY =
@@ -260,8 +264,8 @@ export default function AppCanvas() {
                 x: panOffset.x + deltaX,
                 y: panOffset.y + deltaY,
             });
-            updateScrollLeft(panOffset.x + deltaX);
-            updateScrollTop(panOffset.y + deltaY);
+            updateScrollLeft(deltaX);
+            updateScrollTop(deltaY);
             return;
         }
 
@@ -393,8 +397,10 @@ export default function AppCanvas() {
         if (zoomIn) setScale((prevState) => Math.min(Math.max(prevState * delta, 0.05), 5));
         else setScale((prevState) => Math.max(prevState / delta, 0.05));
     };
+    const canvasRef = useRef<HTMLDivElement>(null);
     return (
-        <div>
+        <div ref={canvasRef}
+            className="bg-white/20 absolute top-0 left-0 w-full h-full">
             <CanvasControls />
             <CanvasToolbar />
             <ActionBar tool={tool} setTool={setTool} />
@@ -426,21 +432,20 @@ export default function AppCanvas() {
 
             <canvas
                 id="canvas"
-                className="absolute w-full h-full top-0 left-0 bg-white/20"
-                width={window.innerWidth}
-                height={window.innerHeight}
+                width={canvasRef.current?.clientWidth}
+                height={canvasRef.current?.clientHeight}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
                 ref={setNodeRef}
-                style={{ position: "absolute", zIndex: 2 }}
+                style={{ position: "absolute", zIndex: 4 }}
             />
             <div
                 id="canvas-viewport"
                 className="absolute top-0 left-0 w-full h-full"
                 style={{
-                    transform: `scale(${zoomLevel})`,
-                    zIndex: 1,
+                    transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
+                    zIndex: 3,
                 }}
             >
                 {elements.map((element) => {
@@ -448,6 +453,7 @@ export default function AppCanvas() {
                     return <CanvasElementWrapper key={element.id} element={element} />;
                 })}
             </div>
+            <CanvasBackground />
         </div>
     );
 }
