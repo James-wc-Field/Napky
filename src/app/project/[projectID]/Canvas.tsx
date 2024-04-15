@@ -31,7 +31,6 @@ export default function Canvas() {
     },
   });
 
-  console.log(elements)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
       if (e.key === "a" && e.ctrlKey) {
@@ -89,10 +88,6 @@ export default function Canvas() {
   };
 
   const canvasRef = useRef<HTMLDivElement>(null);
-  // const curr = useMemo(() => {
-  //   return canvasRef.current
-  // }, [canvasRef])
-  // useWindowResize(curr)
 
   return (
     <>
