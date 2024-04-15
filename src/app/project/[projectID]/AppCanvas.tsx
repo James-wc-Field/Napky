@@ -11,11 +11,12 @@ import rough from "roughjs";
 
 import React from "react";
 import Canvas from "./Canvas";
-import { useHistory } from "./NinjaSketch/hooks/useHistory";
-import { ActionsType, ElementType, ExtendedElementType, SelectedElementType, Tools, ToolsType } from "./NinjaSketch/types";
-import { usePressedKeys } from "./NinjaSketch/hooks/usePressedKeys";
-import { adjustElementCoordinates, adjustmentRequired, createElement, cursorForPosition, drawElement, getElementAtPosition, resizedCoordinates } from "./NinjaSketch/utilities";
-import { ActionBar, ControlPanel } from "./NinjaSketch/components";
+import { useHistory } from "./hooks/useHistory";
+import { ActionsType, ElementType, ExtendedElementType, SelectedElementType, Tools, ToolsType } from "./NinjaSketchTypes"
+import { usePressedKeys } from "./hooks/usePressedKeys";
+import { adjustElementCoordinates, adjustmentRequired, createElement, cursorForPosition, drawElement, getElementAtPosition, resizedCoordinates } from "./utilities";
+import { ControlPanel } from "./control-panel";
+import { ActionBar } from "./action-bar";
 
 export default function AppCanvas() {
     const initialTool: ToolsType = Tools.selection;

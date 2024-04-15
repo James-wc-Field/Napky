@@ -1,5 +1,5 @@
 import { nearPoint } from ".";
-import { ElementType, PointType, Tools } from "../types";
+import { ElementType, PointType, Tools } from "../NinjaSketchTypes";
 
 export const getElementAtPosition = (
   x: number,
