@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ElementType } from "../NinjaSketch/types";
+import { ElementType } from "../NinjaSketchTypes";
 
 export const useHistory = (initialState: ElementType[]) => {
   const [index, setIndex] = useState(0);
@@ -27,8 +27,8 @@ export const useHistory = (initialState: ElementType[]) => {
     index < history.length - 1 && setIndex((prevState) => prevState + 1);
 
   return {
-    elements: history[index],
-    setElements: setState,
+    canvasElements: history[index],
+    setCanvasElements: setState,
     undo,
     redo,
   };

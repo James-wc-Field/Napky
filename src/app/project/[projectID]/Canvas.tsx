@@ -60,25 +60,25 @@ export default function Canvas({ handleMouseDown, handleMouseMove, handleMouseUp
     }
   };
 
-  // const handleMouseMove = useCallback((e: MouseEvent) => {
-  //   if (middleMouseIsDown) {
-  //     selectableRef?.current?.cancel();
-  //     updateScrollLeft(-e.movementX);
-  //     updateScrollTop(-e.movementY);
-  //   }
-  // }, [selectableRef, updateScrollLeft, updateScrollTop, middleMouseIsDown])
-  // const handleMouseUp = useCallback(() => {
-  //   setMiddleMouseIsDown(false);
-  // }, [])
-  // useEffect(() => {
-  //   document.addEventListener("mousemove", handleMouseMove);
-  //   document.addEventListener("mouseup", handleMouseUp);
-  //   return () => {
-  //     // Cleanup event listeners when component unmounts
-  //     document.removeEventListener("mousemove", handleMouseMove);
-  //     document.removeEventListener("mouseup", handleMouseUp);
-  //   };
-  // }, [handleMouseMove, handleMouseUp]);
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (middleMouseIsDown) {
+      selectableRef?.current?.cancel();
+      updateScrollLeft(-e.movementX);
+      updateScrollTop(-e.movementY);
+    }
+  }, [selectableRef, updateScrollLeft, updateScrollTop, middleMouseIsDown])
+  const handleMouseUp = useCallback(() => {
+    setMiddleMouseIsDown(false);
+  }, [])
+  useEffect(() => {
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      // Cleanup event listeners when component unmounts
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [handleMouseMove, handleMouseUp]);
 
   const handleScroll = (e: React.WheelEvent) => {
     const { deltaX, deltaY } = e;
@@ -97,54 +97,54 @@ export default function Canvas({ handleMouseDown, handleMouseMove, handleMouseUp
 
   return (
     <>
-      <Selectable ref={selectableRef} value={selectedElements()} onStart={(e) => {
+      {/* <Selectable ref={selectableRef} value={selectedElements()} onStart={(e) => {
         if ((e.target as HTMLElement).id !== "canvas-pane-droppable" && (e.target as HTMLElement).id !== "canvas-viewport") {
           selectableRef.current?.cancel();
         }
       }}
         onEnd={(value) => {
           updateSelectedElements(value as ProjectElementInstance[])
-        }}>
+        }}> */}
+      <div
+        id="canvas-renderer"
+        className="absolute w-full h-full top-0 left-0"
+        style={{ zIndex: 4 }}
+        onWheel={handleScroll}
+        onMouseDown={handleMiddleDown}
+        ref={canvasRef}
+      >
         <div
-          id="canvas-renderer"
-          className="absolute w-full h-full top-0 left-0"
-          style={{ zIndex: 4 }}
-          onWheel={handleScroll}
-          onMouseDown={handleMiddleDown}
-          ref={canvasRef}
+          id="canvas-pane-droppable"
+          className="absolute w-full h-full top-0 left-0 bg-white/20"
+          style={{ zIndex: 1 }}
+          ref={setNodeRef}
         >
           <div
-            id="canvas-pane-droppable"
-            className="absolute w-full h-full top-0 left-0 bg-white/20"
-            style={{ zIndex: 1 }}
-            ref={setNodeRef}
+            id="canvas-viewport"
+            className="absolute top-0 left-0 w-full h-full"
+            style={{
+              transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
+              transformOrigin: "top left",
+              zIndex: 2,
+            }}
           >
-            <div
-              id="canvas-viewport"
-              className="absolute top-0 left-0 w-full h-full"
-              style={{
-                transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
-                transformOrigin: "top left",
-                zIndex: 2,
-              }}
-            >
-              <canvas
-                id="canvas"
-                width={window.innerWidth}
-                height={window.innerHeight}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                style={{ position: "absolute", zIndex: 1 }}
-              />
-              {elements.map((element) => {
-                if (element.parentId !== "root") return null;
-                return <CanvasElementWrapper key={element.id} element={element} />;
-              })}
-            </div>
+            <canvas
+              id="canvas"
+              width={canvasRef.current?.clientWidth}
+              height={canvasRef.current?.clientHeight}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              style={{ position: "absolute", zIndex: 1 }}
+            />
+            {elements.map((element) => {
+              if (element.parentId !== "root") return null;
+              return <CanvasElementWrapper key={element.id} element={element} />;
+            })}
           </div>
         </div>
-      </Selectable>
+      </div>
+      {/* </Selectable > */}
       <CanvasToolbar />
       <CanvasControls />
       {/* <MiniMap /> */}

@@ -6,11 +6,12 @@ import {
   HiOutlineArrowUturnRight,
 } from "react-icons/hi2";
 import { Card } from "@/components/ui/card";
+import { useProjectStore } from "./storeProvider";
 
 type ControlPanelProps = {
   undo: () => void;
   redo: () => void;
-  onZoom: (scale: number) => void;
+  onZoom: (zoomIn: boolean, scale: number) => void;
   scale: number;
   setScale: (scale: number) => void;
 };
@@ -22,13 +23,17 @@ export function ControlPanel({
   scale,
   setScale,
 }: ControlPanelProps) {
+  const updateZoomLevel = useProjectStore((state) => state.updateZoomLevel);
   return (
     <>
       <Card
-        className="absolute top-4 left-4 flex flex-col p-2 gap-2 z-100"
-      >
+        className="absolute top-4 left-40 flex flex-row p-2 gap-2"
+        style={{ zIndex: 5 }}>
         <Tippy content="Zoom Out">
-          <button onClick={() => onZoom(-0.1)} aria-label="Zoom Out">
+          <button onClick={() => {
+            onZoom(false, 1.05)
+            updateZoomLevel(false, 1.05)
+          }} aria-label="Zoom Out">
             <PiMinus />
           </button>
         </Tippy>
@@ -43,13 +48,17 @@ export function ControlPanel({
           </button>
         </Tippy>
         <Tippy content="Zoom In">
-          <button onClick={() => onZoom(0.1)} aria-label="Zoom In">
+          <button onClick={() => {
+            onZoom(true, 1.05)
+            updateZoomLevel(true, 1.05)
+          }} aria-label="Zoom In">
             <PiPlus />
           </button>
         </Tippy>
       </Card >
 
-      <div className="editPanel">
+      <Card className="absolute top-4 left-120 flex flex-row p-2 gap-2"
+        style={{ zIndex: 5 }}>
         <Tippy content="Undo last action">
           <button onClick={undo} aria-label="Undo last action">
             <HiOutlineArrowUturnLeft />
@@ -60,7 +69,7 @@ export function ControlPanel({
             <HiOutlineArrowUturnRight />
           </button>
         </Tippy>
-      </div>
+      </Card>
     </>
   );
 }

@@ -13,6 +13,7 @@ export type ProjectState = {
     scrollTop: number
     elements: ProjectElementInstance[]
     key: string
+    isDrawing: boolean
 }
 
 export type ProjectActions = {
@@ -30,6 +31,8 @@ export type ProjectActions = {
     setAllElementsSelected: () => void
     deleteElement: (id: string) => void
     deleteSelectedElements: () => void
+    updateIsDrawing: (isDrawing?: boolean) => void
+
 }
 
 
@@ -44,6 +47,7 @@ export const defaultInitState: ProjectState = {
     scrollTop: 0,
     elements: [] as ProjectElementInstance[],
     key: "",
+    isDrawing: false
 }
 const updateZoomLevel = (zoomLevel: number, zoomIn: boolean, multiplier: number) => {
     const MIN_ZOOM = 0.05;
@@ -200,6 +204,10 @@ export const createProjectStore = (
         })),
         deleteSelectedElements: () => set((state) => ({
             elements: state.elements.filter((el) => !el.selected)
+        })),
+        updateIsDrawing: (isDrawing?: boolean) => set((state) => ({
+            isDrawing: isDrawing || !state.isDrawing
         }))
+
     }))
 }
