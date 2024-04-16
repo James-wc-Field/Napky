@@ -1,17 +1,19 @@
 import Canvas from "@/project/[projectID]/Canvas";
 import { useDndMonitor } from "@dnd-kit/core";
-import { ElementsType, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
+import { ElementsType, ProjectElementInstance, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
 import { useExternalDrop } from "@/project/[projectID]/hooks/useExternalDrop";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
 import AppCanvas from "./AppCanvas";
 import { useHistory } from "./hooks/useHistory";
+import { AllElementsType, CanvasElementType } from "./types/NinjaSketchTypes";
+
 export default function BuildArea() {
-  // const elements = useProjectStore((state) => state.elements);
-  const { canvasElements, projectElements, setElements, undo, redo, addElement, updateElement } = useHistory([]);
-  // const addElement = useProjectStore((state) => state.addElement);
-  // const updateElement = useProjectStore((state) => state.updateElement);
+
+  const projectElements = useProjectStore((state) => state.elements);
+  const addElement = useProjectStore((state) => state.addElement);
+  const updateElement = useProjectStore((state) => state.updateElement);
   const selectedElements = useProjectStore((state) => state.selectedElements);
   const scrollLeft = useProjectStore(useShallow((state) => state.scrollLeft));
   const scrollTop = useProjectStore(useShallow((state) => state.scrollTop));
@@ -21,8 +23,6 @@ export default function BuildArea() {
 
   useDndMonitor({
     onDragStart: (event) => {
-      console.log(projectElements)
-      console.log(canvasElements)
       // if (event.active.data?.current?.isCanvasElement) return
       // const elementId = event.active.data.current?.elementId;
       // if (!(selectedElements().find((element) => element.id == elementId))) {
@@ -285,7 +285,7 @@ export default function BuildArea() {
       onDragOver={(e) => e.preventDefault()}
       className="relative overflow-hidden z-0 w-full h-full"
     >
-      <AppCanvas canvasElements={canvasElements} undo={undo} redo={redo} projectElements={projectElements} setElements={setElements} addElement={addElement} updateElement={updateElement} />
+      <AppCanvas />
     </div>
   );
 }
