@@ -13,7 +13,7 @@ import rough from "roughjs";
 import React from "react";
 import Canvas from "./Canvas";
 import { useHistory } from "./hooks/useHistory";
-import { ActionsType, CanvasElementType, ExtendedCanvasElementType, SelectedCanvasElementType, Tools, ToolsType } from "./types/NinjaSketchTypes"
+import { ActionsType, AllElementsType, CanvasElementType, ExtendedCanvasElementType, SelectedCanvasElementType, Tools, ToolsType } from "./types/NinjaSketchTypes"
 import { usePressedKeys } from "./hooks/usePressedKeys";
 import { adjustElementCoordinates, adjustmentRequired, createElement, cursorForPosition, drawElement, getElementAtPosition, resizedCoordinates } from "./utilities";
 import { ControlPanel } from "./control-panel";
@@ -25,10 +25,18 @@ import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { useProjectStore } from "./storeProvider";
 import { useSelectable } from "react-selectable-box";
 import CanvasBackground from "./CanvasBackground";
-
-export default function AppCanvas() {
+type AppCanvasProps = {
+    canvasElements: CanvasElementType[]
+    projectElements: ProjectElementInstance[]
+    setElements: (action: AllElementsType[] | ((current: AllElementsType[]) => AllElementsType[]), overwrite?: boolean) => void
+    addElement: (element: AllElementsType) => void
+    undo: () => void
+    redo: () => void
+    updateElemen: (id: string | number, element: AllElementsType, isHistory?: boolean) => void
+}
+export default function AppCanvas({ canvasElements, projectElements, setElements, undo, redo, addElement, updateElemen }: AppCanvasProps) {
     const initialTool: ToolsType = Tools.selection;
-    const elements = useProjectStore((state) => state.elements);
+    // const elements = useProjectStore((state) => state.elements);
     const updateScrollLeft = useProjectStore((state) => state.updateScrollLeft);
     const updateScrollTop = useProjectStore((state) => state.updateScrollTop);
     const zoomLevel = useProjectStore((state) => state.zoomLevel);
@@ -40,7 +48,6 @@ export default function AppCanvas() {
             isCanvasDropArea: true,
         },
     });
-    const { canvasElements, projectElements, setCanvasElements, undo, redo } = useHistory([]);
     const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
     const [startPanMousePosition, setStartPanMousePosition] = useState({
         x: 0,
@@ -181,7 +188,7 @@ export default function AppCanvas() {
             default:
                 throw new Error(`Type not recognised: ${type}`);
         }
-        setCanvasElements(elementsCopy, true);
+        setElements(elementsCopy, true);
     };
 
     const getMouseCoordinates = (event: MouseEvent) => {
@@ -228,7 +235,7 @@ export default function AppCanvas() {
                 }
 
                 setSelectedElement(selectedElement);
-                setCanvasElements((prevState) => prevState);
+                // setElements((prevState) => prevState);
 
                 if (element.position === "inside") {
                     setAction("moving");
@@ -246,7 +253,7 @@ export default function AppCanvas() {
                 clientY,
                 tool
             );
-            setCanvasElements((prevState) => [...prevState, newElement]);
+            addElement(newElement);
             setSelectedElement(newElement);
             setAction(tool === "text" ? "writing" : "drawing");
         }
@@ -280,9 +287,11 @@ export default function AppCanvas() {
         }
 
         if (action === "drawing") {
-            const index = canvasElements.length - 1;
-            const { x1, y1 } = canvasElements[index];
-            updateElement(index, x1, y1, clientX, clientY, tool);
+            updateElemen(canvasElements.length - 1, {
+                ...canvasElements[canvasElements.length - 1],
+                x2: clientX,
+                y2: clientY,
+            }, false)
         } else if (action === "moving" && selectedElement) {
             if (
                 selectedElement.type === "pencil" &&
@@ -295,12 +304,11 @@ export default function AppCanvas() {
                     x: clientX - extendedElement.xOffsets![index],
                     y: clientY - extendedElement.yOffsets![index],
                 }));
-                const elementsCopy = [...canvasElements];
-                elementsCopy[extendedElement.id] = {
-                    ...elementsCopy[extendedElement.id],
+                updateElemen(extendedElement.id, {
+                    ...extendedElement,
                     points: newPoints,
-                };
-                setCanvasElements(elementsCopy, true);
+                })
+
             } else {
                 const { id, x1, x2, y1, y2, type, offsetX, offsetY } =
                     selectedElement as ExtendedCanvasElementType;
@@ -341,14 +349,17 @@ export default function AppCanvas() {
         const { clientX, clientY } = getMouseCoordinates(event);
 
         if (selectedElement) {
-            const index = selectedElement.id;
+            const index = selectedElement.id - 1;
+            console.log(selectedElement)
+            console.log(index)
+            console.log(canvasElements)
             const { id, type } = canvasElements[index];
             if (
                 (action === "drawing" || action === "resizing") &&
                 adjustmentRequired(type)
             ) {
                 const { x1, y1, x2, y2 } = adjustElementCoordinates(canvasElements[index]);
-                updateElement(id, x1, y1, x2, y2, type);
+                updateElement(id - 1, x1, y1, x2, y2, type);
             }
 
             const offsetX = selectedElement.offsetX || 0;
@@ -446,7 +457,7 @@ export default function AppCanvas() {
                     zIndex: 3,
                 }}
             >
-                {elements.map((element) => {
+                {projectElements.map((element) => {
                     if (element.parentId !== "root") return null;
                     return <CanvasElementWrapper key={element.id} element={element} />;
                 })}
