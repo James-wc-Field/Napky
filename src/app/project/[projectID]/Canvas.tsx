@@ -10,13 +10,9 @@ import Selectable, { SelectableRef, useSelectable } from 'react-selectable-box';
 import { useCallback } from "react";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
-type AppCanvasProps = {
-  handleMouseDown: React.MouseEventHandler<HTMLCanvasElement> | undefined;
-  handleMouseMove: React.MouseEventHandler<HTMLCanvasElement> | undefined;
-  handleMouseUp: React.MouseEventHandler<HTMLCanvasElement> | undefined;
-};
 
-export default function Canvas({ handleMouseDown, handleMouseMove, handleMouseUp }: AppCanvasProps) {
+
+export default function Canvas() {
   const updateZoomLevel = useProjectStore((state) => state.updateZoomLevel);
   const updateScrollLeft = useProjectStore((state) => state.updateScrollLeft);
   const updateScrollTop = useProjectStore((state) => state.updateScrollTop);
