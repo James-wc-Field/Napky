@@ -1,10 +1,9 @@
 import getStroke from "perfect-freehand";
 import { CanvasElementType } from "../types/NinjaSketchTypes";
+import { RoughCanvas } from "roughjs/bin/canvas";
 
 export const drawElement = (
-  // TODO: add type
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  roughCanvas: any,
+  roughCanvas: RoughCanvas,
   context: CanvasRenderingContext2D,
   element: CanvasElementType
 ) => {

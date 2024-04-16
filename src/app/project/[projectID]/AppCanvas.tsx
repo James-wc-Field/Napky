@@ -188,7 +188,8 @@ export default function AppCanvas({ canvasElements, projectElements, setElements
             default:
                 throw new Error(`Type not recognised: ${type}`);
         }
-        setElements(elementsCopy, true);
+        updateElemen(id, elementsCopy[id], false)
+        // setElements(elementsCopy, true);
     };
 
     const getMouseCoordinates = (event: MouseEvent) => {
@@ -288,11 +289,21 @@ export default function AppCanvas({ canvasElements, projectElements, setElements
         }
 
         if (action === "drawing") {
-            updateElemen(canvasElements.length - 1, {
-                ...canvasElements[canvasElements.length - 1],
-                x2: clientX,
-                y2: clientY,
-            }, false)
+            const index = canvasElements.length - 1;
+            const { x1, y1 } = canvasElements[index];
+            console.log(tool)
+            updateElement(index, x1, y1, clientX, clientY, tool);
+
+            // const existingPoints = elementsCopy[id].points || [];
+            //     elementsCopy[id].points = [...existingPoints, { x: x2, y: y2 }];
+            // setElements(elementsCopy, true);
+
+
+            // updateElemen(canvasElements.length - 1, {
+            //     ...canvasElements[canvasElements.length - 1],
+            //     x2: clientX,
+            //     y2: clientY,
+            // }, false)
         } else if (action === "moving" && selectedElement) {
             if (
                 selectedElement.type === "pencil" &&
@@ -305,10 +316,18 @@ export default function AppCanvas({ canvasElements, projectElements, setElements
                     x: clientX - extendedElement.xOffsets![index],
                     y: clientY - extendedElement.yOffsets![index],
                 }));
-                updateElemen(extendedElement.id, {
-                    ...extendedElement,
+                const elementsCopy = [...canvasElements];
+                extendedElement.points = newPoints;
+                setElements
+                elementsCopy[extendedElement.id] = {
+                    ...elementsCopy[extendedElement.id],
                     points: newPoints,
-                })
+                };
+                setElements(elementsCopy, true);
+                // updateElemen(extendedElement.id, {
+                //     ...extendedElement,
+                //     points: newPoints,
+                // })
 
             } else {
                 const { id, x1, x2, y1, y2, type, offsetX, offsetY } =
@@ -350,10 +369,7 @@ export default function AppCanvas({ canvasElements, projectElements, setElements
         const { clientX, clientY } = getMouseCoordinates(event);
 
         if (selectedElement) {
-            const index = selectedElement.id - 1;
-            console.log(selectedElement)
-            console.log(index)
-            console.log(canvasElements)
+            const index = selectedElement.id;
             const { id, type } = canvasElements[index];
             if (
                 (action === "drawing" || action === "resizing") &&
