@@ -20,7 +20,7 @@ import CanvasToolbar from "./CanvasToolbar";
 import { ProjectElementInstance, ProjectElements } from "./types/ProjectElements";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { useProjectStore } from "./storeProvider";
-import { useSelectable } from "react-selectable-box";
+import Selectable, { SelectableRef, useSelectable } from "react-selectable-box";
 import CanvasBackground from "./CanvasBackground";
 type AppCanvasProps = {
     canvasElements: CanvasElementType[]
@@ -254,8 +254,17 @@ export default function AppCanvas({ canvasElements, projectElements, setElements
         if (zoomIn) setScale((prevState) => Math.min(Math.max(prevState * delta, 0.05), 5));
         else setScale((prevState) => Math.max(prevState / delta, 0.05));
     };
+    const selectableRef = useRef<SelectableRef>(null);
     const canvasRef = useRef<HTMLDivElement>(null);
     return (
+        // <Selectable ref={selectableRef} value={selectedElements()} onStart={(e) => {
+        //     if ((e.target as HTMLElement).id !== "canvas-pane-droppable" && (e.target as HTMLElement).id !== "canvas-viewport") {
+        //         selectableRef.current?.cancel();
+        //     }
+        // }}
+        //     onEnd={(value) => {
+        //         updateSelectedElements(value as ProjectElementInstance[])
+        //     }}>
         <div ref={canvasRef}
             className="bg-white/20 absolute top-0 left-0 w-full h-full">
             <CanvasControls />
@@ -277,14 +286,14 @@ export default function AppCanvas({ canvasElements, projectElements, setElements
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
                 ref={setNodeRef}
-                style={{ position: "absolute", zIndex: 4 }}
+                style={{ position: "absolute", zIndex: 3 }}
             />
             <div
                 id="canvas-viewport"
                 className="absolute top-0 left-0 w-full h-full"
                 style={{
                     transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
-                    zIndex: 3,
+                    zIndex: 4,
                 }}
             >
                 {projectElements.map((element) => {
@@ -330,34 +339,34 @@ function CanvasElementWrapper({
         height: element.size.height,
         cursor: isSelected ? "move" : "default",
         border: isSelected ? '1px solid #1677ff' : undefined,
-        zIndex: 5
+        zIndex: 10
     };
     const resizeHandle = useRef<HTMLDivElement>(null)
 
-    // useEffect(() => {
-    //     const handleMouseMove = (e: MouseEvent) => {
-    //         const newWidth = element.size.width + e.clientX - startPos.x!
-    //         const newHeight = element.size.height + e.clientY - startPos.y!
-    //         updateElement(element.id, {
-    //             ...element,
-    //             size: {
-    //                 width: newWidth,
-    //                 height: newHeight
-    //             }
-    //         })
-    //     }
-    //     const handleMouseUp = () => {
-    //         setIsResizing(false)
-    //     }
-    //     if (isResizing) {
-    //         window.addEventListener('mousemove', handleMouseMove)
-    //         window.addEventListener('mouseup', handleMouseUp)
-    //     }
-    //     return () => {
-    //         window.removeEventListener('mousemove', handleMouseMove)
-    //         window.removeEventListener('mouseup', handleMouseUp)
-    //     }
-    // }, [isResizing, startPos]) // eslint-disable-line react-hooks/exhaustive-deps
+    useEffect(() => {
+        function handleMouseMove(e: MouseEvent) {
+            const newWidth = element.size.width + e.clientX - startPos.x!
+            const newHeight = element.size.height + e.clientY - startPos.y!
+            updateElement(element.id, {
+                ...element,
+                size: {
+                    width: newWidth,
+                    height: newHeight
+                }
+            })
+        }
+        const handleMouseUp = () => {
+            setIsResizing(false)
+        }
+        if (isResizing) {
+            window.addEventListener('mousemove', () => handleMouseMove)
+            window.addEventListener('mouseup', handleMouseUp)
+        }
+        return () => {
+            window.removeEventListener('mousemove', () => handleMouseMove)
+            window.removeEventListener('mouseup', handleMouseUp)
+        }
+    }, [isResizing, startPos]) // eslint-disable-line react-hooks/exhaustive-deps
     const CanvasElement = useMemo(() => {
         return ProjectElements[element.type].canvasComponent;
     }, [element]);

@@ -19,8 +19,8 @@ export const useHistory = (initialState: AllElementsType[]) => {
   };
 
   const addElement = (element: AllElementsType) => {
-    const updatedState = [...history].slice(0, index + 1);
-    setHistory(() => [...updatedState, [...updatedState[index], element]]);
+
+    setHistory((prev) => [...prev, [...prev[index], element]]);
     setIndex((prevState) => prevState + 1);
   }
 
@@ -28,12 +28,10 @@ export const useHistory = (initialState: AllElementsType[]) => {
     const updatedState = [...history][isHistory ? index : index - 1].map((el) => (el.id === id ? element : el));
     setHistory((historyState) => [...historyState, updatedState]);
     if (isHistory) setIndex((prevState) => prevState + 1);
-    console.log(history[index])
   };
 
 
   const undo = () => {
-    debugger;
     console.log(history[index - 1])
     return index > 0 && setIndex((prevState) => prevState - 1)
   }
