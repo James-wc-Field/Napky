@@ -235,7 +235,7 @@ export default function AppCanvas({ canvasElements, projectElements, setElements
                 }
 
                 setSelectedElement(selectedElement);
-                // setElements((prevState) => prevState);
+                setElements((prevState) => prevState);
 
                 if (element.position === "inside") {
                     setAction("moving");
@@ -253,7 +253,8 @@ export default function AppCanvas({ canvasElements, projectElements, setElements
                 clientY,
                 tool
             );
-            addElement(newElement);
+            // addElement(newElement);
+            setElements((prevState) => [...prevState, newElement]);
             setSelectedElement(newElement);
             setAction(tool === "text" ? "writing" : "drawing");
         }
