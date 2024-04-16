@@ -15,7 +15,7 @@ export interface ExtendedCanvasElementType extends CanvasElementType {
 export type AllElementsType = (CanvasElementType | ProjectElementInstance);
 
 export type CanvasElementType = {
-    id: number;
+    id: string;
     type: ToolsType;
     offsetX?: number;
     offsetY?: number;
