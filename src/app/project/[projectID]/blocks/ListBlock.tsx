@@ -21,7 +21,7 @@ const unstoredAttributes = {
   label: "List Block",
   placeholder: "Add other blocks here...",
 };
-
+// 
 export const ListBlockProjectElement: ProjectElement = {
   type,
   construct: (id: string, parentId: string) => ({
