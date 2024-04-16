@@ -6,10 +6,12 @@ import { useExternalDrop } from "@/project/[projectID]/hooks/useExternalDrop";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
 import AppCanvas from "./AppCanvas";
+import { useHistory } from "./hooks/useHistory";
 export default function BuildArea() {
-  const elements = useProjectStore((state) => state.elements);
-  const addElement = useProjectStore((state) => state.addElement);
-  const updateElement = useProjectStore((state) => state.updateElement);
+  // const elements = useProjectStore((state) => state.elements);
+  const { canvasElements, projectElements, setElements, undo, redo, addElement, updateElement } = useHistory([]);
+  // const addElement = useProjectStore((state) => state.addElement);
+  // const updateElement = useProjectStore((state) => state.updateElement);
   const selectedElements = useProjectStore((state) => state.selectedElements);
   const scrollLeft = useProjectStore(useShallow((state) => state.scrollLeft));
   const scrollTop = useProjectStore(useShallow((state) => state.scrollTop));
@@ -19,6 +21,8 @@ export default function BuildArea() {
 
   useDndMonitor({
     onDragStart: (event) => {
+      console.log(projectElements)
+      console.log(canvasElements)
       // if (event.active.data?.current?.isCanvasElement) return
       // const elementId = event.active.data.current?.elementId;
       // if (!(selectedElements().find((element) => element.id == elementId))) {
@@ -72,7 +76,7 @@ export default function BuildArea() {
       // Drag existing CanvasElement to new position
       if (isCanvasElement && isCanvasDropArea) {
         const elementId = active.data?.current?.elementId;
-        const dragged = elements.find((element) => element.id == elementId);
+        const dragged = projectElements.find((element) => element.id == elementId);
         const wasDraggedSelected = selectedElements().includes(dragged!)
         if (!dragged) return;
         if (!wasDraggedSelected) {
@@ -114,7 +118,7 @@ export default function BuildArea() {
         const diffY = canvasTop - initialTop;
 
         const elementId = active.data?.current?.elementId;
-        const dragged = elements.find((element) => element.id == elementId);
+        const dragged = projectElements.find((element) => element.id == elementId);
         if (!dragged) return;
 
         updateElement(dragged.id, {
@@ -130,7 +134,7 @@ export default function BuildArea() {
         });
 
         const listId = dragged.parentId;
-        const list = elements.find((element) => element.id == listId);
+        const list = projectElements.find((element) => element.id == listId);
         if (!list) return;
 
         const childElements = list.extraAttributes?.children;
@@ -151,11 +155,11 @@ export default function BuildArea() {
       // Drag canvas element onto list
       if (isListDroppable && isCanvasElement) {
         const elementId = active.data?.current?.elementId;
-        const dragged = elements.find((element) => element.id == elementId);
+        const dragged = projectElements.find((element) => element.id == elementId);
         if (!dragged) return;
 
         const listId = over.data?.current?.elementId;
-        const list = elements.find((element) => element.id == listId);
+        const list = projectElements.find((element) => element.id == listId);
         if (!list) return;
         else if (!over.data.current?.accepts.includes(dragged.type)) {
           updateElement(dragged.id, {
@@ -207,7 +211,7 @@ export default function BuildArea() {
         );
 
         addElement(newElement);
-        const list = elements.find((element) => element.id == listId);
+        const list = projectElements.find((element) => element.id == listId);
         if (!list || !over.data.current?.accepts.includes(type)) return;
 
         const childElements = list.extraAttributes?.children;
@@ -225,10 +229,10 @@ export default function BuildArea() {
       if (isListElement && isListDroppable) {
         const newListId = over.data?.current?.elementId;
         const elementId = active.data?.current?.elementId;
-        const dragged = elements.find((element) => element.id == elementId);
+        const dragged = projectElements.find((element) => element.id == elementId);
         if (!dragged) return;
         const parentListId = dragged.parentId;
-        const parentList = elements.find(
+        const parentList = projectElements.find(
           (element) => element.id == parentListId
         );
         if (!parentList || parentListId === newListId) return;
@@ -246,7 +250,7 @@ export default function BuildArea() {
           },
         });
 
-        const newList = elements.find((element) => element.id == newListId);
+        const newList = projectElements.find((element) => element.id == newListId);
         if (!newList || !over.data.current?.accepts.includes(dragged.type))
           return;
 
@@ -281,7 +285,7 @@ export default function BuildArea() {
       onDragOver={(e) => e.preventDefault()}
       className="relative overflow-hidden z-0 w-full h-full"
     >
-      <AppCanvas />
+      <AppCanvas canvasElements={canvasElements} undo={undo} redo={redo} projectElements={projectElements} setElements={setElements} addElement={addElement} updateElemen={updateElement} />
     </div>
   );
 }
