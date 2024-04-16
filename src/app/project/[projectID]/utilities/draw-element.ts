@@ -1,44 +1,24 @@
 import getStroke from "perfect-freehand";
 import { CanvasElementType } from "../types/NinjaSketchTypes";
-import { RoughCanvas } from "roughjs/bin/canvas";
 
 export const drawElement = (
-  roughCanvas: RoughCanvas,
   context: CanvasRenderingContext2D,
   element: CanvasElementType
 ) => {
-  switch (element.type) {
-    case "line":
-    case "rectangle":
-      roughCanvas.draw(element.roughElement);
-      break;
-    case "pencil": {
-      if (!element.points) {
-        throw new Error("Pencil element points are undefined");
-      }
-      const strokePoints = getStroke(element.points);
-      const formattedPoints: [number, number][] = strokePoints.map((point) => {
-        if (point.length !== 2) {
-          throw new Error(
-            `Expected point to have exactly 2 elements, got ${point.length}`
-          );
-        }
-        return [point[0], point[1]];
-      });
-      const stroke = getSvgPathFromStroke(formattedPoints);
-      context.fill(new Path2D(stroke));
-      break;
-    }
-    case "text": {
-      context.textBaseline = "top";
-      context.font = "24px sans-serif";
-      const text = element.text || "";
-      context.fillText(text, element.x1, element.y1);
-      break;
-    }
-    default:
-      throw new Error(`Type not recognised: ${element.type}`);
+  if (!element.points) {
+    throw new Error("Pencil element points are undefined");
   }
+  const strokePoints = getStroke(element.points);
+  const formattedPoints: [number, number][] = strokePoints.map((point) => {
+    if (point.length !== 2) {
+      throw new Error(
+        `Expected point to have exactly 2 elements, got ${point.length}`
+      );
+    }
+    return [point[0], point[1]];
+  });
+  const stroke = getSvgPathFromStroke(formattedPoints);
+  context.fill(new Path2D(stroke));
 };
 
 // 🥑 source: https://www.npmjs.com/package/perfect-freehand/v/1.0.4

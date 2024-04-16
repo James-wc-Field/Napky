@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { AllElementsType, ToolsType } from "../types/NinjaSketchTypes";
 import { CanvasElementType } from "../types/NinjaSketchTypes";
-import { ElementsType, ProjectElementInstance } from "../types/ProjectElements";
+import { ProjectElementInstance } from "../types/ProjectElements";
 
 
 export const useHistory = (initialState: AllElementsType[]) => {
@@ -9,21 +9,13 @@ export const useHistory = (initialState: AllElementsType[]) => {
   const [history, setHistory] = useState([initialState]);
 
   const setState = (
-    action: AllElementsType[] | ((current: AllElementsType[]) => AllElementsType[]),
-    overwrite = false
+    action: AllElementsType[] | ((current: AllElementsType[]) => AllElementsType[])
   ) => {
     const newState =
       typeof action === "function" ? action(history[index]) : action;
-    if (overwrite) {
-      const historyCopy = [...history];
-      historyCopy[index] = newState;
-      setHistory(historyCopy);
-    } else {
-      const updatedState = [...history].slice(0, index + 1);
-      setHistory([...updatedState, newState]);
-      // setHistory((state)=> [...state, newState]);
-      setIndex((prevState) => prevState + 1);
-    }
+    const historyCopy = [...history];
+    historyCopy[index] = newState;
+    setHistory(historyCopy);
   };
 
   const addElement = (element: AllElementsType) => {
@@ -33,18 +25,23 @@ export const useHistory = (initialState: AllElementsType[]) => {
   }
 
   const updateElement = (id: string | number, element: AllElementsType, isHistory: boolean = true) => {
-    const updatedState = [...history][index].map((el) => (el.id === id ? element : el));
+    const updatedState = [...history][isHistory ? index : index - 1].map((el) => (el.id === id ? element : el));
     setHistory((historyState) => [...historyState, updatedState]);
     if (isHistory) setIndex((prevState) => prevState + 1);
+    console.log(history[index])
   };
 
 
-  const undo = () => index > 0 && setIndex((prevState) => prevState - 1);
+  const undo = () => {
+    debugger;
+    console.log(history[index - 1])
+    return index > 0 && setIndex((prevState) => prevState - 1)
+  }
   const redo = () =>
     index < history.length - 1 && setIndex((prevState) => prevState + 1);
 
   function isCanvasElementType(element: AllElementsType): element is CanvasElementType {
-    return (element as CanvasElementType).x1 !== undefined;
+    return (element as CanvasElementType).points !== undefined;
   }
 
   function isProjectElementType(element: AllElementsType): element is ProjectElementInstance {
