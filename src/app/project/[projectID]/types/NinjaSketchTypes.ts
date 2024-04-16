@@ -32,7 +32,6 @@ export type CanvasElementType = {
 };
 
 export type ActionsType =
-    | "writing"
     | "drawing"
     | "moving"
     | "panning"
@@ -42,10 +41,7 @@ export type ActionsType =
 export const Tools = {
     pan: "pan",
     selection: "selection",
-    rectangle: "rectangle",
-    line: "line",
-    pencil: "pencil",
-    text: "text",
+    pencil: "pencil"
 };
 
 export type ToolsType = (typeof Tools)[keyof typeof Tools];
