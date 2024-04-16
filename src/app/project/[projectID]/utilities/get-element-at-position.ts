@@ -14,21 +14,14 @@ export const getElementAtPosition = (
 };
 
 const positionWithinElement = (x: number, y: number, element: CanvasElementType) => {
-  const { type, x1, x2, y1, y2 } = element;
-  switch (type) {
-    case Tools.pencil: {
-      const betweenAnyPoint = element.points!.some((point, index) => {
-        const nextPoint = element.points![index + 1];
-        if (!nextPoint) return false;
-        return (
-          onLine(point.x, point.y, nextPoint.x, nextPoint.y, x, y, 5) != null
-        );
-      });
-      return betweenAnyPoint ? "inside" : null;
-    }
-    default:
-      throw new Error(`Type not recognised: ${type}`);
-  }
+  const betweenAnyPoint = element.points!.some((point, index) => {
+    const nextPoint = element.points![index + 1];
+    if (!nextPoint) return false;
+    return (
+      onLine(point.x, point.y, nextPoint.x, nextPoint.y, x, y, 5) != null
+    );
+  });
+  return betweenAnyPoint ? "inside" : null;
 };
 
 const onLine = (

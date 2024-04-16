@@ -285,7 +285,7 @@ export default function BuildArea() {
       onDragOver={(e) => e.preventDefault()}
       className="relative overflow-hidden z-0 w-full h-full"
     >
-      <AppCanvas canvasElements={canvasElements} undo={undo} redo={redo} projectElements={projectElements} setElements={setElements} addElement={addElement} updateElemen={updateElement} />
+      <AppCanvas canvasElements={canvasElements} undo={undo} redo={redo} projectElements={projectElements} setElements={setElements} addElement={addElement} updateElement={updateElement} />
     </div>
   );
 }
