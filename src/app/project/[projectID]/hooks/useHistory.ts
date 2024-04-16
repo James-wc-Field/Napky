@@ -27,7 +27,8 @@ export const useHistory = (initialState: AllElementsType[]) => {
   };
 
   const addElement = (element: AllElementsType) => {
-    setHistory((historyState) => [...historyState, [...historyState[index], element]]);
+    const updatedState = [...history].slice(0, index + 1);
+    setHistory(() => [...updatedState, [...updatedState[index], element]]);
     setIndex((prevState) => prevState + 1);
   }
 

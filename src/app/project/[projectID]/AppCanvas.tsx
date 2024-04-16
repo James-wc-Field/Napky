@@ -58,7 +58,6 @@ export default function AppCanvas({ canvasElements, projectElements, setElements
     const [selectedElement, setSelectedElement] = useState<CanvasElementType | null>();
     const [scale, setScale] = useState(1);
     const [scaleOffset, setScaleOffset] = useState({ x: 0, y: 0 });
-    const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const pressedKeys = usePressedKeys();
 
     useLayoutEffect(() => {
@@ -82,12 +81,6 @@ export default function AppCanvas({ canvasElements, projectElements, setElements
         context.scale(scale, scale);
 
         canvasElements.forEach((element) => {
-            if (
-                action === "writing" &&
-                selectedElement &&
-                selectedElement.id === element.id
-            )
-                return;
             drawElement(roughCanvas, context, element);
         });
         context.restore();
@@ -134,63 +127,6 @@ export default function AppCanvas({ canvasElements, projectElements, setElements
         };
     }, [pressedKeys]);
 
-    useEffect(() => {
-        const textArea = textAreaRef.current;
-        if (action === "writing" && textArea && selectedElement) {
-            setTimeout(() => {
-                textArea.focus();
-                textArea.value = selectedElement.text || "";
-            }, 0);
-        }
-    }, [action, selectedElement]);
-
-    const updateElement = (
-        id: number,
-        x1: number,
-        y1: number,
-        x2: number,
-        y2: number,
-        type: ToolsType,
-        options?: { text: string }
-    ) => {
-        const elementsCopy = [...canvasElements];
-        switch (type) {
-            case Tools.line:
-            case Tools.rectangle: {
-                elementsCopy[id] = createElement(id, x1, y1, x2, y2, type);
-                break;
-            }
-            case Tools.pencil: {
-                const existingPoints = elementsCopy[id].points || [];
-                elementsCopy[id].points = [...existingPoints, { x: x2, y: y2 }];
-                break;
-            }
-            case Tools.text: {
-                const canvas = document.getElementById("canvas");
-                if (!(canvas instanceof HTMLCanvasElement)) {
-                    throw new Error("Canvas element not found");
-                }
-                const context = canvas.getContext("2d");
-                if (!context) {
-                    throw new Error("Could not get 2D context from canvas");
-                }
-                if (!options) {
-                    throw new Error("No text options provided for text tool");
-                }
-                const textWidth = context.measureText(options.text).width;
-                const textHeight = 24;
-                elementsCopy[id] = {
-                    ...createElement(id, x1, y1, x1 + textWidth, y1 + textHeight, type),
-                    text: options.text,
-                };
-                break;
-            }
-            default:
-                throw new Error(`Type not recognised: ${type}`);
-        }
-        updateElemen(id, elementsCopy[id], false)
-        // setElements(elementsCopy, true);
-    };
 
     const getMouseCoordinates = (event: MouseEvent) => {
         const clientX =
@@ -201,7 +137,6 @@ export default function AppCanvas({ canvasElements, projectElements, setElements
     };
 
     const handleMouseDown = (event: MouseEvent<HTMLCanvasElement>) => {
-        if (action === "writing") return;
 
         const { clientX, clientY } = getMouseCoordinates(event);
 
@@ -254,10 +189,10 @@ export default function AppCanvas({ canvasElements, projectElements, setElements
                 clientY,
                 tool
             );
-            // addElement(newElement);
-            setElements((prevState) => [...prevState, newElement]);
+            addElement(newElement);
+            // setElements((prevState) => [...prevState, newElement]);
             setSelectedElement(newElement);
-            setAction(tool === "text" ? "writing" : "drawing");
+            setAction(() => "drawing");
         }
     };
 
@@ -290,20 +225,11 @@ export default function AppCanvas({ canvasElements, projectElements, setElements
 
         if (action === "drawing") {
             const index = canvasElements.length - 1;
-            const { x1, y1 } = canvasElements[index];
-            console.log(tool)
-            updateElement(index, x1, y1, clientX, clientY, tool);
+            const elementsCopy = [...canvasElements];
+            const existingPoints = elementsCopy[index].points || [];
+            elementsCopy[index].points = [...existingPoints, { x: clientX, y: clientY }];
+            setElements(elementsCopy, true);
 
-            // const existingPoints = elementsCopy[id].points || [];
-            //     elementsCopy[id].points = [...existingPoints, { x: x2, y: y2 }];
-            // setElements(elementsCopy, true);
-
-
-            // updateElemen(canvasElements.length - 1, {
-            //     ...canvasElements[canvasElements.length - 1],
-            //     x2: clientX,
-            //     y2: clientY,
-            // }, false)
         } else if (action === "moving" && selectedElement) {
             if (
                 selectedElement.type === "pencil" &&
@@ -329,21 +255,6 @@ export default function AppCanvas({ canvasElements, projectElements, setElements
                 //     points: newPoints,
                 // })
 
-            } else {
-                const { id, x1, x2, y1, y2, type, offsetX, offsetY } =
-                    selectedElement as ExtendedCanvasElementType;
-                const safeOffsetX = offsetX ?? 0;
-                const safeOffsetY = offsetY ?? 0;
-                const newX1 = clientX - safeOffsetX;
-                const newY1 = clientY - safeOffsetY;
-                // 🫐 Calculate the new position for x2 and y2 based on the original size
-                const newX2 = newX1 + (x2 - x1);
-                const newY2 = newY1 + (y2 - y1);
-                const options =
-                    type === "text" && selectedElement.text
-                        ? { text: selectedElement.text }
-                        : undefined;
-                updateElement(id, newX1, newY1, newX2, newY2, type, options);
             }
         } else if (
             action === "resizing" &&
@@ -354,20 +265,21 @@ export default function AppCanvas({ canvasElements, projectElements, setElements
                 selectedElement as ExtendedCanvasElementType;
 
             if (typeof position === "string") {
-                const { x1, y1, x2, y2 } = resizedCoordinates(
+                const { x2, y2 } = resizedCoordinates(
                     clientX,
                     clientY,
                     position,
                     coordinates
                 );
-                updateElement(id, x1, y1, x2, y2, type);
+                const elementsCopy = [...canvasElements];
+                const existingPoints = elementsCopy[id].points || [];
+                elementsCopy[id].points = [...existingPoints, { x: x2, y: y2 }];
+                setElements(elementsCopy, true);
             }
         }
     };
 
-    const handleMouseUp = (event: MouseEvent<HTMLCanvasElement>) => {
-        const { clientX, clientY } = getMouseCoordinates(event);
-
+    const handleMouseUp = () => {
         if (selectedElement) {
             const index = selectedElement.id;
             const { id, type } = canvasElements[index];
@@ -375,48 +287,18 @@ export default function AppCanvas({ canvasElements, projectElements, setElements
                 (action === "drawing" || action === "resizing") &&
                 adjustmentRequired(type)
             ) {
-                const { x1, y1, x2, y2 } = adjustElementCoordinates(canvasElements[index]);
-                updateElement(id - 1, x1, y1, x2, y2, type);
-            }
-
-            const offsetX = selectedElement.offsetX || 0;
-            const offsetY = selectedElement.offsetY || 0;
-
-            if (
-                selectedElement.type === "text" &&
-                clientX - offsetX === selectedElement.x1 &&
-                clientY - offsetY === selectedElement.y1
-            ) {
-                setAction("writing");
-                return;
+                const { x2, y2 } = adjustElementCoordinates(canvasElements[index]);
+                const elementsCopy = [...canvasElements];
+                const existingPoints = elementsCopy[id - 1].points || [];
+                elementsCopy[id - 1].points = [...existingPoints, { x: x2, y: y2 }];
+                setElements(elementsCopy, true);
             }
         }
-
-        if (action === "writing") {
-            return;
-        }
-
         if (action === "panning") {
             document.body.style.cursor = "default";
         }
-
         setAction("none");
         setSelectedElement(null);
-    };
-
-    const handleBlur = (event: React.FocusEvent<HTMLTextAreaElement>) => {
-        if (selectedElement) {
-            const { id, x1, y1, type } = selectedElement;
-
-            const x2 = selectedElement.x2 || x1;
-            const y2 = selectedElement.y2 || y1;
-
-            setAction("none");
-            setSelectedElement(null);
-            updateElement(id, x1, y1, x2, y2, type, { text: event.target.value });
-        } else {
-            console.error("No element selected when handleBlur was called");
-        }
     };
 
     const onZoom = (zoomIn: boolean, delta: number) => {
@@ -437,24 +319,6 @@ export default function AppCanvas({ canvasElements, projectElements, setElements
                 scale={scale}
                 setScale={setScale}
             />
-            {action === "writing" ? (
-                <textarea
-                    ref={textAreaRef}
-                    onBlur={handleBlur}
-                    className="textArea"
-                    style={{
-                        top: selectedElement
-                            ? (selectedElement.y1 - 2) * scale +
-                            panOffset.y * scale -
-                            scaleOffset.y
-                            : 0,
-                        left: selectedElement
-                            ? selectedElement.x1 * scale + panOffset.x * scale - scaleOffset.x
-                            : 0,
-                        font: `${24 * scale}px sans-serif`,
-                    }}
-                />
-            ) : null}
 
             <canvas
                 id="canvas"

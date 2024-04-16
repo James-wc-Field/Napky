@@ -31,10 +31,7 @@ export function ActionBar({ tool, setTool }: ActionBarProps) {
           <label htmlFor={t}>{t}</label>
           {t === "pan" && <IoHandRightOutline />}
           {t === "selection" && <FiMousePointer />}
-          {t === "rectangle" && <FiSquare />}
-          {t === "line" && <FiMinus />}
           {t === "pencil" && <LuPencil />}
-          {t === "text" && <IoText />}
           <span>{index + 1}</span>
         </div>
       ))}
