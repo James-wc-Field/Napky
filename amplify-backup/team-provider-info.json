@@ -1,0 +1,33 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-napky-dev-103823-authRole",
+      "UnauthRoleArn": "arn:aws:iam::533267380325:role/amplify-napky-dev-103823-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::533267380325:role/amplify-napky-dev-103823-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-napky-dev-103823-deployment",
+      "UnauthRoleName": "amplify-napky-dev-103823-unauthRole",
+      "StackName": "amplify-napky-dev-103823",
+      "StackId": "arn:aws:cloudformation:us-east-2:533267380325:stack/amplify-napky-dev-103823/2ce90fe0-d660-11ee-a665-0a0e5817e641",
+      "AmplifyAppId": "d1f2rx89u9ycx"
+    },
+    "categories": {
+      "auth": {
+        "napkyff72303c": {}
+      },
+      "storage": {
+        "s3korkbostoragephotos": {}
+      },
+      "api": {
+        "napky": {}
+      }
+    }
+  },
+  "amplify": {
+    "categories": {
+      "auth": {
+        "napkyff72303c": {}
+      }
+    }
+  }
+}
