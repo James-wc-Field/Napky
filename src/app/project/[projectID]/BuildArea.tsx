@@ -6,14 +6,14 @@ import { useExternalDrop } from "@/project/[projectID]/hooks/useExternalDrop";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
 import AppCanvas from "./AppCanvas";
-import { useHistory } from "./hooks/useHistory";
+// import { useHistory } from "./hooks/useHistory";
 import { AllElementsType, CanvasElementType } from "./types/NinjaSketchTypes";
 
 export default function BuildArea() {
 
-  const projectElements = useProjectStore((state) => state.elements);
-  const addElement = useProjectStore((state) => state.addElement);
-  const updateElement = useProjectStore((state) => state.updateElement);
+  const projectElements = useProjectStore((state) => state.projectElements);
+  const addElement = useProjectStore((state) => state.addProjectElement);
+  const updateElement = useProjectStore((state) => state.updateProjectElement);
   const selectedElements = useProjectStore((state) => state.selectedElements);
   const scrollLeft = useProjectStore(useShallow((state) => state.scrollLeft));
   const scrollTop = useProjectStore(useShallow((state) => state.scrollTop));
@@ -285,7 +285,8 @@ export default function BuildArea() {
       onDragOver={(e) => e.preventDefault()}
       className="relative overflow-hidden z-0 w-full h-full"
     >
-      <AppCanvas />
+      {/* <AppCanvas /> */}
+      <Canvas />
     </div>
   );
 }

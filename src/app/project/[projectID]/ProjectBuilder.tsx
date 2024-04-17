@@ -25,7 +25,7 @@ import { Button } from "@/components/ui/button";
 import { useProjectStore } from "./storeProvider";
 import { shallow } from "zustand/shallow";
 export default function ProjectBuilder() {
-  const elements = useProjectStore((state) => state.elements);
+  const projectElements = useProjectStore((state) => state.projectElements);
   const updateProjectName = useProjectStore((state) => state.updateProjectName);
   const projectName = useProjectStore((state) => state.projectName);
   const projectId = useProjectStore((state) => state.projectId);
@@ -60,7 +60,7 @@ export default function ProjectBuilder() {
           </span>
           <Button
             className="gap-1"
-            onClick={() => saveProject(projectId, projectName, elements)}
+            onClick={() => saveProject(projectId, projectName, projectElements)}
           >
             <Save className="h-5 w-6" />
           </Button>

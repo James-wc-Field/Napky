@@ -3,6 +3,7 @@ import { Project } from '@src/API'
 import { createStore } from 'zustand/vanilla'
 import { ProjectElementInstance } from './types/ProjectElements'
 import { getProjectData } from './api'
+import { CanvasElementType } from './types/NinjaSketchTypes'
 
 export type ProjectState = {
     projectId: string
@@ -11,9 +12,10 @@ export type ProjectState = {
     zoomLevel: number
     scrollLeft: number
     scrollTop: number
-    elements: ProjectElementInstance[]
+    projectElements: ProjectElementInstance[]
     key: string
     isDrawing: boolean
+    canvasElements: CanvasElementType[]
 }
 
 export type ProjectActions = {
@@ -22,8 +24,8 @@ export type ProjectActions = {
     updateZoomLevel: (zoomin: boolean, multiplier: number) => void
     updateScrollLeft: (scrollLeft: number) => void
     updateScrollTop: (scrollTop: number) => void
-    addElement: (element: ProjectElementInstance) => void
-    updateElement: (id: string, element: ProjectElementInstance) => void
+    addProjectElement: (element: ProjectElementInstance) => void
+    updateProjectElement: (id: string, element: ProjectElementInstance) => void
     selectedElements: () => ProjectElementInstance[]
     updateSelectedElements: (selectedElements: ProjectElementInstance[]) => void
     removeSelectedElements: () => void
@@ -32,6 +34,9 @@ export type ProjectActions = {
     deleteElement: (id: string) => void
     deleteSelectedElements: () => void
     updateIsDrawing: (isDrawing?: boolean) => void
+    addCanvasElement(element: CanvasElementType): void
+    updateCanvasPoints: (id: string, element: CanvasElementType) => void
+    // updateCanvasPoints: (points: { x: number, y: number }) => void
 
 }
 
@@ -45,7 +50,8 @@ export const defaultInitState: ProjectState = {
     zoomLevel: 1,
     scrollLeft: 0,
     scrollTop: 0,
-    elements: [] as ProjectElementInstance[],
+    projectElements: [] as ProjectElementInstance[],
+    canvasElements: [] as CanvasElementType[],
     key: "",
     isDrawing: false
 }
@@ -167,7 +173,7 @@ export const createProjectStore = (
         fetch: async (projectId: string) => {
             const project = await getProjectData(projectId)
             if (!project) return
-            set({ projectId, projectName: project.name, projectDescription: project.description ?? "", elements: JSON.parse(project.content ?? "[]") })
+            set({ projectId, projectName: project.name, projectDescription: project.description ?? "", projectElements: JSON.parse(project.content ?? "[]") })
         },
         updateProjectName: (name: string) => set({ projectName: name }),
         updateZoomLevel(zoomin, multiplier) {
@@ -175,39 +181,46 @@ export const createProjectStore = (
         },
         updateScrollLeft: (scrollLeft: number) => set((state) => ({ scrollLeft: state.scrollLeft + scrollLeft })),
         updateScrollTop: (scrollTop: number) => set((state) => ({ scrollTop: state.scrollTop + scrollTop })),
-        addElement: (element: ProjectElementInstance) => set((state) => ({
-            elements: [...state.elements, element]
+        addProjectElement: (element: ProjectElementInstance) => set((state) => ({
+            projectElements: [...state.projectElements, element]
         })),
-        updateElement: (id: string, element: ProjectElementInstance) => set((state) => ({
-            elements: state.elements.map((el) => el.id === id ? element : el)
+        updateProjectElement: (id: string, element: ProjectElementInstance) => set((state) => ({
+            projectElements: state.projectElements.map((el) => el.id === id ? element : el)
         })),
         selectedElements: () => {
-            return get().elements.filter((el) => el.selected)
+            return get().projectElements.filter((el) => el.selected)
         },
         updateSelectedElements: (selectedElements: ProjectElementInstance[]) => {
             set((state) => ({
                 ...state,
-                elements: updateSelectedElements(state.elements, selectedElements)
+                elements: updateSelectedElements(state.projectElements, selectedElements)
             }))
         },
         removeSelectedElements: () => set((state) => ({
             ...state,
-            elements: state.elements.map((el) => el.selected ? { ...el, selected: false } : el)
+            elements: state.projectElements.map((el) => el.selected ? { ...el, selected: false } : el)
         })),
         updateKey: (key: string) => set({
             key
         }),
         setAllElementsSelected: () => set((state) => ({
-            elements: state.elements.map((el) => ({ ...el, selected: true }))
+            projectElements: state.projectElements.map((el) => ({ ...el, selected: true }))
         })),
         deleteElement: (id: string) => set((state) => ({
-            elements: state.elements.filter((el) => el.id !== id)
+            projectElements: state.projectElements.filter((el) => el.id !== id)
         })),
         deleteSelectedElements: () => set((state) => ({
-            elements: state.elements.filter((el) => !el.selected)
+            projectElements: state.projectElements.filter((el) => !el.selected)
         })),
         updateIsDrawing: (isDrawing?: boolean) => set((state) => ({
             isDrawing: isDrawing || !state.isDrawing
+        })),
+        addCanvasElement: (element: CanvasElementType) => set((state) => ({
+            canvasElements: [...state.canvasElements, element]
+        })),
+        updateCanvasPoints: (id: string, element: CanvasElementType) => set((state) => ({
+            canvasElements: state.canvasElements.map((el) => el.id === id ? element : el)
+            // canvasElements: [...state.canvasElements, { ...state.canvasElements[state.canvasElements.length - 1], points: [...state.canvasElements[state.canvasElements.length - 1].points ?? [], points] }]
         }))
 
     }))

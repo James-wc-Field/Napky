@@ -1,5 +1,5 @@
 'use client'
-import { ReactNode, use, useEffect, useMemo, useRef, useState } from "react";
+import { ReactNode, use, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { ProjectElementInstance, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
 // import MiniMap from "@/project/[projectID]/MiniMap";
@@ -10,29 +10,58 @@ import Selectable, { SelectableRef, useSelectable } from 'react-selectable-box';
 import { useCallback } from "react";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
+import { ControlPanel } from "./control-panel";
+import { drawElement } from "./utilities";
+import { idGenerator } from "@/lib/idGenerator";
 
 
 export default function Canvas() {
   const updateZoomLevel = useProjectStore((state) => state.updateZoomLevel);
   const updateScrollLeft = useProjectStore((state) => state.updateScrollLeft);
   const updateScrollTop = useProjectStore((state) => state.updateScrollTop);
-  const elements = useProjectStore((state) => state.elements);
-  const selectedElements = useProjectStore((state) => state.selectedElements);
-  const updateSelectedElements = useProjectStore((state) => state.updateSelectedElements);
+  const projectElements = useProjectStore((state) => state.projectElements);
   const scrollLeft = useProjectStore((state) => state.scrollLeft);
   const scrollTop = useProjectStore((state) => state.scrollTop);
   const zoomLevel = useProjectStore((state) => state.zoomLevel);
   const setAllElementsSelected = useProjectStore((state) => state.setAllElementsSelected);
   const deleteSelectedElements = useProjectStore((state) => state.deleteSelectedElements);
+  const canvasElements = useProjectStore((state) => state.canvasElements);
+  const addCanvasElement = useProjectStore((state) => state.addCanvasElement);
+  const updateCanvasPoints = useProjectStore((state) => state.updateCanvasPoints);
   const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false)
+  const [isDrawing, setIsDrawing] = useState(false);
   const selectableRef = useRef<SelectableRef>(null);
+  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
+  const [scale, setScale] = useState(1);
+
   const { setNodeRef } = useDroppable({
     id: "canvas-droppable",
     data: {
       isCanvasDropArea: true,
     },
   });
+  useLayoutEffect(() => {
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+    const context = canvas.getContext("2d") as CanvasRenderingContext2D;
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
+    const scaledWidth = canvas.width * zoomLevel;
+    const scaledHeight = canvas.height * zoomLevel;
+    const scaleOffsetX = (scaledWidth - canvas.width) / 2;
+    const scaleOffsetY = (scaledHeight - canvas.height) / 2;
+
+    context.save();
+    context.translate(
+      scrollLeft * zoomLevel - scaleOffsetX,
+      scrollTop * zoomLevel - scaleOffsetY
+    );
+    context.scale(zoomLevel, zoomLevel);
+
+    canvasElements.forEach((element) => {
+      drawElement(context, element);
+    });
+    context.restore();
+  }, [canvasElements, zoomLevel, scrollLeft, scrollTop]);
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
       if (e.key === "a" && e.ctrlKey) {
@@ -56,11 +85,35 @@ export default function Canvas() {
     }
   };
 
+  // useEffect(() => {
+  //     const undoRedoFunction = (event: KeyboardEvent) => {
+  //         if (event.ctrlKey || event.metaKey) {
+  //             if (event.key === "z") {
+  //                 if (event.shiftKey) {
+  //                     redo();
+  //                 } else {
+  //                     undo();
+  //                 }
+  //             } else if (event.key === "y") {
+  //                 redo();
+  //             }
+  //         }
+  //     };
+  //     document.addEventListener("keydown", undoRedoFunction);
+  //     return () => {
+  //         document.removeEventListener("keydown", undoRedoFunction);
+  //     };
+  // }, [undo, redo]);
+
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (middleMouseIsDown) {
+      setPanOffset((prevState) => ({
+        x: prevState.x + e.movementX,
+        y: prevState.y + e.movementY,
+      }));
       selectableRef?.current?.cancel();
-      updateScrollLeft(-e.movementX);
-      updateScrollTop(-e.movementY);
+      updateScrollLeft(e.movementX);
+      updateScrollTop(e.movementY);
     }
   }, [selectableRef, updateScrollLeft, updateScrollTop, middleMouseIsDown])
   const handleMouseUp = useCallback(() => {
@@ -88,9 +141,35 @@ export default function Canvas() {
     updateScrollLeft(deltaX);
     updateScrollTop(deltaY);
   };
+  const handleCanvasMouseMove = (event: MouseEvent) => {
+    if (!isDrawing) return;
+    const index = canvasElements.length - 1;
+    const existingPoints = canvasElements[index].points || [];
+    const elementsCopy = [...canvasElements];
+    elementsCopy[index] = {
+      ...elementsCopy[index],
+      points: [...existingPoints, { x: event.clientX, y: event.clientY }],
+    };
+    updateCanvasPoints(elementsCopy[index].id, elementsCopy[index])
+  };
+  const handleCanvasMouseUp = () => {
+    setIsDrawing(false);
+  };
 
+  const handleMouseDown = (event: MouseEvent) => {
+    const newElement = {
+      id: idGenerator(),
+      type: "pencil",
+      points: [{ x: event.clientX, y: event.clientY }]
+    }
+    addCanvasElement(newElement)
+    setIsDrawing(true);
+  };
   const canvasRef = useRef<HTMLDivElement>(null);
-
+  const onZoom = (zoomIn: boolean, delta: number) => {
+    if (zoomIn) setScale((prevState) => Math.min(Math.max(prevState * delta, 0.05), 5));
+    else setScale((prevState) => Math.max(prevState / delta, 0.05));
+  };
   return (
     <>
       {/* <Selectable ref={selectableRef} value={selectedElements()} onStart={(e) => {
@@ -109,6 +188,19 @@ export default function Canvas() {
         onMouseDown={handleMiddleDown}
         ref={canvasRef}
       >
+        <canvas
+          id="canvas"
+          width={canvasRef.current?.clientWidth}
+          height={canvasRef.current?.clientHeight}
+          onMouseMove={(event) => handleCanvasMouseMove(event.nativeEvent)}
+          onMouseUp={handleCanvasMouseUp}
+          onWheel={handleScroll}
+          onMouseDown={(event) => {
+            handleMouseDown(event.nativeEvent)
+          }}
+          ref={setNodeRef}
+          style={{ position: "absolute", zIndex: 4 }}
+        />
         <div
           id="canvas-pane-droppable"
           className="absolute w-full h-full top-0 left-0 bg-white/20"
@@ -120,20 +212,11 @@ export default function Canvas() {
             className="absolute top-0 left-0 w-full h-full"
             style={{
               transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
-              transformOrigin: "top left",
+              transformOrigin: "center",
               zIndex: 2,
             }}
           >
-            <canvas
-              id="canvas"
-              width={canvasRef.current?.clientWidth}
-              height={canvasRef.current?.clientHeight}
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              style={{ position: "absolute", zIndex: 1 }}
-            />
-            {elements.map((element) => {
+            {projectElements.map((element) => {
               if (element.parentId !== "root") return null;
               return <CanvasElementWrapper key={element.id} element={element} />;
             })}
@@ -143,6 +226,12 @@ export default function Canvas() {
       {/* </Selectable > */}
       <CanvasToolbar />
       <CanvasControls />
+      <ControlPanel
+        undo={() => { }}
+        redo={() => { }}
+        onZoom={onZoom}
+        scale={scale}
+        setScale={setScale} />
       {/* <MiniMap /> */}
       <CanvasBackground />
     </>
@@ -162,7 +251,7 @@ function CanvasElementWrapper({
       isCanvasElement: true,
     },
   });
-  const { selectedElements, updateElement, updateSelectedElements } = useProjectStore(useShallow((state) => state));
+  const { selectedElements, updateProjectElement, updateSelectedElements } = useProjectStore(useShallow((state) => state));
   const [isResizing, setIsResizing] = useState(false)
   type Position = {
     x: number | null;
@@ -186,7 +275,7 @@ function CanvasElementWrapper({
     const handleMouseMove = (e: MouseEvent) => {
       const newWidth = element.size.width + e.clientX - startPos.x!
       const newHeight = element.size.height + e.clientY - startPos.y!
-      updateElement(element.id, {
+      updateProjectElement(element.id, {
         ...element,
         size: {
           width: newWidth,
