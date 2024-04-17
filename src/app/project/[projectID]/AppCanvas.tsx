@@ -98,16 +98,23 @@ export default function AppCanvas() {
 
 
     useEffect(() => {
+        console.log(isDrawing)
         const handleMouseMove = (event: MouseEvent) => {
+            console.log(event)
             if (!isDrawing) {
                 console.log(isDrawing)
                 return;
             }
             const index = canvasElements.length - 1;
-            updateElement(
-                index,
-                { ...canvasElements[index], points: [...canvasElements[index].points!, { x: event.clientX, y: event.clientY }] }
-            );
+            const elementsCopy = [...canvasElements];
+            const existingPoints = elementsCopy[index].points || [];
+            elementsCopy[index].points = [...existingPoints, { x: event.clientX, y: event.clientY }];
+            setElements(elementsCopy, true);
+            // const index = canvasElements.length - 1;
+            // updateElement(
+            //     index,
+            //     { ...canvasElements[index], points: [...canvasElements[index].points!, { x: event.clientX, y: event.clientY }] }
+            // );
         };
         const handleMouseUp = () => {
             setIsDrawing(false);
