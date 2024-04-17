@@ -1,5 +1,6 @@
 "use server";
 
+import { getUrl } from 'aws-amplify/storage';
 import { cookieBasedClient } from "@/lib/amplifyServerUtils";
 import { listProjects } from "@src/graphql/queries";
 import { createProject } from "@src/graphql/mutations";
@@ -18,7 +19,7 @@ export async function getAllUserProjects() {
     await cookieBasedClient.graphql({
       query: listProjects,
       variables: {
-        limit: 1000,
+        limit: 100,
         filter: {
           userId: { eq: user.userId },
         },

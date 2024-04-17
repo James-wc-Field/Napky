@@ -6,23 +6,32 @@ import {
   ProjectElement,
   ProjectElementInstance,
 } from "@/project/[projectID]/types/ProjectElements";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@ui/card";
 import { Input } from "@ui/input";
 import Image from "next/image";
 import React from "react";
-import { Skeleton } from "@/components/ui/skeleton"
-import { generateSummary, getOpenGraphTags } from "@/project/[projectID]/api"
-import Link from "next/link"
+import { Skeleton } from "@/components/ui/skeleton";
+import { generateSummary, getOpenGraphTags } from "@/project/[projectID]/api";
+import Link from "next/link";
 import { useProjectStore } from "../storeProvider";
 
 const type: ElementsType = "LinkBlock";
 const extraAttributes = {
-  label: "Link Block",
   text: "",
-  placeHolder: "Enter link URL...",
   metaTags: {} as { [property: string]: string },
   summary: [] as string[],
-  isRenderingBackup: false
+  isRenderingBackup: false,
+};
+
+const unstoredAttributes = {
+  label: "Link Block",
+  placeholder: "Enter link URL...",
 };
 
 export const LinkBlockProjectElement: ProjectElement = {
@@ -35,7 +44,15 @@ export const LinkBlockProjectElement: ProjectElement = {
     size: { width: 300, height: 75 },
     parentId,
     extraAttributes,
+    unstoredAttributes,
   }),
+
+  addUnstoredAttributes: (elementInstance) => {
+    return {
+      ...elementInstance,
+      unstoredAttributes,
+    };
+  },
 
   toolbarElement: {
     icon: LinkIcon,
@@ -48,13 +65,14 @@ export const LinkBlockProjectElement: ProjectElement = {
 
 type CustomInstance = ProjectElementInstance & {
   extraAttributes: typeof extraAttributes;
+  unstoredAttributes: typeof unstoredAttributes;
 };
 
 function confirmUrl(str: string) {
-  if (!str.startsWith('http')) {
-    str = "https://" + str
+  if (!str.startsWith("http")) {
+    str = "https://" + str;
   }
-  return str
+  return str;
 }
 function isValidUrl(str: string) {
   let url;
@@ -76,10 +94,13 @@ function CanvasComponent({
   const updateElement = useProjectStore((state) => state.updateElement);
   const key = useProjectStore((state) => state.key);
   const element = elementInstance as CustomInstance;
-  const { placeHolder, text } = element.extraAttributes;
+  const { text, metaTags, summary } = element.extraAttributes;
+  const { placeholder, label } = element.unstoredAttributes;
+
   const style = {
     maxWidth: element.size.width,
   };
+
   function handleOnTextChange(e: React.ChangeEvent<HTMLInputElement>) {
     updateElement(element.id, {
       ...element,
@@ -91,104 +112,105 @@ function CanvasComponent({
   }
 
   async function updateUrl() {
-    const url = confirmUrl(element.extraAttributes.text)
+    const url = confirmUrl(text);
     if (isValidUrl(url)) {
       updateElement(element.id, {
         ...element,
         extraAttributes: {
           ...element.extraAttributes,
-          isRenderingBackup: true
-        }
-      })
-      const metaTags = await getOpenGraphTags(url)
-      const summary = await generateSummary(url, key)
+          isRenderingBackup: true,
+        },
+      });
+      const metaTags = await getOpenGraphTags(url);
+      const summary = await generateSummary(url, key);
       updateElement(element.id, {
         ...element,
         extraAttributes: {
           ...element.extraAttributes,
           isRenderingBackup: false,
-          metaTags: metaTags,
-          summary: summary
-
-        }
+          metaTags,
+          summary,
+        },
       });
     }
   }
 
   return (
     <Card style={style} className="p-2 flex gap-1 flex-col">
-      {
-        element.extraAttributes.isRenderingBackup ? (
-          <div className="flex flex-col space-y-3">
-            <Skeleton className="h-[125px] w-[250px] rounded-xl" />
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-[250px]" />
-              <Skeleton className="h-4 w-[200px]" />
-            </div>
+      {element.extraAttributes.isRenderingBackup ? (
+        <div className="flex flex-col space-y-3">
+          <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
           </div>
-        ) : (
-          <>
-            {Object.keys(element.extraAttributes.metaTags).length !== 0 ? (
-              <CardHeader>
-                <CardTitle>{element.extraAttributes?.metaTags["og:title"] || ""}</CardTitle>
-                <div className="flex row">
-                  <LinkIcon className="text-zinc-500 h-6 w-6 mr-1" />
-                  <Link href={`//${element.extraAttributes.text}`} rel="noopener noreferrer" target="_blank"> {element.extraAttributes.text} </Link>
-                </div>
-                <div className="flex items-center">
-                  <Image src="/images/placeholder.jpg" alt={element.extraAttributes.metaTags["og:title"]} width={300} height={200}></Image>
-                  <CardDescription>{element.extraAttributes?.metaTags["og:description"] || ""}</CardDescription>
-                </div>
-                {element.extraAttributes.summary.length > 0 ? (
-                  <CardContent>
-                    <Card className="whitespace-pre-wrap">
-                      <CardHeader>
-                        <CardTitle>
-                          Summary
-                        </CardTitle>
-                        <CardDescription>
-                          {element.extraAttributes.summary[1]}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardHeader>
-                        <CardTitle>
-                          Highlights
-                        </CardTitle>
-                        <CardDescription>
-                          {element.extraAttributes.summary[2]}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardHeader>
-                        <CardTitle>
-                          Keywords
-                        </CardTitle>
-                        <CardDescription>
-                          {element.extraAttributes.summary[3]}
-                        </CardDescription>
-                      </CardHeader>
-                    </Card>
-                  </CardContent>
-                ) : (<></>)}
-              </CardHeader>
-            ) : (
-              <div className="flex items-center">
+        </div>
+      ) : (
+        <>
+          {Object.keys(metaTags).length !== 0 ? (
+            <CardHeader>
+              <CardTitle>{metaTags["og:title"] || ""}</CardTitle>
+              <div className="flex row">
                 <LinkIcon className="text-zinc-500 h-6 w-6 mr-1" />
-                <Input
-                  className="grow"
-                  placeholder={placeHolder}
-                  onChange={handleOnTextChange}
-                  onBlur={async () => updateUrl()}
-                  onKeyDown={async (e) => {
-                    if (e.key === 'Enter') updateUrl()
-                  }}
-                  value={text}
-                />
+                <Link
+                  href={`//${text}`}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {text}
+                </Link>
               </div>
-            )}
-          </>
-        )
-      }
+              <div className="flex items-center">
+                <Image
+                  src="/images/placeholder.webp" // TODO: Use og:image and try to fix CORS errors upon html-to-image extraction
+                  alt={metaTags["og:title"] || "img"}
+                  width={300}
+                  height={200}
+                  unoptimized
+                  priority
+                />
+                <CardDescription>
+                  {metaTags["og:description"] || ""}
+                </CardDescription>
+              </div>
+              {summary.length > 0 ? (
+                <CardContent>
+                  <Card className="whitespace-pre-wrap">
+                    <CardHeader>
+                      <CardTitle>Summary</CardTitle>
+                      <CardDescription>{summary[1]}</CardDescription>
+                    </CardHeader>
+                    <CardHeader>
+                      <CardTitle>Highlights</CardTitle>
+                      <CardDescription>{summary[2]}</CardDescription>
+                    </CardHeader>
+                    <CardHeader>
+                      <CardTitle>Keywords</CardTitle>
+                      <CardDescription>{summary[3]}</CardDescription>
+                    </CardHeader>
+                  </Card>
+                </CardContent>
+              ) : (
+                <></>
+              )}
+            </CardHeader>
+          ) : (
+            <div className="flex items-center">
+              <LinkIcon className="text-zinc-500 h-6 w-6 mr-1" />
+              <Input
+                className="grow"
+                placeholder={placeholder}
+                onChange={handleOnTextChange}
+                onBlur={async () => updateUrl()}
+                onKeyDown={async (e) => {
+                  if (e.key === "Enter") updateUrl();
+                }}
+                value={text}
+              />
+            </div>
+          )}
+        </>
+      )}
     </Card>
-  )
+  );
 }
-

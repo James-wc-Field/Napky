@@ -14,11 +14,14 @@ import { useProjectStore } from "../storeProvider";
 const type: ElementsType = "ListBlock";
 
 const extraAttributes = {
-  label: "List Block",
-  placeHolder: "Add other blocks here...",
   children: [] as string[],
 };
 
+const unstoredAttributes = {
+  label: "List Block",
+  placeholder: "Add other blocks here...",
+};
+// 
 export const ListBlockProjectElement: ProjectElement = {
   type,
   construct: (id: string, parentId: string) => ({
@@ -29,7 +32,15 @@ export const ListBlockProjectElement: ProjectElement = {
     size: { width: 300, height: 100 },
     parentId,
     extraAttributes,
+    unstoredAttributes,
   }),
+
+  addUnstoredAttributes: (element: ProjectElementInstance) => {
+    return {
+      ...element,
+      unstoredAttributes,
+    };
+  },
 
   toolbarElement: {
     icon: Bars4Icon,
@@ -42,6 +53,7 @@ export const ListBlockProjectElement: ProjectElement = {
 
 type CustomInstance = ProjectElementInstance & {
   extraAttributes: typeof extraAttributes;
+  unstoredAttributes: typeof unstoredAttributes;
 };
 
 function CanvasComponent({
@@ -50,7 +62,8 @@ function CanvasComponent({
   elementInstance: ProjectElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
-  const { label, placeHolder, children: children } = element.extraAttributes;
+  const { children } = element.extraAttributes;
+  const { label, placeholder } = element.unstoredAttributes;
   const style = {
     maxWidth: element.size.width,
     minHeight: element.size.height,
@@ -69,7 +82,7 @@ function CanvasComponent({
             return <ListElementWrapper key={childId} element={child} />;
           })
         ) : (
-          <p>{placeHolder}</p>
+          <p>{placeholder}</p>
         )}
       </ListDroppable>
     </Card>
