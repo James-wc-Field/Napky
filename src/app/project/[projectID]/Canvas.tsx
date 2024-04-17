@@ -30,6 +30,8 @@ export default function Canvas() {
   const updateCanvasPoints = useProjectStore((state) => state.updateCanvasPoints);
   const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false)
   const [isDrawing, setIsDrawing] = useState(false);
+  const drawingEnabled = useProjectStore((state) => state.isDrawing);
+  const setDrawingEnabled = useProjectStore((state) => state.updateIsDrawing);
   const selectableRef = useRef<SelectableRef>(null);
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
@@ -154,6 +156,7 @@ export default function Canvas() {
   };
   const handleCanvasMouseUp = () => {
     setIsDrawing(false);
+    setDrawingEnabled(false);
   };
 
   const handleMouseDown = (event: MouseEvent) => {
@@ -170,6 +173,7 @@ export default function Canvas() {
     if (zoomIn) setScale((prevState) => Math.min(Math.max(prevState * delta, 0.05), 5));
     else setScale((prevState) => Math.max(prevState / delta, 0.05));
   };
+  console.log(isDrawing)
   return (
     <>
       {/* <Selectable ref={selectableRef} value={selectedElements()} onStart={(e) => {
@@ -188,32 +192,30 @@ export default function Canvas() {
         onMouseDown={handleMiddleDown}
         ref={canvasRef}
       >
-        <canvas
-          id="canvas"
-          width={canvasRef.current?.clientWidth}
-          height={canvasRef.current?.clientHeight}
-          onMouseMove={(event) => handleCanvasMouseMove(event.nativeEvent)}
-          onMouseUp={handleCanvasMouseUp}
-          onWheel={handleScroll}
-          onMouseDown={(event) => {
-            handleMouseDown(event.nativeEvent)
-          }}
-          ref={setNodeRef}
-          style={{ position: "absolute", zIndex: 4 }}
-        />
         <div
           id="canvas-pane-droppable"
           className="absolute w-full h-full top-0 left-0 bg-white/20"
-          style={{ zIndex: 1 }}
           ref={setNodeRef}
         >
+          <canvas
+            id="canvas"
+            width={canvasRef.current?.clientWidth}
+            height={canvasRef.current?.clientHeight}
+            onMouseMove={(event) => handleCanvasMouseMove(event.nativeEvent)}
+            onMouseUp={handleCanvasMouseUp}
+            onWheel={handleScroll}
+            onMouseDown={(event) => {
+              handleMouseDown(event.nativeEvent)
+            }}
+            ref={setNodeRef}
+            style={{ position: "absolute", zIndex: 3 }}
+          />
           <div
             id="canvas-viewport"
-            className="absolute top-0 left-0 w-full h-full"
+            className={`absolute top-0 left-0 w-full h-full ${drawingEnabled ? "z-2" : "z-4"}`}
             style={{
               transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
               transformOrigin: "center",
-              zIndex: 2,
             }}
           >
             {projectElements.map((element) => {
