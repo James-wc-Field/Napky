@@ -5,6 +5,7 @@ import { idGenerator } from "@/lib/idGenerator";
 import { useExternalDrop } from "@/project/[projectID]/hooks/useExternalDrop";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
+import { RefObject } from "react";
 export default function BuildArea() {
   const elements = useProjectStore((state) => state.elements);
   const addElement = useProjectStore((state) => state.addElement);

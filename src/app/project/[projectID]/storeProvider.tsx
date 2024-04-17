@@ -5,7 +5,7 @@ import { type ReactNode, createContext, useRef, useContext } from 'react'
 import { type StoreApi } from 'zustand'
 import { useStoreWithEqualityFn as useStore } from 'zustand/traditional'
 
-import { type ProjectStore, createProjectStore } from '../[projectID]/project-store'
+import { type ProjectStore, createProjectStore } from './project-store'
 import { shallow } from 'zustand/shallow'
 
 export const ProjectStoreContext = createContext<StoreApi<ProjectStore> | null>(

@@ -1,4 +1,5 @@
 "use server"
+
 import { getProject } from "../../../graphql/queries";
 import { updateProject } from "../../../graphql/mutations";
 import { ProjectElementInstance } from "@/project/[projectID]/types/ProjectElements";
@@ -33,6 +34,11 @@ export async function saveProject(
   if (!user) {
     throw new Error("User not found");
   }
+
+  for (let element of elements) {
+    delete element.unstoredAttributes;
+  }
+
   await cookieBasedClient.graphql({
     query: updateProject,
     variables: {
@@ -56,10 +62,8 @@ export async function getProjectData(projectID: string) {
     query: getProject,
     variables: { id: projectID }
   })).data.getProject;
-  console.log(data)
   return data;
 }
-
 
 async function getURLDom(url: string) {
   const browser = await puppeteer.launch();
@@ -70,9 +74,6 @@ async function getURLDom(url: string) {
   return html;
 
 }
-
-
-
 
 export async function generateSummary(url: string, apiKey: string) {
   if (apiKey === "") return ""
