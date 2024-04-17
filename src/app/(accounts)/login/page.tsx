@@ -6,5 +6,5 @@ export default function Page() {
     <div className="flex h-screen justify-center items-center">
       <LoginCard />
     </div>
-  );
+  ); 
 }
