@@ -20,16 +20,19 @@ import { useProjectStore } from "./storeProvider";
 import Selectable, { SelectableRef, useSelectable } from "react-selectable-box";
 import CanvasBackground from "./CanvasBackground";
 import { idGenerator } from "@/lib/idGenerator";
-import { useHistory } from "./hooks/useHistory";
 
 export default function AppCanvas() {
-    const { canvasElements,
-        projectElements,
-        setElements,
-        undo,
-        redo,
-        addElement,
-        updateElement } = useHistory([])
+    // const { canvasElements,
+    //     projectElements,
+    //     setElements,
+    //     undo,
+    //     redo,
+    //     addElement,
+    //     updateElement } = useHistory([])
+    const canvasElements = useProjectStore((state) => state.canvasElements)
+    const addCanvasElement = useProjectStore((state) => state.addCanvasElement)
+    const projectElements = useProjectStore((state) => state.projectElements)
+    const updateCanvasPoints = useProjectStore((state) => state.updateCanvasPoints)
     const initialTool: ToolsType = Tools.selection;
     const [isDrawing, setIsDrawing] = useState(false);
     // const elements = useProjectStore((state) => state.elements);
@@ -37,6 +40,7 @@ export default function AppCanvas() {
     const updateScrollTop = useProjectStore((state) => state.updateScrollTop);
     // const isDrawing = useProjectStore((state) => state.isDrawing);
     const updateIsDrawing = useProjectStore((state) => state.updateIsDrawing);
+    const updateZoomLevel = useProjectStore((state) => state.updateZoomLevel);
     const zoomLevel = useProjectStore((state) => state.zoomLevel);
     const scrollTop = useProjectStore((state) => state.scrollTop);
     const scrollLeft = useProjectStore((state) => state.scrollLeft);
@@ -47,8 +51,6 @@ export default function AppCanvas() {
         },
     });
     const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
-    const [action, setAction] = useState<ActionsType>("none");
-    const [selectedElement, setSelectedElement] = useState<CanvasElementType | null>();
     const [scale, setScale] = useState(1);
     const [scaleOffset, setScaleOffset] = useState({ x: 0, y: 0 });
 
@@ -74,60 +76,43 @@ export default function AppCanvas() {
             drawElement(context, element);
         });
         context.restore();
-    }, [canvasElements, action, selectedElement, panOffset, scale]);
+    }, [canvasElements, scale]);
 
-    useEffect(() => {
-        const undoRedoFunction = (event: KeyboardEvent) => {
-            if (event.ctrlKey || event.metaKey) {
-                if (event.key === "z") {
-                    if (event.shiftKey) {
-                        redo();
-                    } else {
-                        undo();
-                    }
-                } else if (event.key === "y") {
-                    redo();
-                }
-            }
-        };
-        document.addEventListener("keydown", undoRedoFunction);
-        return () => {
-            document.removeEventListener("keydown", undoRedoFunction);
-        };
-    }, [undo, redo]);
+    // useEffect(() => {
+    //     const undoRedoFunction = (event: KeyboardEvent) => {
+    //         if (event.ctrlKey || event.metaKey) {
+    //             if (event.key === "z") {
+    //                 if (event.shiftKey) {
+    //                     redo();
+    //                 } else {
+    //                     undo();
+    //                 }
+    //             } else if (event.key === "y") {
+    //                 redo();
+    //             }
+    //         }
+    //     };
+    //     document.addEventListener("keydown", undoRedoFunction);
+    //     return () => {
+    //         document.removeEventListener("keydown", undoRedoFunction);
+    //     };
+    // }, [undo, redo]);
 
 
-    useEffect(() => {
-        console.log(isDrawing)
-        const handleMouseMove = (event: MouseEvent) => {
-            console.log(event)
-            if (!isDrawing) {
-                console.log(isDrawing)
-                return;
-            }
-            const index = canvasElements.length - 1;
-            const elementsCopy = [...canvasElements];
-            const existingPoints = elementsCopy[index].points || [];
-            elementsCopy[index].points = [...existingPoints, { x: event.clientX, y: event.clientY }];
-            setElements(elementsCopy, true);
-            // const index = canvasElements.length - 1;
-            // updateElement(
-            //     index,
-            //     { ...canvasElements[index], points: [...canvasElements[index].points!, { x: event.clientX, y: event.clientY }] }
-            // );
+    const handleMouseMove = (event: MouseEvent) => {
+        if (!isDrawing) return;
+        const index = canvasElements.length - 1;
+        const existingPoints = canvasElements[index].points || [];
+        const elementsCopy = [...canvasElements];
+        elementsCopy[index] = {
+            ...elementsCopy[index],
+            points: [...existingPoints, { x: event.clientX, y: event.clientY }],
         };
-        const handleMouseUp = () => {
-            setIsDrawing(false);
-        };
-        if (isDrawing) {
-            canvasRef.current?.addEventListener('mousemove', handleMouseMove)
-            canvasRef.current?.addEventListener('mouseup', handleMouseUp)
-        }
-        return () => {
-            canvasRef.current?.removeEventListener('mousemove', handleMouseMove)
-            canvasRef.current?.removeEventListener('mouseup', handleMouseUp)
-        }
-    }, [isDrawing])
+        updateCanvasPoints(elementsCopy[index].id, elementsCopy[index])
+    };
+    const handleMouseUp = () => {
+        setIsDrawing(false);
+    };
 
     const handleMouseDown = (event: MouseEvent) => {
         const newElement = {
@@ -135,7 +120,7 @@ export default function AppCanvas() {
             type: "pencil",
             points: [{ x: event.clientX, y: event.clientY }]
         }
-        addElement(newElement);
+        addCanvasElement(newElement)
         setIsDrawing(true);
     };
 
@@ -144,53 +129,83 @@ export default function AppCanvas() {
         else setScale((prevState) => Math.max(prevState / delta, 0.05));
     };
     const selectableRef = useRef<SelectableRef>(null);
+    const handleScroll = (e: React.WheelEvent) => {
+        const { deltaX, deltaY } = e;
+        if (e.ctrlKey) {
+            updateZoomLevel(deltaY < 0, 1.05);
+            return;
+        } else if (e.shiftKey) {
+            updateScrollLeft(deltaY);
+            return;
+        }
+        updateScrollLeft(deltaX);
+        updateScrollTop(deltaY);
+    };
     const canvasRef = useRef<HTMLDivElement>(null);
     return (
-        // <Selectable ref={selectableRef} value={selectedElements()} onStart={(e) => {
-        //     if ((e.target as HTMLElement).id !== "canvas-pane-droppable" && (e.target as HTMLElement).id !== "canvas-viewport") {
-        //         selectableRef.current?.cancel();
-        //     }
-        // }}
-        //     onEnd={(value) => {
-        //         updateSelectedElements(value as ProjectElementInstance[])
-        //     }}>
-        <div ref={canvasRef}
-            className="bg-white/20 absolute top-0 left-0 w-full h-full">
+        <>
+            {/* <Selectable ref={selectableRef} value={selectedElements()} onStart={(e) => {
+                if ((e.target as HTMLElement).id !== "canvas-pane-droppable" && (e.target as HTMLElement).id !== "canvas-viewport") {
+                selectableRef.current?.cancel();
+            }
+        }}
+            onEnd={(value) => {
+                    updateSelectedElements(value as ProjectElementInstance[])
+            }}> */}
+            <div
+                id="canvas-renderer"
+                className="absolute w-full h-full top-0 left-0"
+                style={{ zIndex: 4 }}
+
+                // onWheel={handleScroll}
+                // onMouseDown={handleMiddleDown}
+                ref={canvasRef}
+            >
+                <div
+                    id="canvas-pane-droppable"
+                    className="absolute w-full h-full top-0 left-0 bg-white/20"
+                    style={{ zIndex: 1 }}
+                    ref={setNodeRef}
+                >
+
+                    <canvas
+                        id="canvas"
+                        width={canvasRef.current?.clientWidth}
+                        height={canvasRef.current?.clientHeight}
+                        onMouseMove={(event) => handleMouseMove(event.nativeEvent)}
+                        onMouseUp={handleMouseUp}
+                        onWheel={handleScroll}
+                        onMouseDown={(event) => {
+                            handleMouseDown(event.nativeEvent)
+                        }}
+                        ref={setNodeRef}
+                        style={{ position: "absolute", zIndex: 4, transform: `scale(${zoomLevel}) translate(${scrollLeft}px, ${scrollTop}px)` }}
+                    />
+                    <div
+                        id="canvas-viewport"
+                        className="absolute top-0 left-0 w-full h-full"
+                        style={{
+                            transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
+                            zIndex: 3,
+                        }}
+                    >
+                        {projectElements.map((element) => {
+                            if (element.parentId !== "root") return null;
+                            return <CanvasElementWrapper key={element.id} element={element} />;
+                        })}
+                    </div>
+                    <CanvasBackground />
+                </div>
+            </div>
             <CanvasControls />
             <CanvasToolbar />
             <ControlPanel
-                undo={undo}
-                redo={redo}
+                undo={() => { }}
+                redo={() => { }}
                 onZoom={onZoom}
                 scale={scale}
-                setScale={setScale}
-            />
-
-            <canvas
-                id="canvas"
-                width={canvasRef.current?.clientWidth}
-                height={canvasRef.current?.clientHeight}
-                onMouseDown={(event) => {
-                    handleMouseDown(event.nativeEvent)
-                }}
-                ref={setNodeRef}
-                style={{ position: "absolute", zIndex: 4 }}
-            />
-            <div
-                id="canvas-viewport"
-                className="absolute top-0 left-0 w-full h-full"
-                style={{
-                    transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
-                    zIndex: 3,
-                }}
-            >
-                {projectElements.map((element) => {
-                    if (element.parentId !== "root") return null;
-                    return <CanvasElementWrapper key={element.id} element={element} />;
-                })}
-            </div>
-            <CanvasBackground />
-        </div>
+                setScale={setScale} />
+        </>
     );
 }
 
@@ -208,7 +223,7 @@ function CanvasElementWrapper({
         },
     });
     const selectedElements = useProjectStore((state) => state.selectedElements)
-    const updateElement = useProjectStore((state) => state.updateElement)
+    const updateElement = useProjectStore((state) => state.updateProjectElement)
     const updateSelectedElements = useProjectStore((state) => state.updateSelectedElements)
 
     const [isResizing, setIsResizing] = useState(false)
