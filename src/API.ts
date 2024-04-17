@@ -52,7 +52,7 @@ export type ModelSizeInput = {
   ge?: number | null,
   gt?: number | null,
   between?: Array< number | null > | null,
-};
+}; 
 
 export type Comments = {
   __typename: "Comments",
