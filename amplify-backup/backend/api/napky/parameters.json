@@ -1,0 +1,6 @@
+{
+  "AppSyncApiName": "napky",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthModeLastUpdated": "2024-03-29T20:05:38.300Z"
+}
