@@ -47,15 +47,10 @@ export default function Canvas() {
     const context = canvas.getContext("2d") as CanvasRenderingContext2D;
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    const scaledWidth = canvas.width * zoomLevel;
-    const scaledHeight = canvas.height * zoomLevel;
-    const scaleOffsetX = (scaledWidth - canvas.width) / 2;
-    const scaleOffsetY = (scaledHeight - canvas.height) / 2;
-
     context.save();
     context.translate(
-      scrollLeft * zoomLevel - scaleOffsetX,
-      scrollTop * zoomLevel - scaleOffsetY
+      scrollLeft * zoomLevel,
+      scrollTop * zoomLevel
     );
     context.scale(zoomLevel, zoomLevel);
 
@@ -145,12 +140,17 @@ export default function Canvas() {
   };
   const handleCanvasMouseMove = (event: MouseEvent) => {
     if (!isDrawing) return;
+    const canvasRect = canvasRef.current?.getBoundingClientRect();
+    if (!canvasRect) return;
+
+    const offsetX = event.clientX - canvasRect.left;
+    const offsetY = event.clientY - canvasRect.top;
     const index = canvasElements.length - 1;
     const existingPoints = canvasElements[index].points || [];
     const elementsCopy = [...canvasElements];
     elementsCopy[index] = {
       ...elementsCopy[index],
-      points: [...existingPoints, { x: event.clientX, y: event.clientY }],
+      points: [...existingPoints, { x: offsetX, y: offsetY }],
     };
     updateCanvasPoints(elementsCopy[index].id, elementsCopy[index])
   };
@@ -159,11 +159,16 @@ export default function Canvas() {
     setDrawingEnabled(false);
   };
 
-  const handleMouseDown = (event: MouseEvent) => {
+  const handleCanvasMouseDown = (event: MouseEvent) => {
+    const canvasRect = canvasRef.current?.getBoundingClientRect(); // Get the dimensions and position of the canvas
+    if (!canvasRect) return;
+
+    const offsetX = event.clientX - canvasRect.left; // Calculate the offset of the mouse position relative to the canvas
+    const offsetY = event.clientY - canvasRect.top;
     const newElement = {
       id: idGenerator(),
       type: "pencil",
-      points: [{ x: event.clientX, y: event.clientY }]
+      points: [{ x: offsetX, y: offsetY }]
     }
     addCanvasElement(newElement)
     setIsDrawing(true);
@@ -173,7 +178,6 @@ export default function Canvas() {
     if (zoomIn) setScale((prevState) => Math.min(Math.max(prevState * delta, 0.05), 5));
     else setScale((prevState) => Math.max(prevState / delta, 0.05));
   };
-  console.log(isDrawing)
   return (
     <>
       {/* <Selectable ref={selectableRef} value={selectedElements()} onStart={(e) => {
@@ -186,43 +190,37 @@ export default function Canvas() {
         }}> */}
       <div
         id="canvas-renderer"
-        className="absolute w-full h-full top-0 left-0"
+        className="absolute w-full h-full top-0 left-0 bg-white/20"
         style={{ zIndex: 4 }}
         onWheel={handleScroll}
         onMouseDown={handleMiddleDown}
         ref={canvasRef}
       >
+        <canvas
+          id="canvas"
+          width={canvasRef.current?.clientWidth}
+          height={canvasRef.current?.clientHeight}
+          onMouseMove={(event) => handleCanvasMouseMove(event.nativeEvent)}
+          onMouseUp={handleCanvasMouseUp}
+          onWheel={handleScroll}
+          onMouseDown={(event) => {
+            handleCanvasMouseDown(event.nativeEvent)
+          }}
+          style={{ position: "absolute", zIndex: 3 }}
+        />
         <div
           id="canvas-pane-droppable"
-          className="absolute w-full h-full top-0 left-0 bg-white/20"
+          className={`absolute w-full h-full top-0 left-0 ${drawingEnabled ? "z-2" : "z-4"}`}
+          style={{
+            transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
+            transformOrigin: "top left",
+          }}
           ref={setNodeRef}
         >
-          <canvas
-            id="canvas"
-            width={canvasRef.current?.clientWidth}
-            height={canvasRef.current?.clientHeight}
-            onMouseMove={(event) => handleCanvasMouseMove(event.nativeEvent)}
-            onMouseUp={handleCanvasMouseUp}
-            onWheel={handleScroll}
-            onMouseDown={(event) => {
-              handleMouseDown(event.nativeEvent)
-            }}
-            ref={setNodeRef}
-            style={{ position: "absolute", zIndex: 3 }}
-          />
-          <div
-            id="canvas-viewport"
-            className={`absolute top-0 left-0 w-full h-full ${drawingEnabled ? "z-2" : "z-4"}`}
-            style={{
-              transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
-              transformOrigin: "center",
-            }}
-          >
-            {projectElements.map((element) => {
-              if (element.parentId !== "root") return null;
-              return <CanvasElementWrapper key={element.id} element={element} />;
-            })}
-          </div>
+          {projectElements.map((element) => {
+            if (element.parentId !== "root") return null;
+            return <CanvasElementWrapper key={element.id} element={element} />;
+          })}
         </div>
       </div>
       {/* </Selectable > */}
