@@ -12,7 +12,7 @@ import { AllElementsType, CanvasElementType } from "./types/NinjaSketchTypes";
 export default function BuildArea() {
 
   const projectElements = useProjectStore((state) => state.projectElements);
-  const addElement = useProjectStore((state) => state.addProjectElement);
+  const addElement = useProjectStore((state) => state.addElement);
   const updateElement = useProjectStore((state) => state.updateProjectElement);
   // const selectedElements = useProjectStore((state) => state.selectedElements);
   const scrollLeft = useProjectStore(useShallow((state) => state.scrollLeft));

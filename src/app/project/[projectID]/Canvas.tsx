@@ -25,10 +25,9 @@ export default function Canvas() {
   const zoomLevel = useProjectStore((state) => state.zoomLevel);
   // const setAllElementsSelected = useProjectStore((state) => state.setAllElementsSelected);
   // const deleteSelectedElements = useProjectStore((state) => state.deleteSelectedElements);
-  const updateHistory = useProjectStore((state) => state.updateHistory);
+  // const updateHistory = useProjectStore((state) => state.updateHistory);
   const canvasElements = useProjectStore((state) => state.canvasElements);
-  const history = useProjectStore((state) => state.history);
-  const addCanvasElement = useProjectStore((state) => state.addCanvasElement);
+  const addElement = useProjectStore((state) => state.addElement);
   const updateCanvasPoints = useProjectStore((state) => state.updateCanvasPoints);
   const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false)
   const [isDrawing, setIsDrawing] = useState(false);
@@ -148,14 +147,12 @@ export default function Canvas() {
     const offsetX = (event.clientX - canvasRect.left) / zoomLevel - scrollLeft;
     const offsetY = (event.clientY - canvasRect.top) / zoomLevel - scrollTop;
     const index = canvasElements().length - 1;
-    const existingPoints = canvasElements()[index].points || [];
     const elementsCopy = [...canvasElements()];
     elementsCopy[index] = {
       ...elementsCopy[index],
-      points: [...existingPoints, { x: offsetX, y: offsetY }],
+      points: [...canvasElements()[index].points || [], { x: offsetX, y: offsetY }],
     };
-    // updateHistory(elementsCopy);
-    updateCanvasPoints(elementsCopy[index].id, elementsCopy[index])
+    updateCanvasPoints(elementsCopy)
   };
   const handleCanvasMouseUp = () => {
     setIsDrawing(false);
@@ -163,7 +160,6 @@ export default function Canvas() {
   };
 
   const handleCanvasMouseDown = (event: MouseEvent) => {
-    console.log("mousedown")
     const canvasRect = canvasRef.current?.getBoundingClientRect(); // Get the dimensions and position of the canvas
     if (!canvasRect) return;
 
@@ -174,8 +170,7 @@ export default function Canvas() {
       type: "pencil",
       points: [{ x: offsetX, y: offsetY }]
     }
-    addCanvasElement(newElement)
-    console.log(canvasElements())
+    addElement(newElement)
     setIsDrawing(true);
   };
   const canvasRef = useRef<HTMLDivElement>(null);
