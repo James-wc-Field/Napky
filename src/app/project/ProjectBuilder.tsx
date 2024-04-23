@@ -29,8 +29,7 @@ import { useShallow } from "zustand/react/shallow";
 import { LoadingSpinner } from "@/components/ui/spinner";
 
 export default function ProjectBuilder() {
-
-  const elements = useProjectStore((state) => state.elements);
+  const projectElements = useProjectStore((state) => state.projectElements());
   const updateProjectName = useProjectStore((state) => state.updateProjectName);
   const projectName = useProjectStore((state) => state.projectName);
   const projectId = useProjectStore((state) => state.projectId);
@@ -55,6 +54,21 @@ export default function ProjectBuilder() {
     <DndContext id={id} sensors={sensors} collisionDetection={pointerWithin}>
       <main className="flex flex-col w-full h-full max-h-90vh">
         {/* This is the Project "NavBar" */}
+        <div className="flex border-b-1 border-border p-2 gap-2 items-center">
+          <p className="truncate font-medium">Project</p>
+          <span className="mr-2">
+            <Input
+              placeholder={projectName}
+              onChange={(e) => updateProjectName(e.target.value)}
+            />
+          </span>
+          <Button
+            className="gap-1"
+            onClick={() => saveProject(projectId, projectName, projectElements)}
+          >
+            <Save className="h-5 w-6" />
+          </Button>
+        </div>
         <BuildArea />
         <Popover>
           <PopoverTrigger
@@ -89,9 +103,9 @@ export default function ProjectBuilder() {
             </div>
           </PopoverContent>
         </Popover>
-      </main>
+      </main >
       <DragOverlayWrapper />
-    </DndContext>
+    </DndContext >
   );
 }
 
