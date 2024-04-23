@@ -91,7 +91,7 @@ function CanvasComponent({
   elementInstance: ProjectElementInstance;
 }) {
   // const { updateElement, key } = useProject();
-  const updateElement = useProjectStore((state) => state.updateElement);
+  const updateElement = useProjectStore((state) => state.updateProjectElement);
   const key = useProjectStore((state) => state.key);
   const element = elementInstance as CustomInstance;
   const { text, metaTags, summary } = element.extraAttributes;
