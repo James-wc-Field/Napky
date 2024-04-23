@@ -1,9 +1,8 @@
 // src/stores/counter-store.ts
 import { Project } from '@src/API'
 import { createStore } from 'zustand/vanilla'
-import { ElementsType, ProjectElementInstance, ProjectElements } from './types/ProjectElements'
+import { AllElementsType, CanvasElementType, ElementsType, ProjectElementInstance, ProjectElements } from './types/ProjectElements'
 import { getProjectData } from './api'
-import { AllElementsType, CanvasElementType } from './types/NinjaSketchTypes'
 import { RefObject } from 'react'
 import { getImageURL } from './clientapi'
 

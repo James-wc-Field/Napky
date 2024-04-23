@@ -1,14 +1,11 @@
 import Canvas from "@/project/[projectID]/Canvas";
 import { useDndMonitor } from "@dnd-kit/core";
-import { ElementsType, ProjectElementInstance, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
+import { ElementsType, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
 import { useExternalDrop } from "@/project/[projectID]/hooks/useExternalDrop";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
-// import { useHistory } from "./hooks/useHistory";
-import { AllElementsType, CanvasElementType } from "./types/NinjaSketchTypes";
 
-import { RefObject } from "react";
 export default function BuildArea() {
 
   const projectElements = useProjectStore((state) => state.projectElements);
@@ -19,7 +16,7 @@ export default function BuildArea() {
   const scrollTop = useProjectStore(useShallow((state) => state.scrollTop));
   const zoomLevel = useProjectStore(useShallow((state) => state.zoomLevel));
   // const updateSelectedElements = useProjectStore((state) => state.updateSelectedElements);
-  // const deleteElement = useProjectStore((state) => state.deleteElement);
+  const deleteElement = useProjectStore((state) => state.deleteElement);
 
   useDndMonitor({
     onDragStart: (event) => {
@@ -42,7 +39,7 @@ export default function BuildArea() {
       const isListDroppable = over.data?.current?.isListDroppable;
 
       if (isTrashCan) {
-        // deleteElement(active.data?.current?.elementId as string);
+        deleteElement(active.data?.current?.elementId as string);
       }
       // Drag new element from toolbar onto canvas
       if (isToolbarBtnElement) {
