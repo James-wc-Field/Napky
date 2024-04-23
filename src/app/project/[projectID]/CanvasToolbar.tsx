@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import ToolbarBtnElement from "@/project/[projectID]/ToolbarBtnElement";
 import { ProjectElements } from "@/project/[projectID]/types/ProjectElements";
 import { Card } from "@ui/card";
@@ -7,6 +7,7 @@ import { Button } from "../../components/ui/button";
 import { Save } from "lucide-react";
 import { PencilIcon } from "@heroicons/react/24/solid";
 import { useProjectStore } from "./storeProvider";
+import { uploadImage } from "./clientapi";
 import { TrashIcon } from "@heroicons/react/24/solid";
 
 export default function CanvasToolbar() {
@@ -39,7 +40,7 @@ export default function CanvasToolbar() {
 }
 
 
-function Trash() {
+export function Trash() {
   const { isOver, setNodeRef } = useDroppable({
     id: "trash-list-droppable",
     data: { isTrash: true },
