@@ -1,12 +1,11 @@
 import {
   ElementsType,
   ProjectElements,
-} from "@/[projectID]/types/ProjectElements";
+} from "@/project/types/ProjectElements";
 import { idGenerator } from "@/_lib/idGenerator";
-import { generateSummary, getOpenGraphTags } from "@/[projectID]/api";
+import { generateSummary, getOpenGraphTags } from "@/project/api";
 import { useProjectStore } from "../storeProvider";
-import { uploadImage } from "@/[projectID]/clientapi";
-import { getImageURL } from "@/[projectID]/clientapi";
+import { uploadImage, getImageURL } from "@/project/clientapi";
 
 export function useExternalDrop() {
   const updateElement = useProjectStore((state) => state.updateElement);

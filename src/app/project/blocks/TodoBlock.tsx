@@ -5,7 +5,7 @@ import {
   ElementsType,
   ProjectElement,
   ProjectElementInstance,
-} from "@/[projectID]/types/ProjectElements";
+} from "@/project/types/ProjectElements";
 import { Card } from "@ui/card";
 import { Textarea } from "@ui/textarea";
 import { Checkbox } from "@ui/checkbox";

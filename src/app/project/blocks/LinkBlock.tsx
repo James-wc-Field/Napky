@@ -5,7 +5,7 @@ import {
   ElementsType,
   ProjectElement,
   ProjectElementInstance,
-} from "@/[projectID]/types/ProjectElements";
+} from "@/project/types/ProjectElements";
 import {
   Card,
   CardContent,
@@ -17,7 +17,7 @@ import { Input } from "@ui/input";
 import Image from "next/image";
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { generateSummary, getOpenGraphTags } from "@/[projectID]/api";
+import { generateSummary, getOpenGraphTags } from "@/project/api";
 import Link from "next/link";
 import { useProjectStore } from "../storeProvider";
 

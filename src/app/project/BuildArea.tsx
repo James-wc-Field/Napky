@@ -1,8 +1,8 @@
-import Canvas from "@/[projectID]/Canvas";
+import Canvas from "@/project/Canvas";
 import { useDndMonitor } from "@dnd-kit/core";
-import { ElementsType, ProjectElements } from "@/[projectID]/types/ProjectElements";
+import { ElementsType, ProjectElements } from "@/project/types/ProjectElements";
 import { idGenerator } from "@/_lib/idGenerator";
-import { useExternalDrop } from "@/[projectID]/hooks/useExternalDrop";
+import { useExternalDrop } from "@/project/hooks/useExternalDrop";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
 import { RefObject } from "react";

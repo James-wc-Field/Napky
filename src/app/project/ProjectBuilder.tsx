@@ -11,11 +11,11 @@ import {
 
 import { Save } from "lucide-react";
 import { useEffect } from "react";
-import BuildArea from "@/[projectID]/BuildArea";
-import DragOverlayWrapper from "@/[projectID]/DragOverlayWrapper";
-import usePreventZoom from "@/[projectID]/hooks/usePreventZoom";
+import BuildArea from "@/project/BuildArea";
+import DragOverlayWrapper from "@/project/DragOverlayWrapper";
+import usePreventZoom from "@/project/hooks/usePreventZoom";
 import { ThemeToggle } from "@components/ThemeToggle";
-import { saveProject } from "@/[projectID]/api";
+import { saveProject } from "@/project/api";
 import {
   Popover,
   PopoverContent,

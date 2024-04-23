@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ProjectElement } from "@/[projectID]/types/ProjectElements";
+import { ProjectElement } from "@/project/types/ProjectElements";
 import { Button } from "@ui/button";
 import { useDraggable } from "@dnd-kit/core";
 

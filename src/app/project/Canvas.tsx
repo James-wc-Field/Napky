@@ -1,10 +1,10 @@
 import { ReactNode, use, useEffect, useMemo, useRef, useState } from "react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
-import { ProjectElementInstance, ProjectElements } from "@/[projectID]/types/ProjectElements";
+import { ProjectElementInstance, ProjectElements } from "@/project/types/ProjectElements";
 // import MiniMap from "@/project/[projectID]/MiniMap";
-import CanvasControls from "@/[projectID]/CanvasControls";
-import CanvasBackground from "@/[projectID]/CanvasBackground";
-import CanvasToolbar from "@/[projectID]/CanvasToolbar";
+import CanvasControls from "@/project/CanvasControls";
+import CanvasBackground from "@/project/CanvasBackground";
+import CanvasToolbar from "@/project/CanvasToolbar";
 import Selectable, { SelectableRef, useSelectable } from 'react-selectable-box';
 import { useCallback } from "react";
 import { useProjectStore } from "./storeProvider";

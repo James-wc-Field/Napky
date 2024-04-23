@@ -6,7 +6,7 @@ import {
   ProjectElement,
   ProjectElementInstance,
   ProjectElements,
-} from "@/[projectID]/types/ProjectElements";
+} from "@/project/types/ProjectElements";
 import { Card } from "@ui/card";
 import { useDroppable, useDraggable } from "@dnd-kit/core";
 import { useProjectStore } from "../storeProvider";
