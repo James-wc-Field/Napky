@@ -29,7 +29,6 @@ export default function CanvasToolbar() {
         <Save className="h-6 w-6" />
       </Button>
       <Button onClick={() => {
-        console.log("updateIsDrawing");
         updateIsDrawing();
       }} className="gap-1">
         <PencilIcon className="h-6 w-6" />

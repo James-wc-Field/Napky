@@ -8,7 +8,9 @@ export const drawElement = (
   if (!element.points) {
     throw new Error("Pencil element points are undefined");
   }
-  const strokePoints = getStroke(element.points);
+  const strokePoints = getStroke(element.points, {
+    size: 6,
+  });
   const formattedPoints: [number, number][] = strokePoints.map((point) => {
     if (point.length !== 2) {
       throw new Error(
