@@ -189,6 +189,10 @@ export default function BuildArea() {
             x: 0,
             y: 0,
           },
+          size: {
+            width: list.size.width,
+            height: dragged.size.height,
+          },
           parentId: listId,
           extraAttributes: {
             ...dragged.extraAttributes,
