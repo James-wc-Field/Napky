@@ -63,7 +63,7 @@ function CanvasComponent({
 }: {
   elementInstance: ProjectElementInstance;
 }) {
-  const updateElement = useProjectStore((state) => state.updateElement);
+  const updateElement = useProjectStore((state) => state.updateProjectElement);
   const element = elementInstance as CustomInstance;
   const { checked, items } = element.extraAttributes;
   const { label, placeholder } = element.unstoredAttributes;
