@@ -131,13 +131,14 @@ export const createProjectStore = (
             isDrawing: isDrawing || !state.isDrawing
         })),
         addElement: (element: AllElementsType) => {
-            console.log(get().history)
             set((state) => ({
                 history: [...state.history, [...state.history[state.index], element]],
                 index: state.index + 1,
             }))
+            console.log(get().history)
         },
         updateCanvasPoints: (elements: CanvasElementType[]) => {
+            console.log(get().history)
             const historyCopy = [...get().history];
             historyCopy[get().index] = elements;
             set((state) => ({
