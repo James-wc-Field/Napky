@@ -69,7 +69,7 @@ function CanvasComponent({
     minHeight: element.size.height,
   };
 
-  const elements = useProjectStore((state) => state.elements);
+  const elements = useProjectStore((state) => state.projectElements);
 
   return (
     <Card style={style} className="flex flex-col gap-2 p-2">
@@ -77,7 +77,7 @@ function CanvasComponent({
       <ListDroppable element={element} numItems={children.length}>
         {children.length > 0 ? (
           children.map((childId) => {
-            const child = elements.find((e) => e.id === childId);
+            const child = elements().find((e) => e.id === childId);
             if (!child) return null;
             return <ListElementWrapper key={childId} element={child} />;
           })
