@@ -1,7 +1,4 @@
-import Link from "next/link";
 import Image from 'next/image';
-import { currentAuthenticatedUser } from "@/_lib/auth";
-import { Button } from "./ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 
 export async function NavigationBar({ children }: { children?: React.ReactNode }) {
