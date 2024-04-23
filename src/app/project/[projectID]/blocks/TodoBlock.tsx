@@ -14,10 +14,13 @@ import { useProjectStore } from "../storeProvider";
 const type: ElementsType = "TodoBlock";
 
 const extraAttributes = {
-  label: "Todo Block",
-  placeHolder: "Enter a task...",
   items: [""] as string[],
   checked: [false] as boolean[],
+};
+
+const unstoredAttributes = {
+  label: "To-Do",
+  placeholder: "Enter a task...",
 };
 
 export const TodoBlockProjectElement: ProjectElement = {
@@ -30,7 +33,15 @@ export const TodoBlockProjectElement: ProjectElement = {
     size: { width: 300, height: 75 },
     parentId,
     extraAttributes,
+    unstoredAttributes,
   }),
+
+  addUnstoredAttributes: (elementInstance) => {
+    return {
+      ...elementInstance,
+      unstoredAttributes,
+    };
+  },
 
   toolbarElement: {
     icon: ListBulletIcon,
@@ -43,6 +54,7 @@ export const TodoBlockProjectElement: ProjectElement = {
 
 type CustomInstance = ProjectElementInstance & {
   extraAttributes: typeof extraAttributes;
+  unstoredAttributes: typeof unstoredAttributes;
 };
 
 function CanvasComponent({
@@ -52,7 +64,9 @@ function CanvasComponent({
 }) {
   const updateElement = useProjectStore((state) => state.updateElement);
   const element = elementInstance as CustomInstance;
-  const { placeHolder, checked, items } = element.extraAttributes;
+  const { checked, items } = element.extraAttributes;
+  const { label, placeholder } = element.unstoredAttributes;
+  
   const style = {
     maxWidth: element.size.width,
   };
@@ -171,7 +185,7 @@ function CanvasComponent({
             id={`${element.id}-todo-item-${index}`}
             value={item}
             rows={1} // Need a way to dynamically grow/shrink based on content like NextUI did it
-            placeholder={placeHolder}
+            placeholder={placeholder}
             onChange={(e) => handleOnTextChange(e, index)}
             onKeyDown={(e) => handleOnKeyPress(e, index)}
           />
