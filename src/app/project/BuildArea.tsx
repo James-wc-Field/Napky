@@ -201,9 +201,11 @@ export default function BuildArea() {
       if (isToolbarBtnElement && isListDroppable) {
         const type = active.data?.current?.type;
         const listId = over.data?.current?.elementId;
+        const parentWidth = elements.find((element) => element.id === listId)?.size.width
         const newElement = ProjectElements[type as ElementsType].construct(
           idGenerator(),
-          listId as string
+          listId as string,
+          parentWidth
         );
 
         addElement(newElement);

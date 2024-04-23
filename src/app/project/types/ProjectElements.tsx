@@ -17,8 +17,8 @@ export type ElementsType =
 export type ProjectElement = {
   type: ElementsType;
 
-  construct: (id: string, parentId: string) => ProjectElementInstance;
-  
+  construct: (id: string, parentId: string, parentWidth?: number) => ProjectElementInstance;
+
   // Used when the element is pulled from the server to append any unstored attributes
   addUnstoredAttributes?: (elementInstance: ProjectElementInstance) => ProjectElementInstance;
 
@@ -54,7 +54,7 @@ export type ProjectElementInstance = {
 
   // Extra attributes that are stored on the server
   extraAttributes?: Record<string, any>;
-  
+
   // Extra attributes that do not need to be stored on the server
   // Can be used for common functionality among element types, or generated attributes not necessary to store
   unstoredAttributes?: Record<string, any>;

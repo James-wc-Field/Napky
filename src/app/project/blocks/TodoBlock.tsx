@@ -12,7 +12,6 @@ import { Checkbox } from "@ui/checkbox";
 import { useProjectStore } from "../storeProvider";
 
 const type: ElementsType = "TodoBlock";
-
 const extraAttributes = {
   items: [""] as string[],
   checked: [false] as boolean[],
@@ -25,16 +24,18 @@ const unstoredAttributes = {
 
 export const TodoBlockProjectElement: ProjectElement = {
   type,
-  construct: (id: string, parentId: string) => ({
-    id,
-    type,
-    selected: false,
-    position: { x: 0, y: 0 },
-    size: { width: 300, height: 75 },
-    parentId,
-    extraAttributes,
-    unstoredAttributes,
-  }),
+  construct: (id: string, parentId: string, parentWidth) => {
+    return ({
+      id,
+      type,
+      selected: false,
+      position: { x: 0, y: 0 },
+      size: { width: parentWidth ?? 300, height: 75 },
+      parentId,
+      extraAttributes,
+      unstoredAttributes,
+    })
+  },
 
   addUnstoredAttributes: (elementInstance) => {
     return {
