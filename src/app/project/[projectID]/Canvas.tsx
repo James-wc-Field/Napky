@@ -143,8 +143,8 @@ export default function Canvas() {
     const canvasRect = canvasRef.current?.getBoundingClientRect();
     if (!canvasRect) return;
 
-    const offsetX = event.clientX - canvasRect.left;
-    const offsetY = event.clientY - canvasRect.top;
+    const offsetX = (event.clientX - canvasRect.left) / zoomLevel - scrollLeft;
+    const offsetY = (event.clientY - canvasRect.top) / zoomLevel - scrollTop;
     const index = canvasElements.length - 1;
     const existingPoints = canvasElements[index].points || [];
     const elementsCopy = [...canvasElements];
@@ -163,8 +163,8 @@ export default function Canvas() {
     const canvasRect = canvasRef.current?.getBoundingClientRect(); // Get the dimensions and position of the canvas
     if (!canvasRect) return;
 
-    const offsetX = event.clientX - canvasRect.left; // Calculate the offset of the mouse position relative to the canvas
-    const offsetY = event.clientY - canvasRect.top;
+    const offsetX = (event.clientX - canvasRect.left) / zoomLevel - scrollLeft// Calculate the offset of the mouse position relative to the canvas
+    const offsetY = (event.clientY - canvasRect.top) / zoomLevel - scrollTop
     const newElement = {
       id: idGenerator(),
       type: "pencil",
@@ -225,7 +225,6 @@ export default function Canvas() {
       </div>
       {/* </Selectable > */}
       <CanvasToolbar />
-      <CanvasControls />
       <ControlPanel
         undo={() => { }}
         redo={() => { }}
