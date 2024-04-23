@@ -12,7 +12,7 @@ import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
 import { ControlPanel } from "./control-panel";
 import { drawElement } from "./utilities";
-import { idGenerator } from "@/lib/idGenerator";
+import { idGenerator } from "../_lib/idGenerator";
 
 
 export default function Canvas() {
