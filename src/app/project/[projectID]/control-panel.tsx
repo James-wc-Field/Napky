@@ -17,11 +17,11 @@ export function ControlPanel() {
   return (
     <>
       <Card
-        className="absolute top-4 left-40 flex flex-row p-2 gap-2"
+        className="absolute bottom-20 right-10 flex flex-row p-2 gap-2 select-none"
         style={{ zIndex: 5 }}>
         <Tippy content="Zoom Out">
           <button onClick={() => {
-            updateZoomLevel(false, 1.2)
+            updateZoomLevel(false, 1.1)
           }} aria-label="Zoom Out">
             <PiMinus />
           </button>
@@ -38,14 +38,14 @@ export function ControlPanel() {
         </Tippy>
         <Tippy content="Zoom In">
           <button onClick={() => {
-            updateZoomLevel(true, 1.2)
+            updateZoomLevel(true, 1.1)
           }} aria-label="Zoom In">
             <PiPlus />
           </button>
         </Tippy>
       </Card >
 
-      <Card className="absolute top-4 left-120 flex flex-row p-2 gap-2"
+      <Card className="absolute bottom-20 left-10 flex flex-row p-2 gap-2 select-none"
         style={{ zIndex: 5 }}>
         <Tippy content="Undo last action">
           <button onClick={undo} aria-label="Undo last action">

@@ -163,7 +163,6 @@ export default function Canvas() {
     const offsetY = (event.clientY - canvasRect.top) / zoomLevel - scrollTop
     const newElement = {
       id: idGenerator(),
-      type: "pencil",
       points: [{ x: offsetX, y: offsetY }]
     }
     addElement(newElement)
@@ -198,14 +197,15 @@ export default function Canvas() {
           onMouseDown={(event) => {
             handleCanvasMouseDown(event.nativeEvent)
           }}
-          style={{ position: "absolute", zIndex: 3 }}
+          style={{ position: "absolute", zIndex: drawingEnabled ? 3 : 1 }}
         />
         <div
           id="canvas-pane-droppable"
-          className={`absolute w-full h-full top-0 left-0 ${drawingEnabled ? "z-2" : "z-4"}`}
+          className={`absolute w-full h-full top-0 left-0`}
           style={{
             transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
             transformOrigin: "top left",
+            zIndex: drawingEnabled ? 1 : 3
           }}
           ref={setNodeRef}
         >
