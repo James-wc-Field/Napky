@@ -3,7 +3,7 @@ import { Project } from '@src/API'
 import { createStore } from 'zustand/vanilla'
 import { ProjectElementInstance } from './types/ProjectElements'
 import { getProjectData } from './api'
-import { CanvasElementType } from './types/NinjaSketchTypes'
+import { AllElementsType, CanvasElementType } from './types/NinjaSketchTypes'
 
 export type ProjectState = {
     projectId: string
@@ -12,10 +12,10 @@ export type ProjectState = {
     zoomLevel: number
     scrollLeft: number
     scrollTop: number
-    projectElements: ProjectElementInstance[]
     key: string
     isDrawing: boolean
-    canvasElements: CanvasElementType[]
+    index: number
+    history: AllElementsType[][]
 }
 
 export type ProjectActions = {
@@ -26,19 +26,25 @@ export type ProjectActions = {
     updateScrollTop: (scrollTop: number) => void
     addProjectElement: (element: ProjectElementInstance) => void
     updateProjectElement: (id: string, element: ProjectElementInstance) => void
-    selectedElements: () => ProjectElementInstance[]
-    updateSelectedElements: (selectedElements: ProjectElementInstance[]) => void
-    removeSelectedElements: () => void
+    // selectedElements: () => ProjectElementInstance[]
+    canvasElements: () => CanvasElementType[]
+    projectElements: () => ProjectElementInstance[]
+    // updateSelectedElements: (selectedElements: ProjectElementInstance[]) => void
+    // removeSelectedElements: () => void
     updateKey: (key: string) => void
-    setAllElementsSelected: () => void
-    deleteElement: (id: string) => void
-    deleteSelectedElements: () => void
+    // setAllElementsSelected: () => void
+    // deleteElement: (id: string) => void
+    // deleteSelectedElements: () => void
     updateIsDrawing: (isDrawing?: boolean) => void
     addCanvasElement(element: CanvasElementType): void
     updateCanvasPoints: (id: string, element: CanvasElementType) => void
+    updateHistory: (elements: AllElementsType[], overwrite?: boolean) => void
+    undo: () => void
+    redo: () => void
     // updateCanvasPoints: (points: { x: number, y: number }) => void
 
 }
+
 
 
 export type ProjectStore = ProjectState & ProjectActions
@@ -50,10 +56,10 @@ export const defaultInitState: ProjectState = {
     zoomLevel: 1,
     scrollLeft: 0,
     scrollTop: 0,
-    projectElements: [] as ProjectElementInstance[],
-    canvasElements: [] as CanvasElementType[],
     key: "",
-    isDrawing: false
+    isDrawing: false,
+    index: 0,
+    history: [[]] as AllElementsType[][]
 }
 const updateZoomLevel = (zoomLevel: number, zoomIn: boolean, multiplier: number) => {
     const MIN_ZOOM = 0.05;
@@ -73,97 +79,8 @@ const updateSelectedElements = (elements: ProjectElementInstance[], selectedElem
     return elements.map((el) => selectedElements.find((sel) => sel.id === el.id) ? { ...el, selected: true } : { ...el, selected: false })
 }
 
-// export const useWindowResize = (canvas: HTMLDivElement | null) => {
-//     useEffect(() => {
-//         const handleResize = () => {
-//             if (canvas) {
-//                 const boundingBox = canvas.getBoundingClientRect();
-//                 setCanvasViewRect({
-//                     top: boundingBox.top,
-//                     left: boundingBox.left,
-//                     right: boundingBox.right,
-//                     bottom: boundingBox.bottom,
-//                     width: boundingBox.width,
-//                     height: boundingBox.height,
-//                 });
-//             }
-//         };
-//         window.addEventListener("resize", handleResize);
-//         return () => {
-//             window.removeEventListener("resize", handleResize);
-//         };
-//     }, [canvas])
-// };
-
-// const [outerMostElements, setOuterMostElements] = useState<{
-//     top: ProjectElementInstance | null;
-//     left: ProjectElementInstance | null;
-//     right: ProjectElementInstance | null;
-//     bottom: ProjectElementInstance | null;
-// }>({ top: null, left: null, right: null, bottom: null });
-// const [canvasViewRect, setCanvasViewRect] = useState({
-//     top: 0,
-//     left: 0,
-//     right: 0,
-//     bottom: 0,
-//     width: 0,
-//     height: 0,
-// });
 
 
-//   const useResize = (element: ProjectElementInstance, startPos:Position) => {
-//   //   useEffect(() => {
-//   //   const handleMouseMove =
-//   //   (e: MouseEvent) => {
-//   //     if (isResizing){
-//   //       const newWidth = element.size.width + e.clientX - startPos.x!
-//   //       const newHeight = element.size.height + e.clientY - startPos.y!
-//   //       updateElement(element.id, {
-//   //         ...element,
-//   //         size: {
-//   //           width: newWidth,
-//   //           height: newHeight
-//   //         }
-//   //       })
-//   //     }
-//   //   }
-//   //   const handleMouseUp = () => {
-//   //     setIsResizing(false)
-//   //   }
-//   //   window.addEventListener('mousemove', handleMouseMove)
-//   //     window.addEventListener('mouseup', handleMouseUp)
-//   //   return () => {
-//   //     window.removeEventListener('mousemove', handleMouseMove)
-//   //     window.removeEventListener('mouseup', handleMouseUp)
-//   //   }
-//   // }, [isResizing,startPos])
-// }
-
-
-
-//   useEffect(() => {
-//     let top: ProjectElementInstance | null = null;
-//     let left: ProjectElementInstance | null = null;
-//     let right: ProjectElementInstance | null = null;
-//     let bottom: ProjectElementInstance | null = null;
-
-//     elements.forEach((element) => {
-//       if (!top || element.position.y < top.position.y) {
-//         top = element;
-//       }
-//       if (!left || element.position.x < left.position.x) {
-//         left = element;
-//       }
-//       if (!right || element.position.x > right.position.x) {
-//         right = element;
-//       }
-//       if (!bottom || element.position.y > bottom.position.y) {
-//         bottom = element;
-//       }
-//     });
-
-//     setOuterMostElements({ top, left, right, bottom });
-//   }, [elements]);
 
 export const createProjectStore = (
     initState: ProjectState = defaultInitState,
@@ -181,47 +98,88 @@ export const createProjectStore = (
         },
         updateScrollLeft: (scrollLeft: number) => set((state) => ({ scrollLeft: state.scrollLeft + scrollLeft })),
         updateScrollTop: (scrollTop: number) => set((state) => ({ scrollTop: state.scrollTop + scrollTop })),
-        addProjectElement: (element: ProjectElementInstance) => set((state) => ({
-            projectElements: [...state.projectElements, element]
-        })),
-        updateProjectElement: (id: string, element: ProjectElementInstance) => set((state) => ({
-            projectElements: state.projectElements.map((el) => el.id === id ? element : el)
-        })),
-        selectedElements: () => {
-            return get().projectElements.filter((el) => el.selected)
-        },
-        updateSelectedElements: (selectedElements: ProjectElementInstance[]) => {
+        addProjectElement: (element: ProjectElementInstance) => {
+            console.log(get().history)
             set((state) => ({
-                ...state,
-                elements: updateSelectedElements(state.projectElements, selectedElements)
+                history: [...state.history, [...state.history[state.index], element]],
+                index: state.index + 1
             }))
         },
-        removeSelectedElements: () => set((state) => ({
-            ...state,
-            elements: state.projectElements.map((el) => el.selected ? { ...el, selected: false } : el)
-        })),
+        updateProjectElement: (id: string, element: ProjectElementInstance) => {
+            const updatedState = get().history[get().index - 1].map((el) => (el.id === id ? element : el));
+            set((state) => ({
+                history: [...state.history, updatedState],
+            }))
+        },
+
+        // const updateElement = (id: string | number, element: AllElementsType, isHistory: boolean = true) => {
+        //     const updatedState = [...history][isHistory ? index : index - 1].map((el) => (el.id === id ? element : el));
+        //     setHistory((historyState) => [...historyState, updatedState]);
+        //     if (isHistory) setIndex((prevState) => prevState + 1);
+        // };
+        canvasElements: () => get().history[get().index]?.filter((el) => 'points' in el) as CanvasElementType[] || [],
+        projectElements: () => get().history[get().index]?.filter((el) => 'size' in el) as ProjectElementInstance[] || [],
+        // selectedElements: () => {
+        //     return get().history[get().index].filter((el) => el.selected)
+        // },
+        // updateSelectedElements: (selectedElements: ProjectElementInstance[]) => {
+        //     set((state) => ({
+        //         ...state,
+        //         elements: updateSelectedElements(state.projectElements, selectedElements)
+        //     }))
+        // },
+        // removeSelectedElements: () => set((state) => ({
+        //     ...state,
+        //     elements: state.projectElements.map((el) => el.selected ? { ...el, selected: false } : el)
+        // })),
         updateKey: (key: string) => set({
             key
         }),
-        setAllElementsSelected: () => set((state) => ({
-            projectElements: state.projectElements.map((el) => ({ ...el, selected: true }))
-        })),
-        deleteElement: (id: string) => set((state) => ({
-            projectElements: state.projectElements.filter((el) => el.id !== id)
-        })),
-        deleteSelectedElements: () => set((state) => ({
-            projectElements: state.projectElements.filter((el) => !el.selected)
-        })),
+        // setAllElementsSelected: () => set((state) => ({
+        //     projectElements: state.projectElements.map((el) => ({ ...el, selected: true }))
+        // })),
+        // deleteElement: (id: string) => set((state) => ({
+        //     projectElements: state.projectElements.filter((el) => el.id !== id)
+        // })),
+        // deleteSelectedElements: () => set((state) => ({
+        //     projectElements: state.projectElements.filter((el) => !el.selected)
+        // })),
         updateIsDrawing: (isDrawing?: boolean) => set((state) => ({
             isDrawing: isDrawing || !state.isDrawing
         })),
         addCanvasElement: (element: CanvasElementType) => set((state) => ({
-            canvasElements: [...state.canvasElements, element]
+            history: [...state.history, [...state.history[state.index], element]],
+            index: state.index + 1,
         })),
         updateCanvasPoints: (id: string, element: CanvasElementType) => set((state) => ({
-            canvasElements: state.canvasElements.map((el) => el.id === id ? element : el)
-            // canvasElements: [...state.canvasElements, { ...state.canvasElements[state.canvasElements.length - 1], points: [...state.canvasElements[state.canvasElements.length - 1].points ?? [], points] }]
+            history: [...state.history, state.history[state.index].map((el) => el.id === id ? element : el)],
+            index: state.index + 1
+        })),
+        updateHistory: (elements: AllElementsType[], overwrite = false) => {
+            const historyCopy = get().history
+            historyCopy[get().index] = elements
+            const updatedState = [...historyCopy].slice(0, get().index + 1)
+            set((state) => ({
+                history: overwrite ? historyCopy : [...updatedState, elements],
+                index: overwrite ? state.index : state.index + 1
+            }))
+        },
+        undo: () => set((state) => ({
+            index: state.index > 0 ? state.index - 1 : state.index
+        })),
+        redo: () => set((state) => ({
+            index: state.index < history.length - 1 ? state.index + 1 : state.index
         }))
 
     }))
 }
+
+// if(overwrite) {
+//     const historyCopy = [...state.history];
+//     historyCopy[index] = action;
+//     setHistory(historyCopy);
+// } else {
+//     const updatedState = [...history].slice(0, index + 1);
+//     setHistory([...updatedState, action]);
+//   setIndex((prevState) => prevState + 1);
+// }

@@ -60,7 +60,7 @@ export default function ProjectBuilder() {
           </span>
           <Button
             className="gap-1"
-            onClick={() => saveProject(projectId, projectName, projectElements)}
+            onClick={() => saveProject(projectId, projectName, projectElements())}
           >
             <Save className="h-5 w-6" />
           </Button>

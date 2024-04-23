@@ -23,9 +23,11 @@ export default function Canvas() {
   const scrollLeft = useProjectStore((state) => state.scrollLeft);
   const scrollTop = useProjectStore((state) => state.scrollTop);
   const zoomLevel = useProjectStore((state) => state.zoomLevel);
-  const setAllElementsSelected = useProjectStore((state) => state.setAllElementsSelected);
-  const deleteSelectedElements = useProjectStore((state) => state.deleteSelectedElements);
+  // const setAllElementsSelected = useProjectStore((state) => state.setAllElementsSelected);
+  // const deleteSelectedElements = useProjectStore((state) => state.deleteSelectedElements);
+  const updateHistory = useProjectStore((state) => state.updateHistory);
   const canvasElements = useProjectStore((state) => state.canvasElements);
+  const history = useProjectStore((state) => state.history);
   const addCanvasElement = useProjectStore((state) => state.addCanvasElement);
   const updateCanvasPoints = useProjectStore((state) => state.updateCanvasPoints);
   const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false)
@@ -34,7 +36,8 @@ export default function Canvas() {
   const setDrawingEnabled = useProjectStore((state) => state.updateIsDrawing);
   const selectableRef = useRef<SelectableRef>(null);
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
-  const [scale, setScale] = useState(1);
+  const undo = useProjectStore((state) => state.undo);
+  const redo = useProjectStore((state) => state.redo);
 
   const { setNodeRef } = useDroppable({
     id: "canvas-droppable",
@@ -54,27 +57,27 @@ export default function Canvas() {
     );
     context.scale(zoomLevel, zoomLevel);
 
-    canvasElements.forEach((element) => {
+    canvasElements().forEach((element) => {
       drawElement(context, element);
     });
     context.restore();
-  }, [canvasElements, zoomLevel, scrollLeft, scrollTop]);
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent): void => {
-      if (e.key === "a" && e.ctrlKey) {
-        e.preventDefault();
-        console.log("ctrl+a")
-        setAllElementsSelected();
-      }
-      if (e.key === "Delete") {
-        deleteSelectedElements();
-      }
-    }
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [setAllElementsSelected, deleteSelectedElements]);
+  }, [canvasElements(), zoomLevel, scrollLeft, scrollTop]);
+  // useEffect(() => {
+  //   const handleKeyDown = (e: KeyboardEvent): void => {
+  //     if (e.key === "a" && e.ctrlKey) {
+  //       e.preventDefault();
+  //       console.log("ctrl+a")
+  //       setAllElementsSelected();
+  //     }
+  //     if (e.key === "Delete") {
+  //       deleteSelectedElements();
+  //     }
+  //   }
+  //   document.addEventListener("keydown", handleKeyDown);
+  //   return () => {
+  //     document.removeEventListener("keydown", handleKeyDown);
+  //   };
+  // }, [setAllElementsSelected, deleteSelectedElements]);
 
   const handleMiddleDown = (e: React.MouseEvent) => {
     if (e.button === 1) {
@@ -82,25 +85,25 @@ export default function Canvas() {
     }
   };
 
-  // useEffect(() => {
-  //     const undoRedoFunction = (event: KeyboardEvent) => {
-  //         if (event.ctrlKey || event.metaKey) {
-  //             if (event.key === "z") {
-  //                 if (event.shiftKey) {
-  //                     redo();
-  //                 } else {
-  //                     undo();
-  //                 }
-  //             } else if (event.key === "y") {
-  //                 redo();
-  //             }
-  //         }
-  //     };
-  //     document.addEventListener("keydown", undoRedoFunction);
-  //     return () => {
-  //         document.removeEventListener("keydown", undoRedoFunction);
-  //     };
-  // }, [undo, redo]);
+  useEffect(() => {
+    const undoRedoFunction = (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.metaKey) {
+        if (event.key === "z") {
+          if (event.shiftKey) {
+            redo();
+          } else {
+            undo();
+          }
+        } else if (event.key === "y") {
+          redo();
+        }
+      }
+    };
+    document.addEventListener("keydown", undoRedoFunction);
+    return () => {
+      document.removeEventListener("keydown", undoRedoFunction);
+    };
+  }, [undo, redo]);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (middleMouseIsDown) {
@@ -142,16 +145,16 @@ export default function Canvas() {
     if (!isDrawing) return;
     const canvasRect = canvasRef.current?.getBoundingClientRect();
     if (!canvasRect) return;
-
     const offsetX = (event.clientX - canvasRect.left) / zoomLevel - scrollLeft;
     const offsetY = (event.clientY - canvasRect.top) / zoomLevel - scrollTop;
-    const index = canvasElements.length - 1;
-    const existingPoints = canvasElements[index].points || [];
-    const elementsCopy = [...canvasElements];
+    const index = canvasElements().length - 1;
+    const existingPoints = canvasElements()[index].points || [];
+    const elementsCopy = [...canvasElements()];
     elementsCopy[index] = {
       ...elementsCopy[index],
       points: [...existingPoints, { x: offsetX, y: offsetY }],
     };
+    // updateHistory(elementsCopy);
     updateCanvasPoints(elementsCopy[index].id, elementsCopy[index])
   };
   const handleCanvasMouseUp = () => {
@@ -160,6 +163,7 @@ export default function Canvas() {
   };
 
   const handleCanvasMouseDown = (event: MouseEvent) => {
+    console.log("mousedown")
     const canvasRect = canvasRef.current?.getBoundingClientRect(); // Get the dimensions and position of the canvas
     if (!canvasRect) return;
 
@@ -171,13 +175,10 @@ export default function Canvas() {
       points: [{ x: offsetX, y: offsetY }]
     }
     addCanvasElement(newElement)
+    console.log(canvasElements())
     setIsDrawing(true);
   };
   const canvasRef = useRef<HTMLDivElement>(null);
-  const onZoom = (zoomIn: boolean, delta: number) => {
-    if (zoomIn) setScale((prevState) => Math.min(Math.max(prevState * delta, 0.05), 5));
-    else setScale((prevState) => Math.max(prevState / delta, 0.05));
-  };
   return (
     <>
       {/* <Selectable ref={selectableRef} value={selectedElements()} onStart={(e) => {
@@ -217,7 +218,7 @@ export default function Canvas() {
           }}
           ref={setNodeRef}
         >
-          {projectElements.map((element) => {
+          {projectElements().map((element) => {
             if (element.parentId !== "root") return null;
             return <CanvasElementWrapper key={element.id} element={element} />;
           })}
@@ -225,12 +226,7 @@ export default function Canvas() {
       </div>
       {/* </Selectable > */}
       <CanvasToolbar />
-      <ControlPanel
-        undo={() => { }}
-        redo={() => { }}
-        onZoom={onZoom}
-        scale={scale}
-        setScale={setScale} />
+      <ControlPanel />
       {/* <MiniMap /> */}
       <CanvasBackground />
     </>
@@ -250,7 +246,8 @@ function CanvasElementWrapper({
       isCanvasElement: true,
     },
   });
-  const { selectedElements, updateProjectElement, updateSelectedElements } = useProjectStore(useShallow((state) => state));
+  // const { selectedElements, updateProjectElement, updateSelectedElements } = useProjectStore(useShallow((state) => state));
+  const updateProjectElement = useProjectStore((state) => state.updateProjectElement);
   const [isResizing, setIsResizing] = useState(false)
   type Position = {
     x: number | null;
@@ -306,13 +303,13 @@ function CanvasElementWrapper({
     }}
     >
       <div onMouseDown={(e) => {
-        if (e.ctrlKey) {
-          updateSelectedElements([element])
-        } else {            // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
-          if (selectedElements.length == 1) {
-            updateSelectedElements([element])
-          }
-        }
+        // if (e.ctrlKey) {
+        //   updateSelectedElements([element])
+        // } else {            // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
+        //   if (selectedElements.length == 1) {
+        //     updateSelectedElements([element])
+        //   }
+        // }
       }} className="relative">
         <div {...listeners} {...attributes}>
           <CanvasElement elementInstance={element} />

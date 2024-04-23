@@ -50,7 +50,7 @@ function CanvasComponent({
 }: {
   elementInstance: ProjectElementInstance;
 }) {
-  const updateElement = useProjectStore((state) => state.updateElement);
+  const updateElement = useProjectStore((state) => state.updateProjectElement);
   const element = elementInstance as CustomInstance;
   const { placeHolder, checked, items } = element.extraAttributes;
   const style = {

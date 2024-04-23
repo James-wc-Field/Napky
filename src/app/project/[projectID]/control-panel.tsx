@@ -8,22 +8,12 @@ import {
 import { Card } from "@/components/ui/card";
 import { useProjectStore } from "./storeProvider";
 
-type ControlPanelProps = {
-  undo: () => void;
-  redo: () => void;
-  onZoom: (zoomIn: boolean, scale: number) => void;
-  scale: number;
-  setScale: (scale: number) => void;
-};
 
-export function ControlPanel({
-  undo,
-  redo,
-  onZoom,
-  scale,
-  setScale,
-}: ControlPanelProps) {
+export function ControlPanel() {
+  const undo = useProjectStore((state) => state.undo);
+  const redo = useProjectStore((state) => state.redo);
   const updateZoomLevel = useProjectStore((state) => state.updateZoomLevel);
+  const zoomLevel = useProjectStore((state) => state.zoomLevel);
   return (
     <>
       <Card
@@ -31,26 +21,24 @@ export function ControlPanel({
         style={{ zIndex: 5 }}>
         <Tippy content="Zoom Out">
           <button onClick={() => {
-            onZoom(false, 1.05)
-            updateZoomLevel(false, 1.05)
+            updateZoomLevel(false, 1.2)
           }} aria-label="Zoom Out">
             <PiMinus />
           </button>
         </Tippy>
         <Tippy content={`Set scale to 100%`}>
           <button
-            onClick={() => setScale(1)}
+            onClick={() => updateZoomLevel(zoomLevel < 1, 1)}
             aria-label={`Set scale to 100%`}
           >
             {new Intl.NumberFormat("en-GB", { style: "percent" }).format(
-              scale
+              zoomLevel
             )}
           </button>
         </Tippy>
         <Tippy content="Zoom In">
           <button onClick={() => {
-            onZoom(true, 1.05)
-            updateZoomLevel(true, 1.05)
+            updateZoomLevel(true, 1.2)
           }} aria-label="Zoom In">
             <PiPlus />
           </button>
