@@ -43,7 +43,7 @@ export enum ModelAttributeTypes {
   _null = "_null",
 }
 
-
+ 
 export type ModelSizeInput = {
   ne?: number | null,
   eq?: number | null,
