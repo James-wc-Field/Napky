@@ -4,18 +4,23 @@ import { ImageBlockProjectElement } from "../blocks/ImageBlock";
 import { LinkBlockProjectElement } from "..//blocks/LinkBlock";
 import { ListBlockProjectElement } from "../blocks/ListBlock";
 import { TodoBlockProjectElement } from "../blocks/TodoBlock";
+import { LoadingBlockProjectElement } from "../blocks/LoadingBlock";
 
 export type ElementsType =
   | "TextBlock"
   | "ImageBlock"
   | "LinkBlock"
   | "ListBlock"
-  | "TodoBlock";
+  | "TodoBlock"
+  | "LoadingBlock";
 
 export type ProjectElement = {
   type: ElementsType;
 
   construct: (id: string, parentId: string) => ProjectElementInstance;
+  
+  // Used when the element is pulled from the server to append any unstored attributes
+  addUnstoredAttributes?: (elementInstance: ProjectElementInstance) => ProjectElementInstance;
 
   toolbarElement: {
     icon: React.ElementType;
@@ -31,7 +36,7 @@ export type ProjectElement = {
 export type Position = {
   x: number | null;
   y: number | null;
-}
+};
 
 export type ProjectElementInstance = {
   id: string;
@@ -46,7 +51,13 @@ export type ProjectElementInstance = {
     height: number;
   };
   parentId: string;
+
+  // Extra attributes that are stored on the server
   extraAttributes?: Record<string, any>;
+  
+  // Extra attributes that do not need to be stored on the server
+  // Can be used for common functionality among element types, or generated attributes not necessary to store
+  unstoredAttributes?: Record<string, any>;
 };
 
 type ProjectElementsType = {
@@ -59,4 +70,5 @@ export const ProjectElements: ProjectElementsType = {
   LinkBlock: LinkBlockProjectElement,
   ListBlock: ListBlockProjectElement,
   TodoBlock: TodoBlockProjectElement,
+  LoadingBlock: LoadingBlockProjectElement,
 };

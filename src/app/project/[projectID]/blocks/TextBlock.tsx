@@ -14,7 +14,11 @@ const type: ElementsType = "TextBlock";
 
 const extraAttributes = {
   text: "",
-  placeHolder: "Start typing here...",
+};
+
+const unstoredAttributes = {
+  label: "Text Block",
+  placeholder: "Start typing here...",
 };
 
 export const TextBlockProjectElement: ProjectElement = {
@@ -27,7 +31,15 @@ export const TextBlockProjectElement: ProjectElement = {
     size: { width: 300, height: 75 },
     parentId,
     extraAttributes,
+    unstoredAttributes,
   }),
+
+  addUnstoredAttributes: (elementInstance) => {
+    return {
+      ...elementInstance,
+      unstoredAttributes,
+    };
+  },
 
   toolbarElement: {
     icon: Bars3Icon,
@@ -40,6 +52,7 @@ export const TextBlockProjectElement: ProjectElement = {
 
 type CustomInstance = ProjectElementInstance & {
   extraAttributes: typeof extraAttributes;
+  unstoredAttributes: typeof unstoredAttributes;
 };
 
 function CanvasComponent({
@@ -49,7 +62,8 @@ function CanvasComponent({
 }) {
   const updateElement = useProjectStore((state) => state.updateElement);
   const element = elementInstance as CustomInstance;
-  const { text, placeHolder } = element.extraAttributes;
+  const { text } = element.extraAttributes;
+  const { label, placeholder } = element.unstoredAttributes;
 
   function handleOnTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     updateElement(element.id, {
@@ -67,7 +81,7 @@ function CanvasComponent({
   return (
     <Card style={style} className="p-2">
       <Textarea
-        placeholder={placeHolder}
+        placeholder={placeholder}
         value={text}
         onChange={handleOnTextChange}
       />

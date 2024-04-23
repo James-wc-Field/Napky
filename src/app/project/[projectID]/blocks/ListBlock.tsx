@@ -7,7 +7,6 @@ import {
   ProjectElementInstance,
   ProjectElements,
 } from "@/project/[projectID]/types/ProjectElements";
-import { useSpring, animated } from '@react-spring/web'
 import { Card } from "@ui/card";
 import { useDroppable, useDraggable } from "@dnd-kit/core";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -19,10 +18,14 @@ import { useProjectStore } from "../storeProvider";
 const type: ElementsType = "ListBlock";
 
 const extraAttributes = {
-  label: "List Block",
   children: [] as string[],
 };
 
+const unstoredAttributes = {
+  label: "List Block",
+  placeholder: "Add other blocks here...",
+};
+// 
 export const ListBlockProjectElement: ProjectElement = {
   type,
   construct: (id: string, parentId: string) => ({
@@ -33,7 +36,15 @@ export const ListBlockProjectElement: ProjectElement = {
     size: { width: 300, height: 100 },
     parentId,
     extraAttributes,
+    unstoredAttributes,
   }),
+
+  addUnstoredAttributes: (element: ProjectElementInstance) => {
+    return {
+      ...element,
+      unstoredAttributes,
+    };
+  },
 
   toolbarElement: {
     icon: Bars4Icon,
@@ -46,6 +57,7 @@ export const ListBlockProjectElement: ProjectElement = {
 
 type CustomInstance = ProjectElementInstance & {
   extraAttributes: typeof extraAttributes;
+  unstoredAttributes: typeof unstoredAttributes;
 };
 
 function CanvasComponent({
@@ -54,7 +66,8 @@ function CanvasComponent({
   elementInstance: ProjectElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
-  const { label, children: children } = element.extraAttributes;
+  const { children } = element.extraAttributes;
+  const { label, placeholder } = element.unstoredAttributes;
   const style = {
     maxWidth: element.size.width,
     minHeight: element.size.height
@@ -73,7 +86,6 @@ function CanvasComponent({
       open={isOpen}
       onOpenChange={() => {
         setIsOpen(!isOpen)
-        api.start({ from: { height: isOpen ? element.size.height : 200 }, to: { height: isOpen ? 200 : element.size.height } })
       }}>
       <div>
         <Card style={style} className="flex flex-col gap-2 p-2">
@@ -105,6 +117,7 @@ function CanvasComponent({
         </Card>
       </div>
     </Collapsible >
+
   );
 }
 

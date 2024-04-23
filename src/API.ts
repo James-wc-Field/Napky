@@ -53,7 +53,7 @@ export type ModelSizeInput = {
   gt?: number | null,
   between?: Array< number | null > | null,
 };
-
+ 
 export type Comments = {
   __typename: "Comments",
   id: string,

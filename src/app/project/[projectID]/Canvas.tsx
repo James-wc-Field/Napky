@@ -24,6 +24,7 @@ export default function Canvas() {
   const deleteSelectedElements = useProjectStore((state) => state.deleteSelectedElements);
   const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false)
   const selectableRef = useRef<SelectableRef>(null);
+  const imageRef = useProjectStore((state) => state.imageRef);
   const { setNodeRef } = useDroppable({
     id: "canvas-droppable",
     data: {
@@ -87,7 +88,6 @@ export default function Canvas() {
     updateScrollTop(deltaY);
   };
 
-  const canvasRef = useRef<HTMLDivElement>(null);
   // const curr = useMemo(() => {
   //   return canvasRef.current
   // }, [canvasRef])
@@ -109,7 +109,7 @@ export default function Canvas() {
           style={{ zIndex: 4 }}
           onWheel={handleScroll}
           onMouseDown={handleMouseDown}
-          ref={canvasRef}
+          ref={imageRef}
         >
           <div
             id="canvas-pane-droppable"
@@ -132,12 +132,12 @@ export default function Canvas() {
               })}
             </div>
           </div>
+          <CanvasBackground />
         </div>
       </Selectable>
       <CanvasToolbar />
       <CanvasControls />
       {/* <MiniMap /> */}
-      <CanvasBackground />
     </>
   );
 }
