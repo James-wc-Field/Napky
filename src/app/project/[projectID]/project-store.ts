@@ -24,7 +24,7 @@ export type ProjectActions = {
     updateZoomLevel: (zoomin: boolean, multiplier: number) => void
     updateScrollLeft: (scrollLeft: number) => void
     updateScrollTop: (scrollTop: number) => void
-    addProjectElement: (element: ProjectElementInstance) => void
+    addElement: (element: AllElementsType) => void
     updateProjectElement: (id: string, element: ProjectElementInstance) => void
     // selectedElements: () => ProjectElementInstance[]
     canvasElements: () => CanvasElementType[]
@@ -36,13 +36,9 @@ export type ProjectActions = {
     // deleteElement: (id: string) => void
     // deleteSelectedElements: () => void
     updateIsDrawing: (isDrawing?: boolean) => void
-    addCanvasElement(element: CanvasElementType): void
-    updateCanvasPoints: (id: string, element: CanvasElementType) => void
-    updateHistory: (elements: AllElementsType[], overwrite?: boolean) => void
+    updateCanvasPoints: (elements: CanvasElementType[]) => void
     undo: () => void
     redo: () => void
-    // updateCanvasPoints: (points: { x: number, y: number }) => void
-
 }
 
 
@@ -98,25 +94,12 @@ export const createProjectStore = (
         },
         updateScrollLeft: (scrollLeft: number) => set((state) => ({ scrollLeft: state.scrollLeft + scrollLeft })),
         updateScrollTop: (scrollTop: number) => set((state) => ({ scrollTop: state.scrollTop + scrollTop })),
-        addProjectElement: (element: ProjectElementInstance) => {
-            console.log(get().history)
-            set((state) => ({
-                history: [...state.history, [...state.history[state.index], element]],
-                index: state.index + 1
-            }))
-        },
         updateProjectElement: (id: string, element: ProjectElementInstance) => {
             const updatedState = get().history[get().index - 1].map((el) => (el.id === id ? element : el));
             set((state) => ({
                 history: [...state.history, updatedState],
             }))
         },
-
-        // const updateElement = (id: string | number, element: AllElementsType, isHistory: boolean = true) => {
-        //     const updatedState = [...history][isHistory ? index : index - 1].map((el) => (el.id === id ? element : el));
-        //     setHistory((historyState) => [...historyState, updatedState]);
-        //     if (isHistory) setIndex((prevState) => prevState + 1);
-        // };
         canvasElements: () => get().history[get().index]?.filter((el) => 'points' in el) as CanvasElementType[] || [],
         projectElements: () => get().history[get().index]?.filter((el) => 'size' in el) as ProjectElementInstance[] || [],
         // selectedElements: () => {
@@ -147,21 +130,18 @@ export const createProjectStore = (
         updateIsDrawing: (isDrawing?: boolean) => set((state) => ({
             isDrawing: isDrawing || !state.isDrawing
         })),
-        addCanvasElement: (element: CanvasElementType) => set((state) => ({
-            history: [...state.history, [...state.history[state.index], element]],
-            index: state.index + 1,
-        })),
-        updateCanvasPoints: (id: string, element: CanvasElementType) => set((state) => ({
-            history: [...state.history, state.history[state.index].map((el) => el.id === id ? element : el)],
-            index: state.index + 1
-        })),
-        updateHistory: (elements: AllElementsType[], overwrite = false) => {
-            const historyCopy = get().history
-            historyCopy[get().index] = elements
-            const updatedState = [...historyCopy].slice(0, get().index + 1)
+        addElement: (element: AllElementsType) => {
+            console.log(get().history)
             set((state) => ({
-                history: overwrite ? historyCopy : [...updatedState, elements],
-                index: overwrite ? state.index : state.index + 1
+                history: [...state.history, [...state.history[state.index], element]],
+                index: state.index + 1,
+            }))
+        },
+        updateCanvasPoints: (elements: CanvasElementType[]) => {
+            const historyCopy = [...get().history];
+            historyCopy[get().index] = elements;
+            set((state) => ({
+                history: [...historyCopy],
             }))
         },
         undo: () => set((state) => ({
@@ -173,13 +153,3 @@ export const createProjectStore = (
 
     }))
 }
-
-// if(overwrite) {
-//     const historyCopy = [...state.history];
-//     historyCopy[index] = action;
-//     setHistory(historyCopy);
-// } else {
-//     const updatedState = [...history].slice(0, index + 1);
-//     setHistory([...updatedState, action]);
-//   setIndex((prevState) => prevState + 1);
-// }
