@@ -73,10 +73,6 @@ function CanvasComponent({
     minHeight: element.size.height
   };
   const collapsibleRef = useRef<HTMLDivElement>(null)
-  const [springs, api] = useSpring(() => ({
-    from: { height: collapsibleRef.current?.clientHeight },
-    to: { height: 500 },
-  }))
   const [isOpen, setIsOpen] = useState(true)
 
   const elements = useProjectStore((state) => state.elements);
