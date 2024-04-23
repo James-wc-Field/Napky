@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
-import ToolbarBtnElement from "@/[projectID]/ToolbarBtnElement";
-import { ProjectElements } from "@/[projectID]/types/ProjectElements";
+import ToolbarBtnElement from "@/project/ToolbarBtnElement";
+import { ProjectElements } from "@/project/types/ProjectElements";
 import { Card } from "@ui/card";
 import { useDroppable } from "@dnd-kit/core";
 import { Button } from "../components/ui/button";

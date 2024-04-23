@@ -4,7 +4,7 @@ import {
   ElementsType,
   ProjectElement,
   ProjectElementInstance,
-} from "@/[projectID]/types/ProjectElements";
+} from "@/project/types/ProjectElements";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { Card } from "@/components/ui/card";
 import { Loader } from "lucide-react";

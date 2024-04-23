@@ -5,7 +5,7 @@ import {
   ElementsType,
   ProjectElement,
   ProjectElementInstance,
-} from "@/[projectID]/types/ProjectElements";
+} from "@/project/types/ProjectElements";
 import Image from "next/image";
 
 const type: ElementsType = "ImageBlock";
