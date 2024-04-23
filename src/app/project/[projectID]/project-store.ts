@@ -140,7 +140,7 @@ export const createProjectStore = (
         updateCanvasPoints: (elements: CanvasElementType[]) => {
             console.log(get().history)
             const historyCopy = [...get().history];
-            historyCopy[get().index] = elements;
+            historyCopy[get().index] = [...elements, ...get().projectElements()];
             set((state) => ({
                 history: [...historyCopy],
             }))

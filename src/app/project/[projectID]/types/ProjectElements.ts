@@ -1,7 +1,7 @@
 import React from "react";
-import { TextBlockProjectElement } from "..//blocks/TextBlock";
+import { TextBlockProjectElement } from "../blocks/TextBlock";
 import { ImageBlockProjectElement } from "../blocks/ImageBlock";
-import { LinkBlockProjectElement } from "..//blocks/LinkBlock";
+import { LinkBlockProjectElement } from "../blocks/LinkBlock";
 import { ListBlockProjectElement } from "../blocks/ListBlock";
 import { TodoBlockProjectElement } from "../blocks/TodoBlock";
 
