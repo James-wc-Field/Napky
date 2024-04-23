@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html, body {
+  overscroll-behavior-x: none;
+}
+
 @layer base {
 /* 20, 85%, 67% new secondary color*/
 

@@ -5,10 +5,10 @@ import { idGenerator } from "@/lib/idGenerator";
 import { useExternalDrop } from "@/project/[projectID]/hooks/useExternalDrop";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
-import AppCanvas from "./AppCanvas";
 // import { useHistory } from "./hooks/useHistory";
 import { AllElementsType, CanvasElementType } from "./types/NinjaSketchTypes";
 
+import { RefObject } from "react";
 export default function BuildArea() {
 
   const projectElements = useProjectStore((state) => state.projectElements);

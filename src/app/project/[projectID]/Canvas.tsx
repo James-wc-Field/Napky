@@ -26,7 +26,7 @@ export default function Canvas() {
   // const setAllElementsSelected = useProjectStore((state) => state.setAllElementsSelected);
   // const deleteSelectedElements = useProjectStore((state) => state.deleteSelectedElements);
   // const updateHistory = useProjectStore((state) => state.updateHistory);
-  const canvasElements = useProjectStore((state) => state.canvasElements);
+  const canvasElements = useProjectStore((state) => state.canvasElements());
   const addElement = useProjectStore((state) => state.addElement);
   const updateCanvasPoints = useProjectStore((state) => state.updateCanvasPoints);
   const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false)
@@ -37,6 +37,7 @@ export default function Canvas() {
   const undo = useProjectStore((state) => state.undo);
   const redo = useProjectStore((state) => state.redo);
 
+  const imageRef = useProjectStore((state) => state.imageRef);
   const { setNodeRef } = useDroppable({
     id: "canvas-droppable",
     data: {
@@ -55,11 +56,11 @@ export default function Canvas() {
     );
     context.scale(zoomLevel, zoomLevel);
 
-    canvasElements().forEach((element) => {
+    canvasElements.forEach((element) => {
       drawElement(context, element);
     });
     context.restore();
-  }, [canvasElements(), zoomLevel, scrollLeft, scrollTop]);
+  }, [canvasElements, zoomLevel, scrollLeft, scrollTop]);
   // useEffect(() => {
   //   const handleKeyDown = (e: KeyboardEvent): void => {
   //     if (e.key === "a" && e.ctrlKey) {
@@ -141,11 +142,11 @@ export default function Canvas() {
     if (!canvasRect) return;
     const offsetX = (event.clientX - canvasRect.left) / zoomLevel - scrollLeft;
     const offsetY = (event.clientY - canvasRect.top) / zoomLevel - scrollTop;
-    const index = canvasElements().length - 1;
-    const elementsCopy = [...canvasElements()];
+    const index = canvasElements.length - 1;
+    const elementsCopy = [...canvasElements];
     elementsCopy[index] = {
       ...elementsCopy[index],
-      points: [...canvasElements()[index].points || [], { x: offsetX, y: offsetY }],
+      points: [...canvasElements[index].points || [], { x: offsetX, y: offsetY }],
     };
     updateCanvasPoints(elementsCopy)
   };
@@ -215,10 +216,10 @@ export default function Canvas() {
         </div>
       </div>
       {/* </Selectable > */}
+      <CanvasBackground />
       <CanvasToolbar />
       <ControlPanel />
       {/* <MiniMap /> */}
-      <CanvasBackground />
     </>
   );
 }
