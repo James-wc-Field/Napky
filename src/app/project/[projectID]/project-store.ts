@@ -132,13 +132,14 @@ export const createProjectStore = (
         })),
         addElement: (element: AllElementsType) => {
             set((state) => ({
-                history: [...state.history, [...state.history[state.index], element]],
+                history: [...state.history.slice(0, state.index + 1), [...state.history[state.index], element]],
                 index: state.index + 1,
             }))
             console.log(get().history)
+            console.log(get().index)
+            console.log(get().history[get().index])
         },
         updateCanvasPoints: (elements: CanvasElementType[]) => {
-            console.log(get().history)
             const historyCopy = [...get().history];
             historyCopy[get().index] = [...elements, ...get().projectElements()];
             set((state) => ({

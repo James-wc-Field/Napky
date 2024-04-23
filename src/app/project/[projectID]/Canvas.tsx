@@ -34,7 +34,6 @@ export default function Canvas() {
   const drawingEnabled = useProjectStore((state) => state.isDrawing);
   const setDrawingEnabled = useProjectStore((state) => state.updateIsDrawing);
   const selectableRef = useRef<SelectableRef>(null);
-  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
   const undo = useProjectStore((state) => state.undo);
   const redo = useProjectStore((state) => state.redo);
 
@@ -106,10 +105,6 @@ export default function Canvas() {
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (middleMouseIsDown) {
-      setPanOffset((prevState) => ({
-        x: prevState.x + e.movementX,
-        y: prevState.y + e.movementY,
-      }));
       selectableRef?.current?.cancel();
       updateScrollLeft(e.movementX);
       updateScrollTop(e.movementY);
