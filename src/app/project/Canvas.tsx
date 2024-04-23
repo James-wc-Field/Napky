@@ -1,4 +1,4 @@
-import { ReactNode, use, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { ProjectElementInstance, ProjectElements } from "@/project/types/ProjectElements";
 // import MiniMap from "@/project/[projectID]/MiniMap";
@@ -155,7 +155,7 @@ function CanvasElementWrapper({
       isCanvasElement: true,
     },
   });
-  const { selectedElements, updateElement, updateSelectedElements } = useProjectStore(useShallow((state) => state));
+  const { elements, updateElement, updateSelectedElements } = useProjectStore(useShallow((state) => state));
   const [isResizing, setIsResizing] = useState(false)
   type Position = {
     x: number | null;
@@ -170,8 +170,6 @@ function CanvasElementWrapper({
     visibility: isDragging ? "hidden" : undefined,
     width: element.size.width,
     height: element.size.height,
-    cursor: isSelected ? "move" : "default",
-    border: isSelected ? '1px solid #1677ff' : undefined,
   };
   const resizeHandle = useRef<HTMLDivElement>(null)
 
@@ -179,13 +177,30 @@ function CanvasElementWrapper({
     const handleMouseMove = (e: MouseEvent) => {
       const newWidth = element.size.width + e.clientX - startPos.x!
       const newHeight = element.size.height + e.clientY - startPos.y!
-      updateElement(element.id, {
-        ...element,
-        size: {
-          width: newWidth,
-          height: newHeight
+      if (element.extraAttributes?.children) {
+        element.extraAttributes.children.forEach((id: string) => {
+          const child = elements.find((e) => e.id === id);
+          if (child) {
+            updateElement(id, {
+              ...child,
+              size: {
+                width: newWidth,
+                height: newHeight
+              }
+            })
+          }
         }
-      })
+        )
+      }
+      if (element.id) {
+        updateElement(element.id, {
+          ...element,
+          size: {
+            width: newWidth,
+            height: newHeight
+          }
+        })
+      }
     }
     const handleMouseUp = () => {
       setIsResizing(false)
@@ -202,39 +217,30 @@ function CanvasElementWrapper({
   const CanvasElement = useMemo(() => {
     return ProjectElements[element.type].canvasComponent;
   }, [element]);
-  // useResize(element,startPos)
-
+  const parentRef = useRef<HTMLDivElement>(null)
   return (
-    <div style={style} ref={(ref) => {
+    <div className={`left-${element.position.x} top-${element.position.y}`} style={style} ref={(ref) => {
       setDragRef(ref);
       setSelectRef(ref);
     }}
     >
-      <div onMouseDown={(e) => {
-        if (e.ctrlKey) {
-          updateSelectedElements([element])
-        } else {            // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
-          if (selectedElements.length == 1) {
+      <div className="relative">
+        <div onMouseDown={(e) => {
+          if (e.ctrlKey) {
             updateSelectedElements([element])
+          } else {
+            // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
           }
-        }
-      }} className="relative">
-        <div {...listeners} {...attributes}>
-          <CanvasElement elementInstance={element} />
+        }}>
+          <div ref={parentRef} className={`${isSelected ? "cursor-move border-blue-600 border-2 border-solid rounded-lg" : "cursor-default"}`} {...listeners} {...attributes}>
+            <CanvasElement elementInstance={element} />
+          </div>
         </div>
-        <div className="absolute"
+        <div className="absolute -bottom-5 -right-5 w-3 h-3 bg-gray-500 cursor-nwse-resize"
           ref={resizeHandle}
           onMouseDown={(e) => {
             setIsResizing(true)
             setStartPos({ x: e.clientX, y: e.clientY })
-          }}
-          style={{
-            bottom: -10,
-            right: -10,
-            width: '10px',
-            height: '10px',
-            backgroundColor: 'grey',
-            cursor: 'nwse-resize'
           }}
         ></div>
       </div>
