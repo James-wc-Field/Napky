@@ -13,9 +13,9 @@ import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
 
 export default function DragOverlayWrapper() {
-  const removeSelectedElements = useProjectStore((state) => state.removeSelectedElements);
-  const selectedElements = useProjectStore((state) => state.selectedElements);
-  const elements = useProjectStore((state) => state.elements);
+  // const removeSelectedElements = useProjectStore((state) => state.removeSelectedElements);
+  // const selectedElements = useProjectStore((state) => state.selectedElements);
+  const elements = useProjectStore((state) => state.projectElements);
   const zoomLevel = useProjectStore((state) => state.zoomLevel);
   const [draggedItem, setDraggedItem] = useState<Active | null>(null);
 
@@ -26,11 +26,11 @@ export default function DragOverlayWrapper() {
     },
     onDragCancel: (event: DragCancelEvent) => {
       setDraggedItem(null);
-      removeSelectedElements();
+      // removeSelectedElements();
     },
     onDragEnd: (event: DragEndEvent) => {
       setDraggedItem(null);
-      removeSelectedElements();
+      // removeSelectedElements();
 
     },
   });
@@ -55,17 +55,17 @@ export default function DragOverlayWrapper() {
   const isListElement = draggedItem.data?.current?.isListElement;
   if (isCanvasElement || isListElement) {
     const elementId = draggedItem.data?.current?.elementId;
-    const element = elements.find((element) => element.id === elementId);
+    const element = elements()?.find((element) => element.id === elementId);
     const isSelected = element?.selected;
 
     if (!element) return <div>Dragged element not found</div>;
     if (isSelected) {
-      node = <>
-        {selectedElements().map((element) => {
-          const CanvasElementComponent =
-            ProjectElements[element.type as ElementsType].canvasComponent;
-          return <CanvasElementComponent key={element.id} elementInstance={element} />;
-        })}</>;
+      // node = <>
+      //   {selectedElements().map((element) => {
+      //     const CanvasElementComponent =
+      //       ProjectElements[element.type as ElementsType].canvasComponent;
+      //     return <CanvasElementComponent key={element.id} elementInstance={element} />;
+      //   })}</>;
     } else {
       const CanvasElementComponent =
         ProjectElements[element.type as ElementsType].canvasComponent;
