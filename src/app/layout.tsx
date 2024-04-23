@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import ConfigureAmplifyClientSide from "./lib/ConfigureAmplifyClientSIde";
-import { cn } from "@/lib/utils";
+import ConfigureAmplifyClientSide from "./_lib/ConfigureAmplifyClientSIde";
+import { cn } from "@/_lib/utils";
 import FeedbackToast from "./components/FeedbackToast";
+import { NavigationBar } from "./components/NavigationBar";
+import { ProjectStoreProvider } from "./project/storeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +27,19 @@ export default function RootLayout({
         <Providers>
           <ConfigureAmplifyClientSide />
           <div> {/* className="h-screen overflow-hidden"> */}
-            <main>{children}</main>
+            <main>
+              <div className="flex flex-col min-h-screen max-h-screen min-w-full">
+                <main className="flex grow">
+                  <div className="w-full mx-auto overflow-hidden">
+                    <NavigationBar>
+                    </NavigationBar>
+                    <ProjectStoreProvider>
+                      {children}
+                    </ProjectStoreProvider>
+                  </div>
+                </main>
+              </div>
+            </main>
           </div>
           <FeedbackToast />
         </Providers>
