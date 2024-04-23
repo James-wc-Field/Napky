@@ -23,12 +23,12 @@ const unstoredAttributes = {
 
 export const TextBlockProjectElement: ProjectElement = {
   type,
-  construct: (id: string, parentId: string) => ({
+  construct: (id: string, parentId: string, parentWidth) => ({
     id,
     type,
     selected: false,
     position: { x: 0, y: 0 },
-    size: { width: 300, height: 75 },
+    size: { width: parentWidth ?? 300, height: 75 },
     parentId,
     extraAttributes,
     unstoredAttributes,
