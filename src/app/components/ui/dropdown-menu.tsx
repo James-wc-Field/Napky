@@ -3,19 +3,19 @@
 import * as React from "react"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
 import { Check, ChevronRight, Circle } from "lucide-react"
-import { cva, type VariantProps} from "class-variance-authority"
+import { cva, type VariantProps } from "class-variance-authority"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/_lib/utils"
 
 const menuVariants = cva(
   {
     variants: {
-    default: ""
-  },
-  defaultVariants: {
-    variant: "default"
+      default: ""
+    },
+    defaultVariants: {
+      variant: "default"
+    }
   }
-}
 
 )
 
