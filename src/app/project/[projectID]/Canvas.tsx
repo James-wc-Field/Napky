@@ -29,6 +29,7 @@ export default function Canvas() {
   const canvasElements = useProjectStore((state) => state.canvasElements());
   const addElement = useProjectStore((state) => state.addElement);
   const updateCanvasPoints = useProjectStore((state) => state.updateCanvasPoints);
+  const removeSelectedElements = useProjectStore((state) => state.removeSelectedElements);
   const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false)
   const [isDrawing, setIsDrawing] = useState(false);
   const drawingEnabled = useProjectStore((state) => state.isDrawing);
@@ -64,6 +65,9 @@ export default function Canvas() {
   const handleMiddleDown = (e: React.MouseEvent) => {
     if (e.button === 1) {
       setMiddleMouseIsDown(true);
+    } else {
+      console.log(e)
+      removeSelectedElements();
     }
   };
 

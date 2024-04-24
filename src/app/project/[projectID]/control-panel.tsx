@@ -1,12 +1,11 @@
-import Tippy from "@tippyjs/react";
-import "tippy.js/dist/tippy.css";
-import { PiMinus, PiPlus } from "react-icons/pi";
-import {
-  HiOutlineArrowUturnLeft,
-  HiOutlineArrowUturnRight,
-} from "react-icons/hi2";
+import { ArrowUturnLeftIcon } from "@heroicons/react/24/solid";
+import { ArrowUturnRightIcon } from "@heroicons/react/24/solid";
+import { PlusIcon } from "@heroicons/react/24/solid";
+import { MinusIcon } from "@heroicons/react/24/solid";
 import { Card } from "@/components/ui/card";
 import { useProjectStore } from "./storeProvider";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 
 export function ControlPanel() {
@@ -19,45 +18,71 @@ export function ControlPanel() {
       <Card
         className="absolute bottom-20 right-10 flex flex-row p-2 gap-2 select-none"
         style={{ zIndex: 5 }}>
-        <Tippy content="Zoom Out">
-          <button onClick={() => {
-            updateZoomLevel(false, 1.1)
-          }} aria-label="Zoom Out">
-            <PiMinus />
-          </button>
-        </Tippy>
-        <Tippy content={`Set scale to 100%`}>
-          <button
-            onClick={() => updateZoomLevel(zoomLevel < 1, 1)}
-            aria-label={`Set scale to 100%`}
-          >
-            {new Intl.NumberFormat("en-GB", { style: "percent" }).format(
-              zoomLevel
-            )}
-          </button>
-        </Tippy>
-        <Tippy content="Zoom In">
-          <button onClick={() => {
-            updateZoomLevel(true, 1.1)
-          }} aria-label="Zoom In">
-            <PiPlus />
-          </button>
-        </Tippy>
-      </Card >
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={() => {
+                updateZoomLevel(false, 1.1)
+              }}>
+                <MinusIcon className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Zoom Out</p>
+            </TooltipContent>
+          </Tooltip>
 
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={() => updateZoomLevel(zoomLevel < 1, 1)}>
+                {new Intl.NumberFormat("en-GB", { style: "percent" }).format(
+                  zoomLevel
+                )}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Set scale to 100%</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={() => {
+                updateZoomLevel(true, 1.1)
+              }}>
+                <PlusIcon className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Zoom In</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </Card>
       <Card className="absolute bottom-20 left-10 flex flex-row p-2 gap-2 select-none"
         style={{ zIndex: 5 }}>
-        <Tippy content="Undo last action">
-          <button onClick={undo} aria-label="Undo last action">
-            <HiOutlineArrowUturnLeft />
-          </button>
-        </Tippy>
-        <Tippy content="Redo last action">
-          <button onClick={redo} aria-label="Redo last action">
-            <HiOutlineArrowUturnRight />
-          </button>
-        </Tippy>
-      </Card>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={undo}>
+                <ArrowUturnLeftIcon className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Undo last action</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={redo}>
+                <ArrowUturnRightIcon className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Redo last action</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider >
+      </Card >
     </>
   );
 }
