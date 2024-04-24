@@ -77,6 +77,7 @@ export default function BuildArea() {
         // const wasDraggedSelected = selectedElements().includes(dragged!)
         if (!dragged) return;
         // if (!wasDraggedSelected) {
+        console.log("update element")
         updateElement(dragged.id, {
           ...dragged,
           position: {
