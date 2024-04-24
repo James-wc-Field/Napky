@@ -1,9 +1,8 @@
 // src/stores/counter-store.ts
 import { Project } from '@src/API'
 import { createStore } from 'zustand/vanilla'
-import { ElementsType, ProjectElementInstance, ProjectElements } from './types/ProjectElements'
+import { AllElementsType, CanvasElementType, ElementsType, ProjectElementInstance, ProjectElements } from './types/ProjectElements'
 import { getProjectData } from './api'
-import { AllElementsType, CanvasElementType } from './types/NinjaSketchTypes'
 import { RefObject } from 'react'
 import { getImageURL } from './clientapi'
 
@@ -30,15 +29,14 @@ export type ProjectActions = {
   updateScrollTop: (scrollTop: number) => void
   addElement: (element: AllElementsType) => void
   updateProjectElement: (id: string, element: ProjectElementInstance) => void
-  // selectedElements: () => ProjectElementInstance[]
+  selectedElements: () => ProjectElementInstance[]
   canvasElements: () => CanvasElementType[]
   projectElements: () => ProjectElementInstance[]
-  // updateSelectedElements: (selectedElements: ProjectElementInstance[]) => void
   // removeSelectedElements: () => void
   updateKey: (key: string) => void
-  // setAllElementsSelected: () => void
+  setAllElementsSelected: () => void
   deleteElement: (id: string) => void
-  // deleteSelectedElements: () => void
+  deleteSelectedElements: () => void
   updateIsDrawing: (isDrawing?: boolean) => void
   updateCanvasPoints: (elements: CanvasElementType[]) => void
   undo: () => void
@@ -114,53 +112,49 @@ export const createProjectStore = (
     },
     updateScrollLeft: (scrollLeft: number) => set((state) => ({ scrollLeft: state.scrollLeft + scrollLeft })),
     updateScrollTop: (scrollTop: number) => set((state) => ({ scrollTop: state.scrollTop + scrollTop })),
+
     updateProjectElement: (id: string, element: ProjectElementInstance) => {
-      const updatedState = get().history[get().index - 1].map((el) => (el.id === id ? element : el));
+      const updatedState = get().history[get().index].map((el) => (el.id === id ? element : el));
       set((state) => ({
         history: [...state.history, updatedState],
+        index: state.index + 1
       }))
+
     },
     canvasElements: () => get().history[get().index]?.filter((el) => 'points' in el) as CanvasElementType[] || [],
     projectElements: () => get().history[get().index]?.filter((el) => 'size' in el) as ProjectElementInstance[] || [],
-    // selectedElements: () => {
-    //     return get().history[get().index].filter((el) => el.selected)
-    // },
-    // updateSelectedElements: (selectedElements: ProjectElementInstance[]) => {
-    //     set((state) => ({
-    //         ...state,
-    //         elements: updateSelectedElements(state.projectElements, selectedElements)
-    //     }))
-    // },
+    selectedElements: () => {
+      return get().projectElements().filter((el) => el.selected)
+    },
     // removeSelectedElements: () => set((state) => ({
     //     ...state,
-    //     elements: state.projectElements.map((el) => el.selected ? { ...el, selected: false } : el)
+    //     history: [...state.history, state. state.projectElements.map((el) => el.selected ? { ...el, selected: false } : el)
     // })),
     updateKey: (key: string) => set({
       key
     }),
-    // setAllElementsSelected: () => set((state) => ({
-    //     projectElements: state.projectElements.map((el) => ({ ...el, selected: true }))
-    // })),
-    deleteElement: (id: string) => set((state) => ({
-      history: [...state.history, state.history[state.index].filter((el) => el.id !== id)
-      ],
+    setAllElementsSelected: () => set((state) => ({
+      history: [...state.history, state.history[state.index].map((el) => ({ ...el, selected: true }))],
       index: state.index + 1
     })),
-    // deleteSelectedElements: () => set((state) => ({
-    //     projectElements: state.projectElements.filter((el) => !el.selected)
-    // })),
+    deleteElement: (id: string) => set((state) => ({
+      history: [...state.history, state.history[state.index].filter((el) => el.id !== id)],
+      index: state.index + 1
+    })),
+    deleteSelectedElements: () => set((state) => ({
+      history: [...state.history, state.history[state.index].filter((el) => !el.selected)],
+      index: state.index + 1
+    })),
     updateIsDrawing: (isDrawing?: boolean) => set((state) => ({
       isDrawing: isDrawing || !state.isDrawing
     })),
     addElement: (element: AllElementsType) => {
       set((state) => ({
-        history: [...state.history.slice(0, state.index + 1), [...state.history[state.index], element]],
+        history: [...state.history, [...state.history[state.index], element]],
         index: state.index + 1,
       }))
-      console.log(get().history)
-      console.log(get().index)
-      console.log(get().history[get().index])
     },
+    // Use this as an example for updating state without adding to history
     updateCanvasPoints: (elements: CanvasElementType[]) => {
       const historyCopy = [...get().history];
       historyCopy[get().index] = [...elements, ...get().projectElements()];
