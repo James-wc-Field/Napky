@@ -114,16 +114,18 @@ export const createProjectStore = (
     updateScrollLeft: (scrollLeft: number) => set((state) => ({ scrollLeft: state.scrollLeft + scrollLeft })),
     updateScrollTop: (scrollTop: number) => set((state) => ({ scrollTop: state.scrollTop + scrollTop })),
     updateProjectElement: (id: string, element: ProjectElementInstance) => {
-      const updatedState = get().history[get().index - 1].map((el) => (el.id === id ? element : el));
+      const updatedState = get().history[get().index].map((el) => (el.id === id ? element : el));
       set((state) => ({
         history: [...state.history, updatedState],
+        index: state.index + 1
       }))
+
     },
     canvasElements: () => get().history[get().index]?.filter((el) => 'points' in el) as CanvasElementType[] || [],
     projectElements: () => get().history[get().index]?.filter((el) => 'size' in el) as ProjectElementInstance[] || [],
-    // selectedElements: () => {
-    //     return get().history[get().index].filter((el) => el.selected)
-    // },
+    selectedElements: () => {
+      return get().history[get().index].filter((el) => el.selected)
+    },
     // updateSelectedElements: (selectedElements: ProjectElementInstance[]) => {
     //     set((state) => ({
     //         ...state,
