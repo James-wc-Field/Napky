@@ -1,34 +1,23 @@
 import Canvas from "@/project/[projectID]/Canvas";
 import { useDndMonitor } from "@dnd-kit/core";
-import { ElementsType, ProjectElementInstance, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
+import { ElementsType, ProjectElements } from "@/project/[projectID]/types/ProjectElements";
 import { idGenerator } from "@/lib/idGenerator";
 import { useExternalDrop } from "@/project/[projectID]/hooks/useExternalDrop";
 import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
-// import { useHistory } from "./hooks/useHistory";
-import { AllElementsType, CanvasElementType } from "./types/NinjaSketchTypes";
 
-import { RefObject } from "react";
 export default function BuildArea() {
 
   const projectElements = useProjectStore((state) => state.projectElements);
   const addElement = useProjectStore((state) => state.addElement);
   const updateElement = useProjectStore((state) => state.updateProjectElement);
-  // const selectedElements = useProjectStore((state) => state.selectedElements);
+  const selectedElements = useProjectStore((state) => state.selectedElements());
   const scrollLeft = useProjectStore(useShallow((state) => state.scrollLeft));
   const scrollTop = useProjectStore(useShallow((state) => state.scrollTop));
   const zoomLevel = useProjectStore(useShallow((state) => state.zoomLevel));
-  // const updateSelectedElements = useProjectStore((state) => state.updateSelectedElements);
-  // const deleteElement = useProjectStore((state) => state.deleteElement);
+  const deleteElement = useProjectStore((state) => state.deleteElement);
 
   useDndMonitor({
-    onDragStart: (event) => {
-      // if (event.active.data?.current?.isCanvasElement) return
-      // const elementId = event.active.data.current?.elementId;
-      // if (!(selectedElements().find((element) => element.id == elementId))) {
-      //   updateSelectedElements([elements.find((element) => element.id == elementId)!])
-      // }
-    },
     onDragEnd: (event) => {
       const { active, over, delta } = event;
       if (!active || !over) return;
@@ -42,7 +31,7 @@ export default function BuildArea() {
       const isListDroppable = over.data?.current?.isListDroppable;
 
       if (isTrashCan) {
-        // deleteElement(active.data?.current?.elementId as string);
+        deleteElement(active.data?.current?.elementId as string);
       }
       // Drag new element from toolbar onto canvas
       if (isToolbarBtnElement) {
@@ -77,36 +66,36 @@ export default function BuildArea() {
       if (isCanvasElement && isCanvasDropArea) {
         const elementId = active.data?.current?.elementId;
         const dragged = projectElements()?.find((element) => element.id == elementId);
-        // const wasDraggedSelected = selectedElements().includes(dragged!)
+        const wasDraggedSelected = selectedElements.includes(dragged!)
         if (!dragged) return;
-        // if (!wasDraggedSelected) {
-        updateElement(dragged.id, {
-          ...dragged,
-          position: {
-            x: dragged.position.x + delta.x / zoomLevel,
-            y: dragged.position.y + delta.y / zoomLevel,
-          },
-          extraAttributes: {
-            ...dragged.extraAttributes,
-          },
-        });
-        // }
-        // else {
-        //   selectedElements().forEach((element) => {
-        //     updateElement(element.id, {
-        //       ...element,
-        //       position: {
-        //         x: element.position.x + delta.x / zoomLevel,
-        //         y: element.position.y + delta.y / zoomLevel,
-        //       },
-        //       extraAttributes: {
-        //         ...element.extraAttributes,
-        //       },
-        //     });
-        //   }
-        //   );
+        if (!wasDraggedSelected) {
+          updateElement(dragged.id, {
+            ...dragged,
+            position: {
+              x: dragged.position.x + delta.x / zoomLevel,
+              y: dragged.position.y + delta.y / zoomLevel,
+            },
+            extraAttributes: {
+              ...dragged.extraAttributes,
+            },
+          });
+        }
+        else {
+          selectedElements.forEach((element) => {
+            updateElement(element.id, {
+              ...element,
+              position: {
+                x: element.position.x + delta.x / zoomLevel,
+                y: element.position.y + delta.y / zoomLevel,
+              },
+              extraAttributes: {
+                ...element.extraAttributes,
+              },
+            });
+          }
+          );
 
-        // }
+        }
       }
 
       // Drag list element onto canvas
@@ -286,7 +275,6 @@ export default function BuildArea() {
       onDragOver={(e) => e.preventDefault()}
       className="relative overflow-hidden z-0 w-full h-full"
     >
-      {/* <AppCanvas /> */}
       <Canvas />
     </div>
   );

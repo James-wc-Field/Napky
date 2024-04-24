@@ -1,4 +1,4 @@
-import { CanvasElementType, PointType, Tools } from "../types/NinjaSketchTypes";
+import { CanvasElementType, PointType } from "../types/ProjectElements";
 
 export const getElementAtPosition = (
   x: number,
