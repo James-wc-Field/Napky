@@ -23,8 +23,8 @@ export default function Canvas() {
   const scrollLeft = useProjectStore((state) => state.scrollLeft);
   const scrollTop = useProjectStore((state) => state.scrollTop);
   const zoomLevel = useProjectStore((state) => state.zoomLevel);
-  // const setAllElementsSelected = useProjectStore((state) => state.setAllElementsSelected);
-  // const deleteSelectedElements = useProjectStore((state) => state.deleteSelectedElements);
+  const setAllElementsSelected = useProjectStore((state) => state.setAllElementsSelected);
+  const deleteSelectedElements = useProjectStore((state) => state.deleteSelectedElements);
   const updateProjectElement = useProjectStore((state) => state.updateProjectElement);
   const selectedElements = useProjectStore((state) => state.selectedElements());
   const canvasElements = useProjectStore((state) => state.canvasElements());
@@ -38,7 +38,6 @@ export default function Canvas() {
   const undo = useProjectStore((state) => state.undo);
   const redo = useProjectStore((state) => state.redo);
 
-  const imageRef = useProjectStore((state) => state.imageRef);
   const { setNodeRef } = useDroppable({
     id: "canvas-droppable",
     data: {
@@ -62,22 +61,6 @@ export default function Canvas() {
     });
     context.restore();
   }, [canvasElements, zoomLevel, scrollLeft, scrollTop]);
-  // useEffect(() => {
-  //   const handleKeyDown = (e: KeyboardEvent): void => {
-  //     if (e.key === "a" && e.ctrlKey) {
-  //       e.preventDefault();
-  //       console.log("ctrl+a")
-  //       setAllElementsSelected();
-  //     }
-  //     if (e.key === "Delete") {
-  //       deleteSelectedElements();
-  //     }
-  //   }
-  //   document.addEventListener("keydown", handleKeyDown);
-  //   return () => {
-  //     document.removeEventListener("keydown", handleKeyDown);
-  //   };
-  // }, [setAllElementsSelected, deleteSelectedElements]);
 
   const handleMiddleDown = (e: React.MouseEvent) => {
     if (e.button === 1) {
@@ -86,7 +69,7 @@ export default function Canvas() {
   };
 
   useEffect(() => {
-    const undoRedoFunction = (event: KeyboardEvent) => {
+    const onKeyPress = (event: KeyboardEvent) => {
       if (event.ctrlKey || event.metaKey) {
         if (event.key === "z") {
           if (event.shiftKey) {
@@ -96,12 +79,18 @@ export default function Canvas() {
           }
         } else if (event.key === "y") {
           redo();
+        } else if (event.key === "a") {
+          event.preventDefault();
+          console.log("select all")
+          setAllElementsSelected();
         }
-      }
-    };
-    document.addEventListener("keydown", undoRedoFunction);
+      } else if (event.key === "Delete") {
+        deleteSelectedElements();
+      };
+    }
+    document.addEventListener("keydown", onKeyPress);
     return () => {
-      document.removeEventListener("keydown", undoRedoFunction);
+      document.removeEventListener("keydown", onKeyPress);
     };
   }, [undo, redo]);
 
@@ -241,7 +230,6 @@ function CanvasElementWrapper({
       isCanvasElement: true,
     },
   });
-  // const {selectedElements, updateProjectElement, updateSelectedElements} = useProjectStore(useShallow((state) => state));
   const updateProjectElement = useProjectStore((state) => state.updateProjectElement);
   const [isResizing, setIsResizing] = useState(false)
   type Position = {
@@ -289,7 +277,6 @@ function CanvasElementWrapper({
   const CanvasElement = useMemo(() => {
     return ProjectElements[element.type].canvasComponent;
   }, [element]);
-  // useResize(element,startPos)
 
   return (
     <div style={style} ref={(ref) => {

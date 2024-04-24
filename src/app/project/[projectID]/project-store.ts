@@ -32,12 +32,11 @@ export type ProjectActions = {
   selectedElements: () => ProjectElementInstance[]
   canvasElements: () => CanvasElementType[]
   projectElements: () => ProjectElementInstance[]
-  // updateSelectedElements: (selectedElements: ProjectElementInstance[]) => void
   // removeSelectedElements: () => void
   updateKey: (key: string) => void
-  // setAllElementsSelected: () => void
+  setAllElementsSelected: () => void
   deleteElement: (id: string) => void
-  // deleteSelectedElements: () => void
+  deleteSelectedElements: () => void
   updateIsDrawing: (isDrawing?: boolean) => void
   updateCanvasPoints: (elements: CanvasElementType[]) => void
   undo: () => void
@@ -128,14 +127,15 @@ export const createProjectStore = (
     },
     // removeSelectedElements: () => set((state) => ({
     //     ...state,
-    //     elements: state.projectElements.map((el) => el.selected ? { ...el, selected: false } : el)
+    //     history: [...state.history, state. state.projectElements.map((el) => el.selected ? { ...el, selected: false } : el)
     // })),
     updateKey: (key: string) => set({
       key
     }),
-    // setAllElementsSelected: () => set((state) => ({
-    //     projectElements: state.projectElements.map((el) => ({ ...el, selected: true }))
-    // })),
+    setAllElementsSelected: () => set((state) => ({
+      history: [...state.history, state.history[state.index].map((el) => ({ ...el, selected: true }))],
+      index: state.index + 1
+    })),
     deleteElement: (id: string) => set((state) => ({
       history: [...state.history, state.history[state.index].filter((el) => el.id !== id)
       ],

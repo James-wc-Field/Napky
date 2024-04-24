@@ -15,17 +15,9 @@ export default function BuildArea() {
   const scrollLeft = useProjectStore(useShallow((state) => state.scrollLeft));
   const scrollTop = useProjectStore(useShallow((state) => state.scrollTop));
   const zoomLevel = useProjectStore(useShallow((state) => state.zoomLevel));
-  // const updateSelectedElements = useProjectStore((state) => state.updateSelectedElements);
   const deleteElement = useProjectStore((state) => state.deleteElement);
 
   useDndMonitor({
-    onDragStart: (event) => {
-      // if (event.active.data?.current?.isCanvasElement) return
-      // const elementId = event.active.data.current?.elementId;
-      // if (!(selectedElements().find((element) => element.id == elementId))) {
-      //   updateSelectedElements([elements.find((element) => element.id == elementId)!])
-      // }
-    },
     onDragEnd: (event) => {
       const { active, over, delta } = event;
       if (!active || !over) return;
@@ -283,7 +275,6 @@ export default function BuildArea() {
       onDragOver={(e) => e.preventDefault()}
       className="relative overflow-hidden z-0 w-full h-full"
     >
-      {/* <AppCanvas /> */}
       <Canvas />
     </div>
   );
