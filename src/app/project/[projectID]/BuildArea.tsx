@@ -11,7 +11,7 @@ export default function BuildArea() {
   const projectElements = useProjectStore((state) => state.projectElements);
   const addElement = useProjectStore((state) => state.addElement);
   const updateElement = useProjectStore((state) => state.updateProjectElement);
-  // const selectedElements = useProjectStore((state) => state.selectedElements);
+  const selectedElements = useProjectStore((state) => state.selectedElements());
   const scrollLeft = useProjectStore(useShallow((state) => state.scrollLeft));
   const scrollTop = useProjectStore(useShallow((state) => state.scrollTop));
   const zoomLevel = useProjectStore(useShallow((state) => state.zoomLevel));
@@ -74,37 +74,36 @@ export default function BuildArea() {
       if (isCanvasElement && isCanvasDropArea) {
         const elementId = active.data?.current?.elementId;
         const dragged = projectElements()?.find((element) => element.id == elementId);
-        // const wasDraggedSelected = selectedElements().includes(dragged!)
+        const wasDraggedSelected = selectedElements.includes(dragged!)
         if (!dragged) return;
-        // if (!wasDraggedSelected) {
-        console.log("update element")
-        updateElement(dragged.id, {
-          ...dragged,
-          position: {
-            x: dragged.position.x + delta.x / zoomLevel,
-            y: dragged.position.y + delta.y / zoomLevel,
-          },
-          extraAttributes: {
-            ...dragged.extraAttributes,
-          },
-        });
-        // }
-        // else {
-        //   selectedElements().forEach((element) => {
-        //     updateElement(element.id, {
-        //       ...element,
-        //       position: {
-        //         x: element.position.x + delta.x / zoomLevel,
-        //         y: element.position.y + delta.y / zoomLevel,
-        //       },
-        //       extraAttributes: {
-        //         ...element.extraAttributes,
-        //       },
-        //     });
-        //   }
-        //   );
+        if (!wasDraggedSelected) {
+          updateElement(dragged.id, {
+            ...dragged,
+            position: {
+              x: dragged.position.x + delta.x / zoomLevel,
+              y: dragged.position.y + delta.y / zoomLevel,
+            },
+            extraAttributes: {
+              ...dragged.extraAttributes,
+            },
+          });
+        }
+        else {
+          selectedElements.forEach((element) => {
+            updateElement(element.id, {
+              ...element,
+              position: {
+                x: element.position.x + delta.x / zoomLevel,
+                y: element.position.y + delta.y / zoomLevel,
+              },
+              extraAttributes: {
+                ...element.extraAttributes,
+              },
+            });
+          }
+          );
 
-        // }
+        }
       }
 
       // Drag list element onto canvas
