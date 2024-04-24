@@ -230,7 +230,8 @@ function CanvasElementWrapper({
     },
   });
 
-  const updateProjectElement = useProjectStore((state) => state.updateProjectElement);
+  const updateElement = useProjectStore((state) => state.updateProjectElement);
+  const elements = useProjectStore((state) => state.projectElements());
   const [isResizing, setIsResizing] = useState(false)
   type Position = {
     x: number | null;
@@ -301,12 +302,12 @@ function CanvasElementWrapper({
       <div className="relative">
         <div onMouseDown={(e) => {
           if (e.ctrlKey) {
-//             updateSelectedElements([element])
+            //             updateSelectedElements([element])
           } else {
             // TOFIX: This allows quick selection between components but removes the ability to drag multiple components
           }
         }}>
-          <div ref={parentRef} className={`${isSelected ? "cursor-move border-blue-600 border-2 border-solid rounded-lg" : "cursor-default"}`} {...listeners} {...attributes}>
+          <div className={`${isSelected ? "cursor-move border-blue-600 border-2 border-solid rounded-lg" : "cursor-default"}`} {...listeners} {...attributes}>
             <CanvasElement elementInstance={element} />
           </div>
         </div>

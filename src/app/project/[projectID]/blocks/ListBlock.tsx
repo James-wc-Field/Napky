@@ -75,7 +75,7 @@ function CanvasComponent({
   const collapsibleRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(true)
 
-  const elements = useProjectStore((state) => state.elements);
+  const elements = useProjectStore((state) => state.projectElements());
   return (
     <Collapsible
       ref={collapsibleRef}
