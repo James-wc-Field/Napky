@@ -22,12 +22,12 @@ const unstoredAttributes = {
 
 export const ImageBlockProjectElement: ProjectElement = {
   type,
-  construct: (id: string, parentId: string) => ({
+  construct: (id: string, parentId: string, parentWidth?: number) => ({
     id,
     type,
     position: { x: 0, y: 0 },
     selected: false,
-    size: { width: 300, height: 200 },
+    size: { width: parentWidth ?? 300, height: 200 },
     parentId,
     extraAttributes,
     unstoredAttributes,
