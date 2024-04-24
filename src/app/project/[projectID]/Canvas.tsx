@@ -25,7 +25,8 @@ export default function Canvas() {
   const zoomLevel = useProjectStore((state) => state.zoomLevel);
   // const setAllElementsSelected = useProjectStore((state) => state.setAllElementsSelected);
   // const deleteSelectedElements = useProjectStore((state) => state.deleteSelectedElements);
-  // const updateHistory = useProjectStore((state) => state.updateHistory);
+  const updateProjectElement = useProjectStore((state) => state.updateProjectElement);
+  const selectedElements = useProjectStore((state) => state.selectedElements());
   const canvasElements = useProjectStore((state) => state.canvasElements());
   const addElement = useProjectStore((state) => state.addElement);
   const updateCanvasPoints = useProjectStore((state) => state.updateCanvasPoints);
@@ -163,7 +164,8 @@ export default function Canvas() {
     const offsetY = (event.clientY - canvasRect.top) / zoomLevel - scrollTop
     const newElement = {
       id: idGenerator(),
-      points: [{ x: offsetX, y: offsetY }]
+      points: [{ x: offsetX, y: offsetY }],
+      selected: false,
     }
     addElement(newElement)
     setIsDrawing(true);
@@ -171,51 +173,53 @@ export default function Canvas() {
   const canvasRef = useRef<HTMLDivElement>(null);
   return (
     <>
-      {/* <Selectable ref={selectableRef} value={selectedElements()} onStart={(e) => {
+      <Selectable ref={selectableRef} value={selectedElements} onStart={(e) => {
         if ((e.target as HTMLElement).id !== "canvas-pane-droppable" && (e.target as HTMLElement).id !== "canvas-viewport") {
           selectableRef.current?.cancel();
         }
       }}
         onEnd={(value) => {
-          updateSelectedElements(value as ProjectElementInstance[])
-        }}> */}
-      <div
-        id="canvas-renderer"
-        className="absolute w-full h-full top-0 left-0 bg-white/20"
-        style={{ zIndex: 4 }}
-        onWheel={handleScroll}
-        onMouseDown={handleMiddleDown}
-        ref={canvasRef}
-      >
-        <canvas
-          id="canvas"
-          width={canvasRef.current?.clientWidth}
-          height={canvasRef.current?.clientHeight}
-          onMouseMove={(event) => handleCanvasMouseMove(event.nativeEvent)}
-          onMouseUp={handleCanvasMouseUp}
-          onWheel={handleScroll}
-          onMouseDown={(event) => {
-            handleCanvasMouseDown(event.nativeEvent)
-          }}
-          style={{ position: "absolute", zIndex: drawingEnabled ? 3 : 1 }}
-        />
+          (value as ProjectElementInstance[]).forEach((element) => {
+            updateProjectElement(element.id, { ...element, selected: true })
+          })
+        }}>
         <div
-          id="canvas-pane-droppable"
-          className={`absolute w-full h-full top-0 left-0`}
-          style={{
-            transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
-            transformOrigin: "top left",
-            zIndex: drawingEnabled ? 1 : 3
-          }}
-          ref={setNodeRef}
+          id="canvas-renderer"
+          className="absolute w-full h-full top-0 left-0 bg-white/20"
+          style={{ zIndex: 4 }}
+          onWheel={handleScroll}
+          onMouseDown={handleMiddleDown}
+          ref={canvasRef}
         >
-          {projectElements().map((element) => {
-            if (element.parentId !== "root") return null;
-            return <CanvasElementWrapper key={element.id} element={element} />;
-          })}
+          <canvas
+            id="canvas"
+            width={canvasRef.current?.clientWidth}
+            height={canvasRef.current?.clientHeight}
+            onMouseMove={(event) => handleCanvasMouseMove(event.nativeEvent)}
+            onMouseUp={handleCanvasMouseUp}
+            onWheel={handleScroll}
+            onMouseDown={(event) => {
+              handleCanvasMouseDown(event.nativeEvent)
+            }}
+            style={{ position: "absolute", zIndex: drawingEnabled ? 3 : 1 }}
+          />
+          <div
+            id="canvas-pane-droppable"
+            className={`absolute w-full h-full top-0 left-0`}
+            style={{
+              transform: `translate3d(${scrollLeft}px, ${scrollTop}px, 0) scale(${zoomLevel})`,
+              transformOrigin: "top left",
+              zIndex: drawingEnabled ? 1 : 3
+            }}
+            ref={setNodeRef}
+          >
+            {projectElements().map((element) => {
+              if (element.parentId !== "root") return null;
+              return <CanvasElementWrapper key={element.id} element={element} />;
+            })}
+          </div>
         </div>
-      </div>
-      {/* </Selectable > */}
+      </Selectable >
       <CanvasBackground />
       <CanvasToolbar />
       <ControlPanel />
@@ -237,7 +241,7 @@ function CanvasElementWrapper({
       isCanvasElement: true,
     },
   });
-  // const { selectedElements, updateProjectElement, updateSelectedElements } = useProjectStore(useShallow((state) => state));
+  // const {selectedElements, updateProjectElement, updateSelectedElements} = useProjectStore(useShallow((state) => state));
   const updateProjectElement = useProjectStore((state) => state.updateProjectElement);
   const [isResizing, setIsResizing] = useState(false)
   type Position = {

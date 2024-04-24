@@ -29,7 +29,7 @@ export type ProjectActions = {
   updateScrollTop: (scrollTop: number) => void
   addElement: (element: AllElementsType) => void
   updateProjectElement: (id: string, element: ProjectElementInstance) => void
-  // selectedElements: () => ProjectElementInstance[]
+  selectedElements: () => ProjectElementInstance[]
   canvasElements: () => CanvasElementType[]
   projectElements: () => ProjectElementInstance[]
   // updateSelectedElements: (selectedElements: ProjectElementInstance[]) => void
@@ -124,7 +124,7 @@ export const createProjectStore = (
     canvasElements: () => get().history[get().index]?.filter((el) => 'points' in el) as CanvasElementType[] || [],
     projectElements: () => get().history[get().index]?.filter((el) => 'size' in el) as ProjectElementInstance[] || [],
     selectedElements: () => {
-      return get().history[get().index].filter((el) => el.selected)
+      return get().projectElements().filter((el) => el.selected)
     },
     // updateSelectedElements: (selectedElements: ProjectElementInstance[]) => {
     //     set((state) => ({
