@@ -9,7 +9,7 @@ import { uploadImage } from "@/project/[projectID]/clientapi";
 import { getImageURL } from "@/project/[projectID]/clientapi";
 
 export function useExternalDrop() {
-  const updateElement = useProjectStore((state) => state.updateElement);
+  const updateElement = useProjectStore((state) => state.updateProjectElement);
   const addElement = useProjectStore((state) => state.addElement);
   const deleteElement = useProjectStore((state) => state.deleteElement);
   const scrollLeft = useProjectStore((state) => state.scrollLeft);
