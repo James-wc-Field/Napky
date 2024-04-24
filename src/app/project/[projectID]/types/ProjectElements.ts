@@ -95,4 +95,5 @@ export type CanvasElementType = {
   offsetY?: number;
   position?: string | null;
   points?: { x: number; y: number }[];
+  selected: boolean;
 };

@@ -1,4 +1,5 @@
 import getStroke from "perfect-freehand";
+import { CanvasElementType } from "../types/ProjectElements";
 
 export const drawElement = (
   context: CanvasRenderingContext2D,
