@@ -113,7 +113,6 @@ function CanvasComponent({
         </Card>
       </div>
     </Collapsible >
-
   );
 }
 
