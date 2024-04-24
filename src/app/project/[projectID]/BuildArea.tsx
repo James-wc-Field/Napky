@@ -183,6 +183,10 @@ export default function BuildArea() {
             x: 0,
             y: 0,
           },
+          size: {
+            width: list.size.width,
+            height: dragged.size.height,
+          },
           parentId: listId,
           extraAttributes: {
             ...dragged.extraAttributes,
@@ -195,9 +199,11 @@ export default function BuildArea() {
       if (isToolbarBtnElement && isListDroppable) {
         const type = active.data?.current?.type;
         const listId = over.data?.current?.elementId;
+        const parentWidth = projectElements().find((element) => element.id === listId)?.size.width
         const newElement = ProjectElements[type as ElementsType].construct(
           idGenerator(),
-          listId as string
+          listId as string,
+          parentWidth
         );
 
         addElement(newElement);
