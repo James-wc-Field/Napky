@@ -126,12 +126,6 @@ export const createProjectStore = (
     selectedElements: () => {
       return get().projectElements().filter((el) => el.selected)
     },
-    // updateSelectedElements: (selectedElements: ProjectElementInstance[]) => {
-    //     set((state) => ({
-    //         ...state,
-    //         elements: updateSelectedElements(state.projectElements, selectedElements)
-    //     }))
-    // },
     // removeSelectedElements: () => set((state) => ({
     //     ...state,
     //     elements: state.projectElements.map((el) => el.selected ? { ...el, selected: false } : el)
@@ -147,20 +141,18 @@ export const createProjectStore = (
       ],
       index: state.index + 1
     })),
-    // deleteSelectedElements: () => set((state) => ({
-    //     projectElements: state.projectElements.filter((el) => !el.selected)
-    // })),
+    deleteSelectedElements: () => set((state) => ({
+      history: [...state.history, state.history[state.index].filter((el) => !el.selected)],
+      index: state.index + 1
+    })),
     updateIsDrawing: (isDrawing?: boolean) => set((state) => ({
       isDrawing: isDrawing || !state.isDrawing
     })),
     addElement: (element: AllElementsType) => {
       set((state) => ({
-        history: [...state.history.slice(0, state.index + 1), [...state.history[state.index], element]],
+        history: [...state.history, [...state.history[state.index], element]],
         index: state.index + 1,
       }))
-      console.log(get().history)
-      console.log(get().index)
-      console.log(get().history[get().index])
     },
     updateCanvasPoints: (elements: CanvasElementType[]) => {
       const historyCopy = [...get().history];
