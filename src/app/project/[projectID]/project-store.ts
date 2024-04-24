@@ -112,6 +112,7 @@ export const createProjectStore = (
     },
     updateScrollLeft: (scrollLeft: number) => set((state) => ({ scrollLeft: state.scrollLeft + scrollLeft })),
     updateScrollTop: (scrollTop: number) => set((state) => ({ scrollTop: state.scrollTop + scrollTop })),
+
     updateProjectElement: (id: string, element: ProjectElementInstance) => {
       const updatedState = get().history[get().index].map((el) => (el.id === id ? element : el));
       set((state) => ({
@@ -137,8 +138,7 @@ export const createProjectStore = (
       index: state.index + 1
     })),
     deleteElement: (id: string) => set((state) => ({
-      history: [...state.history, state.history[state.index].filter((el) => el.id !== id)
-      ],
+      history: [...state.history, state.history[state.index].filter((el) => el.id !== id)],
       index: state.index + 1
     })),
     deleteSelectedElements: () => set((state) => ({
@@ -154,6 +154,7 @@ export const createProjectStore = (
         index: state.index + 1,
       }))
     },
+    // Use this as an example for updating state without adding to history
     updateCanvasPoints: (elements: CanvasElementType[]) => {
       const historyCopy = [...get().history];
       historyCopy[get().index] = [...elements, ...get().projectElements()];

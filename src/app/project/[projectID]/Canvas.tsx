@@ -92,7 +92,7 @@ export default function Canvas() {
     return () => {
       document.removeEventListener("keydown", onKeyPress);
     };
-  }, [undo, redo]);
+  }, [undo, redo, deleteSelectedElements, setAllElementsSelected]);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (middleMouseIsDown) {
