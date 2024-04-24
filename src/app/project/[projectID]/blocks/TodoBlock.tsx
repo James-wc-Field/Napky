@@ -25,12 +25,12 @@ const unstoredAttributes = {
 
 export const TodoBlockProjectElement: ProjectElement = {
   type,
-  construct: (id: string, parentId: string) => ({
+  construct: (id: string, parentId: string, parentWidth?: number) => ({
     id,
     type,
     selected: false,
     position: { x: 0, y: 0 },
-    size: { width: 300, height: 75 },
+    size: { width: parentWidth ?? 300, height: 75 },
     parentId,
     extraAttributes,
     unstoredAttributes,
@@ -66,7 +66,7 @@ function CanvasComponent({
   const element = elementInstance as CustomInstance;
   const { checked, items } = element.extraAttributes;
   const { label, placeholder } = element.unstoredAttributes;
-  
+
   const style = {
     maxWidth: element.size.width,
   };
