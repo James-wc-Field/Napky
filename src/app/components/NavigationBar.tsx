@@ -12,7 +12,6 @@ export async function NavigationBar({ children }: { children: React.ReactNode })
       <nav className="bg-navbar text-navbar-foreground flex p-2 items-center font-main px-10 h-nav">
         <Link href="/discover" className="flex justify-center items-center ml-2 min-w-fit">
           <Image
-            // Need absolute path to icon
             className="min-w-12"
             width={48}
             height={48}
