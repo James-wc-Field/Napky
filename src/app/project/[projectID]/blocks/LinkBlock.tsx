@@ -98,6 +98,7 @@ function CanvasComponent({
 
   const style = {
     maxWidth: element.size.width,
+    minWidth: element.size.width,
   };
 
   function handleOnTextChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -124,6 +125,7 @@ function CanvasComponent({
       const summary = await generateSummary(url, key);
       updateElement(element.id, {
         ...element,
+        size: { width: 600, height: element.size.height },
         extraAttributes: {
           ...element.extraAttributes,
           isRenderingBackup: false,
@@ -149,26 +151,24 @@ function CanvasComponent({
           {Object.keys(metaTags).length !== 0 ? (
             <CardHeader>
               <CardTitle>{metaTags["og:title"] || ""}</CardTitle>
-              <div className="flex row">
-                <LinkIcon className="text-zinc-500 h-6 w-6 mr-1" />
-                <Link
-                  href={`//${text}`}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  {text}
-                </Link>
-              </div>
+              <Link
+                className="p-2 text-blue-500 hover:underline"
+                href={`//${text}`}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {text}
+              </Link>
               <div className="flex items-center">
                 <Image
-                  src={metaTags["og:image"]} // TODO: Use og:image and try to fix CORS errors upon html-to-image extraction
+                  src={metaTags["og:image"]}
                   alt={metaTags["og:title"] || "img"}
                   width={300}
                   height={200}
                   unoptimized
                   priority
                 />
-                <CardDescription>
+                <CardDescription className="p-2">
                   {metaTags["og:description"] || ""}
                 </CardDescription>
               </div>
