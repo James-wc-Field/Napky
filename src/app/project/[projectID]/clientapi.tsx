@@ -6,7 +6,7 @@ export async function createProjectImage(
   ref: HTMLDivElement | null
 ) {
   if (!ref) return;
-  toJpeg(ref, 
+  toJpeg(ref,
   )
     .then(async (dataUrl) => {
       const blob = await fetch(dataUrl).then((res) => res.blob());
@@ -46,7 +46,7 @@ export async function getImageURL(key: string) {
     key,
     options: {
       accessLevel: "guest",
-      expiresIn: 10, // We don't really need the URL for long
+      // expiresIn: 10, // We don't really need the URL for long
     },
   });
   if (!storageUrl) {
