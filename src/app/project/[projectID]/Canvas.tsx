@@ -34,6 +34,7 @@ export default function Canvas() {
   const [isDrawing, setIsDrawing] = useState(false);
   const drawingEnabled = useProjectStore((state) => state.isDrawing);
   const setDrawingEnabled = useProjectStore((state) => state.updateIsDrawing);
+  const setImageRef = useProjectStore((state) => state.setImageRef);
   const selectableRef = useRef<SelectableRef>(null);
   const undo = useProjectStore((state) => state.undo);
   const redo = useProjectStore((state) => state.redo);
@@ -163,6 +164,9 @@ export default function Canvas() {
     setIsDrawing(true);
   };
   const canvasRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    setImageRef(canvasRef);
+  }, [canvasRef]);
   return (
     <>
       <Selectable ref={selectableRef} value={selectedElements} onStart={(e) => {
@@ -210,9 +214,9 @@ export default function Canvas() {
               return <CanvasElementWrapper key={element.id} element={element} />;
             })}
           </div>
+          <CanvasBackground />
         </div>
       </Selectable >
-      <CanvasBackground />
       <CanvasToolbar />
       <ControlPanel />
       {/* <MiniMap /> */}

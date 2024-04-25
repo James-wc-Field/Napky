@@ -18,7 +18,7 @@ export type ProjectState = {
   index: number
   history: AllElementsType[][]
   fetched: boolean;
-  imageRef: RefObject<HTMLImageElement>;
+  imageRef: RefObject<HTMLDivElement>;
 }
 
 export type ProjectActions = {
@@ -41,6 +41,7 @@ export type ProjectActions = {
   updateCanvasPoints: (elements: CanvasElementType[]) => void
   undo: () => void
   redo: () => void
+  setImageRef: (ref: RefObject<HTMLDivElement>) => void
 }
 
 
@@ -114,6 +115,7 @@ export const createProjectStore = (
       }))
 
     },
+    setImageRef: (ref: RefObject<HTMLDivElement>) => set({ imageRef: ref }),
     canvasElements: () => get().history[get().index]?.filter((el) => 'points' in el) as CanvasElementType[] || [],
     projectElements: () => get().history[get().index]?.filter((el) => 'size' in el) as ProjectElementInstance[] || [],
     selectedElements: () => {
