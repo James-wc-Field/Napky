@@ -69,7 +69,7 @@ function CanvasComponent({
       width={element.size.width}
       height={element.size.height}
       alt={alt}
-      className="rounded-md select-none"
+      className="rounded-md select-none pointer-events-none"
       unoptimized
       priority
       crossOrigin="anonymous"

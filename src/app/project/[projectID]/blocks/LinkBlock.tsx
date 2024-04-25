@@ -15,7 +15,7 @@ import {
 } from "@ui/card";
 import { Input } from "@ui/input";
 import Image from "next/image";
-import React from "react";
+import React, { useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { generateSummary, getOpenGraphTags } from "@/project/[projectID]/api";
 import Link from "next/link";
@@ -90,7 +90,6 @@ function CanvasComponent({
 }: {
   elementInstance: ProjectElementInstance;
 }) {
-  // const { updateElement, key } = useProject();
   const updateElement = useProjectStore((state) => state.updateProjectElement);
   const key = useProjectStore((state) => state.key);
   const element = elementInstance as CustomInstance;
@@ -134,7 +133,7 @@ function CanvasComponent({
       });
     }
   }
-
+  const contentRef = useRef<HTMLDivElement>(null);
   return (
     <Card style={style} className="p-2 flex gap-1 flex-col">
       {element.extraAttributes.isRenderingBackup ? (
@@ -162,7 +161,7 @@ function CanvasComponent({
               </div>
               <div className="flex items-center">
                 <Image
-                  src="/images/placeholder.webp" // TODO: Use og:image and try to fix CORS errors upon html-to-image extraction
+                  src={metaTags["og:image"]} // TODO: Use og:image and try to fix CORS errors upon html-to-image extraction
                   alt={metaTags["og:title"] || "img"}
                   width={300}
                   height={200}
@@ -195,7 +194,7 @@ function CanvasComponent({
               )}
             </CardHeader>
           ) : (
-            <div className="flex items-center">
+            <div className="flex items-center" ref={contentRef}>
               <LinkIcon className="text-zinc-500 h-6 w-6 mr-1" />
               <Input
                 className="grow"
