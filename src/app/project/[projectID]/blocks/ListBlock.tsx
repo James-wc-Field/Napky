@@ -88,7 +88,7 @@ function CanvasComponent({
           <div className="flex flex-row justify-between">
             <p className="content-center">{label}</p>
             <CollapsibleTrigger className="-right-10" asChild>
-              <Button variant="ghost" size="sm" className="w-9 p-0">
+              <Button className="w-9 p-0">
                 <ChevronsUpDown className="h-4 w-4" />
                 <span className="sr-only">Toggle</span>
               </Button>
