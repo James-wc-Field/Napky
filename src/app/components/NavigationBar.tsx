@@ -16,7 +16,7 @@ export async function NavigationBar({ children }: { children: React.ReactNode })
             width={48}
             height={48}
             alt="Happy Squirrel"
-            src="/images/icon.png"
+            src="/images/Korkbo.png"
           />
           <p className="mx-2 text-xl">
             KorkBo
