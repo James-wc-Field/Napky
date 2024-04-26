@@ -15,7 +15,7 @@ import {
 } from "@ui/card";
 import { Input } from "@ui/input";
 import Image from "next/image";
-import React from "react";
+import React, { useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { generateSummary, getOpenGraphTags } from "@/project/[projectID]/api";
 import Link from "next/link";
@@ -90,7 +90,6 @@ function CanvasComponent({
 }: {
   elementInstance: ProjectElementInstance;
 }) {
-  // const { updateElement, key } = useProject();
   const updateElement = useProjectStore((state) => state.updateProjectElement);
   const key = useProjectStore((state) => state.key);
   const element = elementInstance as CustomInstance;
@@ -99,6 +98,7 @@ function CanvasComponent({
 
   const style = {
     maxWidth: element.size.width,
+    minWidth: element.size.width,
   };
 
   function handleOnTextChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -125,6 +125,7 @@ function CanvasComponent({
       const summary = await generateSummary(url, key);
       updateElement(element.id, {
         ...element,
+        size: { width: 600, height: element.size.height },
         extraAttributes: {
           ...element.extraAttributes,
           isRenderingBackup: false,
@@ -134,7 +135,7 @@ function CanvasComponent({
       });
     }
   }
-
+  const contentRef = useRef<HTMLDivElement>(null);
   return (
     <Card style={style} className="p-2 flex gap-1 flex-col">
       {element.extraAttributes.isRenderingBackup ? (
@@ -150,26 +151,24 @@ function CanvasComponent({
           {Object.keys(metaTags).length !== 0 ? (
             <CardHeader>
               <CardTitle>{metaTags["og:title"] || ""}</CardTitle>
-              <div className="flex row">
-                <LinkIcon className="text-zinc-500 h-6 w-6 mr-1" />
-                <Link
-                  href={`//${text}`}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  {text}
-                </Link>
-              </div>
+              <Link
+                className="p-2 text-blue-500 hover:underline"
+                href={`//${text}`}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {text}
+              </Link>
               <div className="flex items-center">
                 <Image
-                  src="/images/placeholder.webp" // TODO: Use og:image and try to fix CORS errors upon html-to-image extraction
+                  src={metaTags["og:image"]}
                   alt={metaTags["og:title"] || "img"}
                   width={300}
                   height={200}
                   unoptimized
                   priority
                 />
-                <CardDescription>
+                <CardDescription className="p-2">
                   {metaTags["og:description"] || ""}
                 </CardDescription>
               </div>
@@ -195,7 +194,7 @@ function CanvasComponent({
               )}
             </CardHeader>
           ) : (
-            <div className="flex items-center">
+            <div className="flex items-center" ref={contentRef}>
               <LinkIcon className="text-zinc-500 h-6 w-6 mr-1" />
               <Input
                 className="grow"

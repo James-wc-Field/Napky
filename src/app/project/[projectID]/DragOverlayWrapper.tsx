@@ -13,7 +13,7 @@ import { useProjectStore } from "./storeProvider";
 import { useShallow } from "zustand/react/shallow";
 
 export default function DragOverlayWrapper() {
-  // const removeSelectedElements = useProjectStore((state) => state.removeSelectedElements);
+  const removeSelectedElements = useProjectStore((state) => state.removeSelectedElements);
   const selectedElements = useProjectStore((state) => state.selectedElements());
   const elements = useProjectStore((state) => state.projectElements());
   const zoomLevel = useProjectStore((state) => state.zoomLevel);
@@ -26,11 +26,11 @@ export default function DragOverlayWrapper() {
     },
     onDragCancel: (event: DragCancelEvent) => {
       setDraggedItem(null);
-      // removeSelectedElements();
+      removeSelectedElements();
     },
     onDragEnd: (event: DragEndEvent) => {
       setDraggedItem(null);
-      // removeSelectedElements();
+      removeSelectedElements();
 
     },
   });
