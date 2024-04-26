@@ -93,8 +93,6 @@ export function useExternalDrop() {
             console.log("No URL returned.");
             return;
           }
-
-          console.log("NEW ELEMENT:", newElement);
           addElement({
             ...newElement,
             position: {
@@ -110,6 +108,7 @@ export function useExternalDrop() {
               src: url.href
             },
           });
+
           deleteElement(loadingElement.id);
         });
       }

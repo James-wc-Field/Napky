@@ -29,10 +29,12 @@ export default function Canvas() {
   const canvasElements = useProjectStore((state) => state.canvasElements());
   const addElement = useProjectStore((state) => state.addElement);
   const updateCanvasPoints = useProjectStore((state) => state.updateCanvasPoints);
+  const removeSelectedElements = useProjectStore((state) => state.removeSelectedElements);
   const [middleMouseIsDown, setMiddleMouseIsDown] = useState(false)
   const [isDrawing, setIsDrawing] = useState(false);
   const drawingEnabled = useProjectStore((state) => state.isDrawing);
   const setDrawingEnabled = useProjectStore((state) => state.updateIsDrawing);
+  const setImageRef = useProjectStore((state) => state.setImageRef);
   const selectableRef = useRef<SelectableRef>(null);
   const undo = useProjectStore((state) => state.undo);
   const redo = useProjectStore((state) => state.redo);
@@ -64,6 +66,8 @@ export default function Canvas() {
   const handleMiddleDown = (e: React.MouseEvent) => {
     if (e.button === 1) {
       setMiddleMouseIsDown(true);
+    } else {
+      removeSelectedElements();
     }
   };
 
@@ -125,7 +129,9 @@ export default function Canvas() {
     updateScrollLeft(deltaX);
     updateScrollTop(deltaY);
   };
+
   const handleCanvasMouseMove = (event: MouseEvent) => {
+    if (!drawingEnabled) return;
     if (!isDrawing) return;
     const canvasRect = canvasRef.current?.getBoundingClientRect();
     if (!canvasRect) return;
@@ -140,11 +146,17 @@ export default function Canvas() {
     updateCanvasPoints(elementsCopy)
   };
   const handleCanvasMouseUp = () => {
+    if (!drawingEnabled) return;
+    if (!isDrawing) return;
     setIsDrawing(false);
     setDrawingEnabled(false);
+    console.log("mouseup")
+    console.log(isDrawing)
+    console.log(drawingEnabled)
   };
 
   const handleCanvasMouseDown = (event: MouseEvent) => {
+    if (!drawingEnabled) return;
     const canvasRect = canvasRef.current?.getBoundingClientRect(); // Get the dimensions and position of the canvas
     if (!canvasRect) return;
 
@@ -159,10 +171,16 @@ export default function Canvas() {
     setIsDrawing(true);
   };
   const canvasRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    setImageRef(canvasRef);
+  }, [canvasRef]);
   return (
     <>
       <Selectable ref={selectableRef} value={selectedElements} onStart={(e) => {
-        if ((e.target as HTMLElement).id !== "canvas-pane-droppable" && (e.target as HTMLElement).id !== "canvas-viewport") {
+        if ((e.target as HTMLElement).id !== "canvas-pane-droppable" && (e.target as HTMLElement).id !== "canvas-viewport" && (e.target as HTMLElement).id !== "canvas") {
+          selectableRef.current?.cancel();
+        }
+        if (isDrawing || drawingEnabled) {
           selectableRef.current?.cancel();
         }
       }}
@@ -206,9 +224,9 @@ export default function Canvas() {
               return <CanvasElementWrapper key={element.id} element={element} />;
             })}
           </div>
+          <CanvasBackground />
         </div>
       </Selectable >
-      <CanvasBackground />
       <CanvasToolbar />
       <ControlPanel />
       {/* <MiniMap /> */}

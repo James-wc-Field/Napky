@@ -72,6 +72,7 @@ export default function ProjectBuilder({ projectID }: { projectID: string }) {
             className="gap-1"
             onClick={() => {
               saveProject(projectId, projectName, elements)
+              console.log(imageRef.current)
               createProjectImage(projectId, imageRef.current)
             }
             }
