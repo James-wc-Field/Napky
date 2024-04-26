@@ -10,6 +10,10 @@ import Link from "next/link";
 
 
 export const metadata = {
+  icons: {
+    favicon: '/images/Korkbo.png',
+    touchIcon: '/images/Korkbo.png',
+  },
   openGraph: {
     title: 'Korkbo',
     url: 'https://www.korkbo.com/',
