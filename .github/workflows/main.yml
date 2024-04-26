@@ -1,0 +1,22 @@
+name: Create Pull Request on Push to Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create_pull_request:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: Automatically Generated PR
+          body: This pull request was automatically generated on pushing to main branch.
+          branch: 144-make-project-only-branch
