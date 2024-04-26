@@ -28,13 +28,8 @@ import { createProjectImage } from "./clientapi";
 import { useShallow } from "zustand/react/shallow";
 import { LoadingSpinner } from "@/components/ui/spinner";
 
-export default function ProjectBuilder({ projectID }: { projectID: string }) {
-  const { fetch } = useProjectStore(useShallow((state) => state));
-  useEffect(() => {
-    fetch(projectID);
-  }, [projectID, fetch]);
+export default function ProjectBuilder() {
 
-  const fetched = useProjectStore((state) => state.fetched);
   const elements = useProjectStore((state) => state.projectElements());
   const updateProjectName = useProjectStore((state) => state.updateProjectName);
   const projectName = useProjectStore((state) => state.projectName);
@@ -59,28 +54,7 @@ export default function ProjectBuilder({ projectID }: { projectID: string }) {
   return (
     <DndContext id={id} sensors={sensors} collisionDetection={pointerWithin}>
       <main className="flex flex-col w-full h-full max-h-90vh">
-        {/* This is the Project "NavBar" */}
-        <div className="flex border-b-1 border-border p-2 gap-2 items-center">
-          <p className="truncate font-medium">Project</p>
-          <span className="mr-2">
-            <Input
-              placeholder={projectName}
-              onChange={(e) => updateProjectName(e.target.value)}
-            />
-          </span>
-          <Button
-            className="gap-1"
-            onClick={() => {
-              saveProject(projectId, projectName, elements)
-              console.log(imageRef.current)
-              createProjectImage(projectId, imageRef.current)
-            }
-            }
-          >
-            <Save className="h-5 w-6" />
-          </Button>
-        </div>
-        {fetched ? <BuildArea /> : <Loading />}
+        <BuildArea />
         <Popover>
           <PopoverTrigger
             asChild

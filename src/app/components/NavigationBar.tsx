@@ -25,9 +25,6 @@ export async function NavigationBar({ children }: { children: React.ReactNode })
         <div className="flex w-full justify-center mx-5">
           {children}
         </div>
-        <div className="flex justify-end min-w-fit">
-          <Account isSignediIn={currentUser ? true : false} />
-        </div>
         <ThemeToggle />
       </nav>
     </>
